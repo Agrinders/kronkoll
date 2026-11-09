@@ -122,7 +122,7 @@ nav .more{display:none}
   #h>:nth-child(2){grid-column:span 7}#h>:nth-child(3){grid-column:span 5;align-content:center}#h>.btn{justify-self:start;min-width:260px}
   #b>:nth-child(2),#b>:nth-child(3),#b>:nth-child(4),#b>:nth-child(5){grid-column:span 6}
   #b details>summary{cursor:default}#b details>summary::after{display:none}
-  #s_per{order:-1}#s>:nth-child(1){grid-column:span 5}#s>:nth-child(3){grid-column:span 7}#s>:nth-child(4){grid-column:span 7}#s>:nth-child(5){grid-column:span 5}
+  #s_per{order:-1}#s>:nth-child(1){grid-column:span 5}#s>:nth-child(3){grid-column:span 7}#s>:nth-child(5){grid-column:span 7}#s>:nth-child(6){grid-column:span 5}
   #r>:nth-child(2),#r>:nth-child(3){align-self:start}#r>:nth-child(4),#r>:nth-child(5){grid-column:span 6;align-self:start}
   #m>:nth-child(2),#m>:nth-child(3){grid-column:span 6}#m>:nth-child(4),#m>:nth-child(5){grid-column:span 6}
   #m .links{max-width:440px}
@@ -210,6 +210,17 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
   nav{width:calc(100% - 20px);bottom:calc(7px + env(safe-area-inset-bottom,0px));padding:4px;border-radius:20px}
   nav button{min-height:50px;font-size:10.5px;padding:5px 0 3px;border-radius:16px}nav svg{width:20px;height:20px;margin-bottom:2px}
 }
+
+#rs,#rd{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));background:rgba(5,10,20,.55);opacity:0;pointer-events:none;transition:opacity .2s}
+#rs.on,#rd.on{opacity:1;pointer-events:auto}
+#rd .mbox b{display:block}
+#rs .mbox,#rd .mbox{max-height:calc(100dvh - 24px);overflow-y:auto}
+.opt{display:block;width:100%;text-align:left;border:1px solid var(--rule);border-radius:14px;background:none;padding:11px 14px;margin-bottom:8px;font-weight:650;font-size:15.5px}.opt small{display:block;font-weight:500;font-size:13.5px;color:var(--soft);margin-top:2px}.opt.bad{color:var(--bad)}
+.ln.g{grid-template-columns:minmax(0,1fr) 32px}
+.ln .nmt{font-size:16.5px;font-weight:500;padding-block:12px;overflow-wrap:anywhere}
+.ln.s{grid-template-columns:minmax(0,1fr) auto}
+.freq.skip{color:var(--warn)}
+#rs_amt{margin-top:12px}#rs_amt .seg{margin:8px 0 0}
 </style>
 
 <canvas id="fx" aria-hidden="true"></canvas>
@@ -220,7 +231,8 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 <button data-go="e" data-i="ttlE"></button><button data-go="x" data-i="ttlX"></button><button data-go="c" data-i="ttlC"></button>
 <small data-i="disc"></small>
 </aside>
-<div id="rs"><div class="mbox"><b id="rs_t"></b><div class="seg" id="rs_f"></div><label for="rs_d" id="rs_l"></label><input id="rs_d" type="date"><p class="note" id="rs_h"></p><div class="mact"><button class="btn out" id="rs_no"></button><button class="btn" id="rs_ok"></button></div></div></div>
+<div id="rs"><div class="mbox"><b id="rs_t"></b><div class="seg" id="rs_f"></div><label for="rs_d" id="rs_l"></label><input id="rs_d" type="date"><p class="note" id="rs_h"></p><div id="rs_amt"><label for="rs_a" id="rs_al"></label><input id="rs_a" type="text" inputmode="decimal"><div class="seg" id="rs_sc"></div></div><div style="height:14px"></div><div class="mact"><button class="btn out" id="rs_no"></button><button class="btn" id="rs_ok"></button></div></div></div>
+<div id="rd"><div class="mbox"><b id="rd_t"></b><p class="note" id="rd_s" style="margin:6px 0 12px"></p><div id="rd_o"></div><button class="btn out" id="rd_no" style="width:100%"></button></div></div>
 <div id="yrs"><p data-i="pickYear"></p><div id="yr_list"></div></div>
 
 <main>
@@ -251,7 +263,7 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 <details name="bud" id="d_var"><summary><span class="head" data-i="varHead"></span><span class="sumv" id="sum_var"></span></summary><div id="l_vars"></div><button class="lnk" data-add="vars" data-i="newLine"></button></details>
 </div>
 <div class="sheet">
-<details name="bud" id="d_rest"><summary><span><span class="head" data-i="restHead"></span><span class="sub2" data-i="restSub"></span></span><span class="sumv" id="sum_rest"></span></summary><p class="note" id="r_intro"></p><div id="l_split"></div><button class="lnk" data-add="split" data-i="newGoal"></button><br><button class="lnk hide" id="r_rec" data-i="useRec"></button><div id="r_warn"></div><p class="note" id="r_note"></p></details>
+<details name="bud" id="d_rest"><summary><span><span class="head" data-i="restHead"></span><span class="sub2" data-i="restSub"></span></span><span class="sumv" id="sum_rest"></span></summary><p class="note" id="r_intro"></p><div id="l_split"></div><button class="lnk hide" id="r_rec" data-i="useRec"></button><div id="r_warn"></div><p class="note" id="r_note"></p></details>
 <div class="total" style="border-top:1px solid var(--rule);margin-top:6px"><span data-i="lifeRow"></span><b id="b_life"></b></div>
 </div>
 <div class="sheet"><p class="head" data-i="addSaveHead"></p>
@@ -264,6 +276,7 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 <div class="sheet"><div class="lbl" data-i="totSaved"></div><div class="big" id="s_big"></div><div class="bar"><i id="s_bar" style="width:0"></i></div><div class="lbl" id="s_goal" style="margin-top:6px"></div></div>
 <div class="mnavw" id="s_per"></div>
 <div class="sheet"><div class="lbl" id="s_month"></div><div class="cols" id="s_cols"></div></div>
+<div class="sheet"><p class="head" data-i="goalsHead"></p><p class="note" style="margin-top:-4px" data-i="goalsNote"></p><div id="s_goals"></div><button class="lnk" id="g_add" data-i="newGoal"></button></div>
 <div class="sheet"><p class="head" data-i="potHead"></p><div id="s_pots"></div></div>
 <div class="sheet"><details><summary><span class="head" data-i="entries"></span><span class="sumv" id="s_cnt"></span></summary><div id="s_list"></div></details></div>
 </section>
@@ -334,14 +347,14 @@ leftIn:[m=>`Kvar att leva på i ${m}`,m=>`Left to live on in ${m}`],perDay:[(d,n
 needs:["Räkningar","Bills"],fixedL:["Fasta","Fixed"],varL:["Rörliga","Variable"],saving:["Sparande","Saving"],life:["Eget liv","Living"],
 in:["Inkomster","Income"],out:["Fasta utgifter","Fixed expenses"],varOut:["Rörliga utgifter","Variable expenses"],rem:["Återstående","Remaining"],totOut:["Summa utgifter","Total expenses"],sRate:["Sparkvot","Savings rate"],totSave:["Total sparad summa","Total saved"],yearT:[y=>`Hela ${y}`,y=>`All of ${y}`],total:["Totalt","Total"],savedIn:[m=>`Sparat i ${m}`,m=>`Saved in ${m}`],ofP:[(s,p)=>`${s} av ${p}`,(s,p)=>`${s} of ${p}`],
 topNow:["Viktigast just nu","Most important right now"],seeAll:["Se hela resultatet →","See all results →"],exNote:["Det här är exempelsiffror. Skriv över dem med era egna.","These are example figures. Replace them with your own."],exGo:["Öppna budgeten →","Open the budget →"],addBuy:["＋ Lägg till ett köp","＋ Add a purchase"],
-incHead:["Inkomster","Income"],outHead:["Fasta utgifter","Fixed expenses"],restHead:["Sparande mål","Savings goals"],restSub:["Fördela resten","Split the rest"],varHead:["Rörliga utgifter","Variable expenses"],newLine:["＋ Ny rad","＋ New line"],newGoal:["＋ Nytt mål","＋ New goal"],goalPh:["Namn på målet, t.ex. Resa","Goal name, e.g. Trip"],linePh:["Skriv här","Write here"],del:["Ta bort","Remove"],
+incHead:["Inkomster","Income"],outHead:["Fasta utgifter","Fixed expenses"],restHead:["Sparande","Saving"],goalsHead:["Sparande mål","Savings goals"],goalsNote:["Skapa och namnge dina mål här. Pengarna lägger du in under Budget.","Create and name your goals here. You add the money under Budget."],noGoals:["Du har inga sparande mål ännu.","You have no savings goals yet."],toGoals:["Skapa ett under Sparande →","Create one under Savings →"],restSub:["Fördela resten","Split the rest"],varHead:["Rörliga utgifter","Variable expenses"],newLine:["＋ Ny rad","＋ New line"],newGoal:["＋ Nytt mål","＋ New goal"],goalPh:["Namn på målet, t.ex. Resa","Goal name, e.g. Trip"],linePh:["Skriv här","Write here"],del:["Ta bort","Remove"],
 restIntro:[v=>`Efter utgifterna har ni ${v} kvar. Bestäm vad som ska sparas, resten är ert att leva på.`,v=>`After expenses you have ${v} left. Decide what to save, the rest is yours to live on.`],lifeRow:["Kvar att leva på","Left to live on"],
 overAlloc:[v=>`Ni har fördelat ${v} mer än ni har kvar. Sänk en rad.`,v=>`You have split ${v} more than you have left. Lower one line.`],useRec:["Återställ till förslaget","Reset to the suggestion"],
 aBuf:["Buffert","Buffer"],aGoal:["Studier & mål","Studies & goals"],aLong:["Långsiktigt","Long-term"],potOther:["Övrigt","Other"],
 depNow:[v=>"＋ Sätt in "+v,v=>"＋ Deposit "+v],potProg:[(s,p)=>`Insatt ${s} av ${p}`,(s,p)=>`Deposited ${s} of ${p}`],potDone:["Insatt ✓","Deposited ✓"],
 bufNote:[(t,m)=>`Buffertmålet ${t} nås om ca ${m} månader.`,(t,m)=>`You reach the ${t} buffer target in about ${m} months.`],
 addSaveHead:["Lägg till sparande","Add savings"],amountPh:["Belopp (kr)","Amount (kr)"],bSaved:["＋ Sparat","＋ Saved"],bWd:["− Tog ut","− Withdrew"],fSaved:["Redan sparat innan","Saved before this"],
-totSaved:["Totalt sparat","Total saved"],ofBuf:[(p,t)=>`${p} av buffertmålet ${t}`,(p,t)=>`${p} of the ${t} buffer target`],sMonth:[(m,s,p)=>`${m}: ${s} av ${p} planerat`,(m,s,p)=>`${m}: ${s} of ${p} planned`],potHead:["Per sparande mål","By savings goal"],entries:["Poster","Entries"],none:["Inga poster den här månaden. Lägg till sparande längst ner i Budget.","No entries this month. Add savings at the bottom of Budget."],toMonth:["Till den här månaden","Back to this month"],
+totSaved:["Totalt sparat","Total saved"],ofBuf:[(p,t)=>`${p} av buffertmålet ${t}`,(p,t)=>`${p} of the ${t} buffer target`],sMonth:[(m,s,p)=>`${m}: ${s} av ${p} planerat`,(m,s,p)=>`${m}: ${s} of ${p} planned`],potHead:["Sparat per mål","Saved per goal"],entries:["Poster","Entries"],none:["Inga poster den här månaden. Lägg till sparande längst ner i Budget.","No entries this month. Add savings at the bottom of Budget."],toMonth:["Till den här månaden","Back to this month"],
 changeHead:["Det här skulle jag ändra","What I would change"],cmpHead:["Er budget mot min","Your budget vs mine"],you:["Ni","You"],me:["Jag","Me"],diff:["Skillnad","Change"],cmpFood:["Mat","Food"],cmpSubs:["Prenumerationer","Subscriptions"],cmpOther:["Övriga räkningar","Other bills"],cmpSave:["Sparande","Saving"],cmpBuf:["till buffert","to buffer"],cmpFund:["till fonder på ISK","to funds in ISK"],cmpLife:["Kvar att leva på","Left to live on"],cmpNote:["Kronor per månad. Boende och lån låter jag stå kvar, de går sällan att ändra snabbt.","Kronor per month. I leave housing and loans as they are, since they are rarely quick to change."],
 ecoHead:["Ekonomin just nu","The economy right now"],howHead:["Så har jag räknat","How I calculated"],
 vLbl:[m=>`Min bedömning för ${m}`,m=>`My assessment for ${m}`],vMore:[v=>`Ni kan spara ${v} mer i månaden`,v=>`You could save ${v} more a month`],vMoreS:[v=>`Det blir ${v} på ett år, utan att ni får mindre att leva på än ni tål.`,v=>`That is ${v} a year, while keeping a liveable amount to spend.`],vFree:[v=>`Ni kan frigöra ${v} i månaden`,v=>`You could free up ${v} a month`],vFreeS:[v=>`Det blir ${v} på ett år, från mat och prenumerationer.`,v=>`That is ${v} a year, from food and subscriptions.`],vOk:["Er budget håller","Your budget holds up"],vOkS:["Inga stora ändringar behövs just nu.","No big changes needed right now."],vBad:["Utgifterna är för höga","Expenses are too high"],vBadS:[v=>`Det saknas ${v} i månaden för att räkningarna och lite eget liv ska gå ihop.`,v=>`You are ${v} short each month to cover bills and some personal spending.`],vInc:["Skriv in era inkomster","Add your income"],vIncS:["Resultatet bygger på er budget.","The results are based on your budget."],
@@ -367,7 +380,10 @@ netMo:["Nettolön per månad","Net pay per month"],testNote:["Uppskattning med t
 theme:["Tema","Theme"],auto:["Auto","Auto"],light:["Ljust","Light"],dark:["Mörkt","Dark"],notif:["Notiser i appen","In-app notifications"],on:["På","On"],off:["Av","Off"],lang:["Språk","Language"],
 fO:["Bara en gång","One time"],fM:["Varje månad","Every month"],fQ:["Varje kvartal","Every quarter"],fY:["Varje år","Every year"],chO:["Engång","One time"],chEv:["↻ ","↻ "],pickDate:["Datum","Date"],pickFirst:["Första betalning","First payment"],pickOpt:["Datum (valfritt)","Date (optional)"],cancel:["Avbryt","Cancel"],saveW:["Spara","Save"],
 hO:[m=>`Finns bara i ${m}. Välj ett datum i en annan månad för att flytta den dit.`,m=>`Only in ${m}. Pick a date in another month to move it there.`],hM:["Kopieras automatiskt till alla kommande månader.","Copies automatically to all coming months."],hQ:["Läggs in var tredje månad, räknat från datumet.","Added every third month, counting from the date."],hY:["Läggs in en gång per år på datumet.","Added once a year on the date."],needDate:["Välj ett datum först","Pick a date first"],
-tStop:[m=>`Borttagen från och med ${m}`,m=>`Removed from ${m} onward`],tMoved:[m=>`Finns nu i ${m}`,m=>`Now in ${m}`],nextHead:["Kommande betalningar","Coming payments"],short:["Kvartal","Quarter"],yearly:["År","Year"],once:["Engång","One time"],moIn:["In","In"],moOut:["Ut","Out"],moSave:["Spar","Saved"],moLeft:["Kvar","Left"],moName:["Mån","Mon"],motion:["Rörlig bakgrund","Moving background"],
+tStop:[m=>`Borttagen från och med ${m}`,m=>`Removed from ${m} onward`],tMoved:[m=>`Finns nu i ${m}`,m=>`Now in ${m}`],nextHead:["Kommande betalningar","Coming payments"],
+amtIn:[m=>`Belopp i ${m}`,m=>`Amount in ${m}`],scOne:["Bara denna månad","This month only"],scFwd:["Från och med nu","From now on"],
+rdT:["Vad vill du göra?","What do you want to do?"],rdEnd:[m=>`Avsluta efter ${m}`,m=>`End after ${m}`],rdEndS:[m=>`Betalningen räknas kvar i ${m}, sedan försvinner den.`,m=>`The payment still counts in ${m}, then it stops.`],rdSkip:[m=>`Hoppa över ${m}`,m=>`Skip ${m}`],rdSkipS:["Bara den här månaden. Den kommer tillbaka sedan.","This month only. It comes back afterward."],rdUn:[m=>`Räkna med ${m} igen`,m=>`Count ${m} again`],rdCont:["Fortsätt som vanligt","Keep it going"],rdContS:["Slutdatumet tas bort.","The end date is removed."],rdKill:["Ta bort helt","Delete completely"],rdKillS:["Försvinner från alla månader, även tidigare.","Disappears from every month, including earlier ones."],
+chSkip:[m=>`Hoppas över i ${m} · tryck för att ändra`,m=>`Skipped in ${m} · tap to change`],chLast:[m=>` · sista ${m}`,m=>` · last ${m}`],tEnd:[m=>`Avslutas efter ${m}`,m=>`Ends after ${m}`],tSkip:[m=>`Hoppar över ${m}`,m=>`Skipping ${m}`],tKill:["Borttagen","Deleted"],tBack:["Återställd","Restored"],short:["Kvartal","Quarter"],yearly:["År","Year"],once:["Engång","One time"],moIn:["In","In"],moOut:["Ut","Out"],moSave:["Spar","Saved"],moLeft:["Kvar","Left"],moName:["Mån","Mon"],motion:["Rörlig bakgrund","Moving background"],
 fAdults:["Vuxna i hushållet","Adults in the household"],bufF:["Buffert, månader av räkningar","Buffer, months of bills"],lifeF:["Minst kvar till eget liv, %","Minimum for personal life, %"],hBufSet:["Under 2 månader är kort, riktlinjen är 2–3.","Under 2 months is short; the guideline is 2–3."],hLifeSet:["Under 10 % till eget liv gör planer svåra att hålla.","Under 10% for personal life makes plans hard to keep."],
 yourData:["Er data","Your data"],dStore:["Budgeten är gemensam. Alla som har tillgång till sidan ser och ändrar samma siffror.","The budget is shared. Everyone with access to this page sees and edits the same figures."],dOff:["Inte ansluten: inget sparas när sidan stängs.","Not connected: nothing is saved when the page closes."],reset:["Radera all data","Delete all data"],resetAgain:["Tryck igen för att radera allt","Tap again to delete everything"],
 tNeedAmt:["Skriv ett belopp först","Type an amount first"],tSaved:[(a,t)=>`Sparade ${a} · totalt ${t}`,(a,t)=>`Saved ${a} · total ${t}`],tWd:[(a,t)=>`Tog ut ${a} · totalt ${t}`,(a,t)=>`Withdrew ${a} · total ${t}`],tBuf:["Bufferten är klar 🎉","Buffer complete 🎉"],tStart:["En månads buffert är nådd 🎉","One month of buffer reached 🎉"],tOver:[(o,m)=>`Över budget med ${o} i ${m}`,(o,m)=>`Over budget by ${o} in ${m}`],tAddExp:[(a,l,m)=>`${a} tillagd · ${l} kvar i ${m}`,(a,l,m)=>`${a} added · ${l} left in ${m}`],tFail:["Kunde inte spara. Kontrollera anslutningen och försök igen.","Could not save. Check your connection and try again."],tRem:["Post borttagen","Entry removed"],tRec:["Fördelningen återställd","Split reset"],tDel:["All data raderades","All data was deleted"],tNotif:["Notiser på","Notifications on"],tDelFail:["Kunde inte radera allt. Försök igen.","Could not delete everything. Try again."],
@@ -392,30 +408,34 @@ const mk=(y,m)=>y+"_"+String(m+1).padStart(2,"0");
 const pmSel=()=>({y:P.y,m:P.m});
 /* Repeating lines are rules that appear in every month they are due; one-time lines live in their own month. */
 const RW=["inc","items","vars"];let RULES=[],exampleMode=false;
+const defaultGoals=()=>[{k:"buf",n:""},{k:"goal",n:""},{k:"long",n:""}];let G=defaultGoals(),goalsDirty=false,goalsT;
+function saveGoals(){leaveExample();if(!col)return;goalsDirty=true;clearTimeout(goalsT);goalsT=setTimeout(()=>{goalsDirty=false;col.doc("goals").set({kind:"goals",list:G}).catch(()=>toast(t("tFail")))},300)}
 const startKey=r=>{const[y,m]=r.date.split("-");return y+"_"+m};
 function due(r,y,m){const k=mk(y,m),[sy,sm]=r.date.split("-").map(Number);if(k<startKey(r)||(r.end&&k>=r.end))return false;const n=y*12+m-(sy*12+sm-1);return r.freq==="m"||(r.freq==="q"?n%3===0:n%12===0)}
-function amtOf(r,k){let v=r.amts[0].a;r.amts.forEach(x=>{if(x.f<=k)v=x.a});return v}
+function amtOf(r,k){if((r.skip||[]).includes(k))return 0;if(r.over&&r.over[k]!=null)return r.over[k];let v=r.amts[0].a;r.amts.forEach(x=>{if(x.f<=k)v=x.a});return v}
 function rawMonth(y,m){const k=mk(y,m);if(PM[k])return PM[k];const ks=Object.keys(PM).filter(x=>x<k&&Array.isArray(PM[x].split)).sort(),s=ks.length?PM[ks[ks.length-1]].split:null;return{inc:[],items:[],vars:[],...(s?{split:s.map(l=>({...l}))}:{})}}
-function monthData(y,m){const k=mk(y,m),raw=rawMonth(y,m),v={};RW.forEach(t=>{v[t]=[...RULES.filter(r=>r.t===t&&due(r,y,m)).map(r=>({n:r.n,a:amtOf(r,k),rid:r.id,freq:r.freq,date:r.date})),...raw[t].map((x,i)=>({...x,ix:i}))]});if(Array.isArray(raw.split))v.split=raw.split;return v}
+function monthData(y,m){const k=mk(y,m),raw=rawMonth(y,m),v={};RW.forEach(t=>{v[t]=[...RULES.filter(r=>r.t===t&&due(r,y,m)).map(r=>({n:r.n,a:amtOf(r,k),rid:r.id,freq:r.freq,date:r.date,end:r.end,skip:(r.skip||[]).includes(k)})),...raw[t].map((x,i)=>({...x,ix:i}))]});if(Array.isArray(raw.split))v.split=raw.split;return v}
 const isoOf=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const defDate=()=>isNow()?isoOf(NOW):P.y+"-"+String(P.m+1).padStart(2,"0")+"-01";
 const newId=()=>"r"+Date.now()+Math.floor(Math.random()*1e3);
-function seedExample(){const d=defaults(),s=isoOf(new Date(NOW.getFullYear(),NOW.getMonth(),1));RULES=[];[["inc",d.inc],["items",d.items],["vars",d.vars]].forEach(([t,a])=>a.forEach(([n,x],i)=>RULES.push({id:"ex"+t+i,t,n,freq:"m",date:s,ds:false,amts:[{f:"0",a:x}],end:null})));PM={};exampleMode=true}
+function seedExample(){G=defaultGoals();const d=defaults(),s=isoOf(new Date(NOW.getFullYear(),NOW.getMonth(),1));RULES=[];[["inc",d.inc],["items",d.items],["vars",d.vars]].forEach(([t,a])=>a.forEach(([n,x],i)=>RULES.push({id:"ex"+t+i,t,n,freq:"m",date:s,ds:false,amts:[{f:"0",a:x}],end:null})));PM={};exampleMode=true}
 const cur=()=>monthData(P.y,P.m),nowMd=()=>monthData(NOW.getFullYear(),NOW.getMonth());
 const hasData=()=>!exampleMode;
 const TM={},DIRTY=new Set();
 const pmDoc=k=>{const w=PM[k];return{kind:"pm",inc:w.inc,items:w.items,vars:w.vars,...(Array.isArray(w.split)?{split:w.split}:{})}};
-const ruleDoc=r=>({kind:"rec",id:r.id,t:r.t,n:r.n,freq:r.freq,date:r.date,ds:!!r.ds,amts:r.amts,end:r.end||null});
+const ruleDoc=r=>({kind:"rec",id:r.id,t:r.t,n:r.n,freq:r.freq,date:r.date,ds:!!r.ds,amts:r.amts,end:r.end||null,over:r.over||{},skip:r.skip||[]});
 const DIRTYR=new Set(),TR={};
 function leaveExample(){if(!exampleMode)return;exampleMode=false;if(!col)return;RULES.forEach(r=>col.doc("rec_"+r.id).set(ruleDoc(r)).catch(()=>{}));Object.keys(PM).forEach(k=>col.doc("pm_"+k).set(pmDoc(k)).catch(()=>{}))}
 function editMonth(fn,y=P.y,m=P.m){leaveExample();const k=mk(y,m);if(!PM[k])PM[k]=rawMonth(y,m);fn(PM[k]);if(!col)return;DIRTY.add(k);clearTimeout(TM[k]);TM[k]=setTimeout(()=>{DIRTY.delete(k);if(PM[k])col.doc("pm_"+k).set(pmDoc(k)).catch(()=>toast(t("tFail")))},400)}
 function saveRule(r){leaveExample();if(!col)return;DIRTYR.add(r.id);clearTimeout(TR[r.id]);TR[r.id]=setTimeout(()=>{DIRTYR.delete(r.id);col.doc("rec_"+r.id).set(ruleDoc(r)).catch(()=>toast(t("tFail")))},400)}
 function dropRule(r){leaveExample();RULES=RULES.filter(x=>x!==r);DIRTYR.delete(r.id);clearTimeout(TR[r.id]);if(col)col.doc("rec_"+r.id).delete().catch(()=>{})}
 function newRule(tp,n,a,freq,date,ds){const r={id:newId(),t:tp,n,freq,date,ds,amts:[{f:"0",a}],end:null};RULES.push(r);saveRule(r);return r}
+function setForward(r,k,v){if(r.over)delete r.over[k];const e=r.amts.find(z=>z.f===k);if(e)e.a=v;else{r.amts.push({f:k,a:v});r.amts.sort((a,b)=>a.f<b.f?-1:1)}}
+const nextKey=k=>{const[y,m]=k.split("_").map(Number),d=new Date(y,m,1);return mk(d.getFullYear(),d.getMonth())};
 function ruleStop(r,k){if(startKey(r)>=k)dropRule(r);else{r.end=k;saveRule(r)}}
 const ruleById=id=>RULES.find(r=>r.id===id);
-function chip(r){const dt=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString(loc(),{day:"numeric",month:"short"})};if(r.rid)return "↻ "+t(r.freq==="m"?"fM":r.freq==="q"?"fQ":"fY")+(r.freq==="m"?"":" · "+dt(r.date));return t("chO")+(r.d?" · "+dt(r.d):"")}
-function upcoming(){const out=[],t0=new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()).getTime();for(let o=0;o<=13;o++){const d=new Date(NOW.getFullYear(),NOW.getMonth()+o,1),y=d.getFullYear(),m=d.getMonth(),k=mk(y,m);RULES.filter(r=>r.freq!=="m"&&due(r,y,m)).forEach(r=>{const day=Math.min(+r.date.split("-")[2],new Date(y,m+1,0).getDate()),at=new Date(y,m,day).getTime();if(at>=t0&&!out.some(u=>u.id===r.id))out.push({id:r.id,at,n:r.n,a:amtOf(r,k),tp:r.t,f:r.freq})});if(PM[k])RW.forEach(tp=>PM[k][tp].forEach(x=>{if(x.d){const at=new Date(x.d+"T12:00:00").getTime();if(at>=t0)out.push({at,n:x.n,a:x.a,tp,f:"o"})}}))}return out.sort((a,b)=>a.at-b.at).slice(0,5)}
+function chip(r){const dt=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString(loc(),{day:"numeric",month:"short"})};if(r.skip)return t("chSkip",mn(P.m).toLowerCase());if(r.rid){const last=r.end?(()=>{const[y,m]=r.end.split("_").map(Number);return new Date(y,m-2,1).toLocaleDateString(loc(),{month:"short"})})():"";return "↻ "+t(r.freq==="m"?"fM":r.freq==="q"?"fQ":"fY")+(r.freq==="m"?"":" · "+dt(r.date))+(last?t("chLast",last):"")}return t("chO")+(r.d?" · "+dt(r.d):"")}
+function upcoming(){const out=[],t0=new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()).getTime();for(let o=0;o<=13;o++){const d=new Date(NOW.getFullYear(),NOW.getMonth()+o,1),y=d.getFullYear(),m=d.getMonth(),k=mk(y,m);RULES.filter(r=>r.freq!=="m"&&due(r,y,m)&&!(r.skip||[]).includes(k)).forEach(r=>{const day=Math.min(+r.date.split("-")[2],new Date(y,m+1,0).getDate()),at=new Date(y,m,day).getTime();if(at>=t0&&!out.some(u=>u.id===r.id))out.push({id:r.id,at,n:r.n,a:amtOf(r,k),tp:r.t,f:r.freq})});if(PM[k])RW.forEach(tp=>PM[k][tp].forEach(x=>{if(x.d){const at=new Date(x.d+"T12:00:00").getTime();if(at>=t0)out.push({at,n:x.n,a:x.a,tp,f:"o"})}}))}return out.sort((a,b)=>a.at-b.at).slice(0,5)}
 const POTS={buf:"aBuf",goal:"aGoal",long:"aLong"};
 const rowName=l=>l.n||(POTS[l.k]?t(POTS[l.k]):"");
 const potName=l=>rowName(l)||t("potOther");
@@ -435,8 +455,8 @@ function planCalc(md){
   const inc=sum(md.inc),fixed=sum(md.items),vars=sum(md.vars),needs=fixed+vars,bal=total(),share=inc>0?needs/inc:1;
   const rate=share<=.5?.2:share<=.6?.15:share<=.7?.1:share<=.8?.05:0,lifeMin=inc*S.lifePct/100,recSave=Math.max(0,Math.min(inc*rate,inc-needs-lifeMin));
   const a=bal<needs?{buf:1,goal:0,long:0}:bal<S.buf*needs?{buf:.8,goal:.2,long:0}:{buf:0,goal:.4,long:.6};
-  const custom=Array.isArray(md.split);
-  const lines=custom?md.split:[["buf",recSave*a.buf],["goal",recSave*a.goal],["long",recSave*a.long]].filter(r=>r[1]>0).map(([k,v])=>({k,n:"",a:v}));
+  const sp=Array.isArray(md.split)?md.split:null,custom=!!sp,bi=G.reduce((s,g)=>s+(a[g.k]||0),0);
+  const lines=G.map(g=>({k:g.k,n:g.n,a:custom?((sp.find(l=>l.k===g.k)||{a:0}).a):(bi>0&&a[g.k]?recSave*a[g.k]/bi:0)}));
   const save=sum(lines),life=inc-needs-save,target=S.buf*needs,bufM=sum(lines.filter(l=>l.k==="buf")),left=Math.max(0,target-bal);
   return{inc,fixed,vars,needs,bal,share,save,life,lifeMin,target,months:bufM>0?Math.ceil(left/bufM):0,lines,custom};
 }
@@ -492,12 +512,13 @@ function renderYear(){
 }
 function yearScroll(){const sc=$("y_sc"),th=sc.querySelector("th.cur"),first=sc.querySelector("th");if(!sc.clientWidth)return;sc.scrollLeft=th?Math.max(0,th.offsetLeft-first.offsetWidth-120):0}
 const fmtA=v=>Math.round(v)?Math.round(v).toLocaleString("sv-SE"):"",parseA=v=>+String(v).replace(/\s/g,"").replace(",",".")||0;
-function rowHtml(rw,name,amt,i,extra,key){const k=key||`data-ix="${i}"`,ph=rw==="split"?t("goalPh"):t("linePh");return `<div class="lnw"><div class="ln"><input class="nm" type="text" id="${rw}_n${i}" data-rw="${rw}" data-f="n" ${k} value="${esc(name)}" maxlength="40" placeholder="${ph}" aria-label="${ph}"><span class="amw"><input class="am" type="text" inputmode="decimal" id="${rw}_a${i}" data-rw="${rw}" data-f="a" ${k} value="${fmtA(amt)}" placeholder="0" aria-label="kr"><span>kr</span></span><button class="x" data-delrw="${rw}" ${k} aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>${extra||""}</div>`}
+function rowHtml(rw,name,amt,i,extra,key){const k=key||`data-ix="${i}"`,ph=t("linePh");if(rw==="split")return `<div class="lnw"><div class="ln s"><span class="nmt">${esc(name)}</span><span class="amw"><input class="am" type="text" inputmode="decimal" id="split_a${i}" data-rw="split" data-f="a" ${k} value="${fmtA(amt)}" placeholder="0" aria-label="kr"><span>kr</span></span></div>${extra||""}</div>`;return `<div class="lnw"><div class="ln"><input class="nm" type="text" id="${rw}_n${i}" data-rw="${rw}" data-f="n" ${k} value="${esc(name)}" maxlength="40" placeholder="${ph}" aria-label="${ph}"><span class="amw"><input class="am" type="text" inputmode="decimal" id="${rw}_a${i}" data-rw="${rw}" data-f="a" ${k} value="${fmtA(amt)}" placeholder="0" aria-label="kr"><span>kr</span></span><button class="x" data-delrw="${rw}" ${k} aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>${extra||""}</div>`}
 let splitSig=null;
 function buildSheet(){const md=cur(),p=planCalc(md);
-  RW.forEach(rw=>{$("l_"+rw).innerHTML=md[rw].map((r,i)=>{const key=r.rid?`data-rid="${r.rid}"`:`data-ix="${r.ix}"`;return rowHtml(rw,r.n,r.a,i,`<button class="freq ${r.rid?"on":""}" data-rs="${rw}" ${key}>${esc(chip(r))}</button>`,key)}).join("")});
+  RW.forEach(rw=>{$("l_"+rw).innerHTML=md[rw].map((r,i)=>{const key=r.rid?`data-rid="${r.rid}"`:`data-ix="${r.ix}"`;return rowHtml(rw,r.n,r.a,i,`<button class="freq ${r.skip?"skip":r.rid?"on":""}" ${r.skip?`data-rdel="${r.rid}"`:`data-rs="${rw}"`} ${key}>${esc(chip(r))}</button>`,key)}).join("");md[rw].forEach((r,i)=>{if(r.skip)$(rw+"_a"+i).readOnly=true})});
   splitSig=p.lines.map(l=>l.k).join();
-  $("l_split").innerHTML=p.lines.map((l,i)=>rowHtml("split",rowName(l),l.a,i,`<div class="spst" data-spst="${i}"></div>`)).join("")}
+  $("l_split").innerHTML=p.lines.map((l,i)=>rowHtml("split",potName(l),l.a,i,`<div class="spst" data-spst="${i}"></div>`,`data-k="${l.k}"`)).join("")||`<p class="note">${t("noGoals")}</p><button class="lnk" data-go="s">${t("toGoals")}</button>`}
+function buildGoals(){$("s_goals").innerHTML=G.map(g=>`<div class="lnw"><div class="ln g"><input class="nm" type="text" id="goal_${g.k}" data-goal="${g.k}" value="${esc(rowName(g))}" maxlength="40" placeholder="${t("goalPh")}" aria-label="${t("goalPh")}"><button class="x" data-gdel="${g.k}" aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div></div>`).join("")}
 function renderBudget(){
   const md=cur(),p=planCalc(md),{y,m}=pmSel(),ae=document.activeElement,inS=ae&&ae.closest&&ae.closest("#l_split");
   $("b_per").innerHTML=mnavHtml();$("sum_inc").textContent=kr(p.inc);$("sum_out").textContent=kr(p.fixed);$("sum_var").textContent=kr(p.vars);$("sum_rest").textContent=kr(p.save);$("r_intro").textContent=t("restIntro",kr(p.inc-p.needs));
@@ -571,7 +592,7 @@ const setF=(k,l)=>`<div class="set"><label for="f_${k}">${t(l)}</label><input id
 function build(){
   $("set_in").innerHTML=setF("adults","fAdults")+setF("buf","bufF")+setF("lifePct","lifeF");
   $("x_in").innerHTML=setF("gx","fGross")+setF("rate","fRatef")+`<details style="margin-top:8px"><summary class="lbl">${t("adv")}</summary><div class="adv">${[["ga","advG"],["jk","advJ"],["ts","advT"],["tr","advR"],["fe","advF"]].map(([k,l])=>`<div><label for="f_${k}">${t(l)}</label><input id="f_${k}" type="number" data-s="${k}" value="${S[k]}" step="any"></div>`).join("")}</details>`;
-  buildSheet();
+  buildSheet();buildGoals();
 }
 function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render()}
 function render(){$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderSpend();renderTax();renderResults();renderMarket();renderSettings();FX.sync(planCalc(nowMd()))}
@@ -590,19 +611,35 @@ function go(x){tab=x;closeYears();FX.tab(x);setTimeout(yearScroll,0);["h","b","s
 $("menu").onclick=()=>{$("drawer").classList.add("on");$("scrim").classList.add("on")};$("scrim").onclick=()=>{$("drawer").classList.remove("on");$("scrim").classList.remove("on")};
 
 document.addEventListener("input",e=>{const x=e.target;
+  if(x.dataset.goal){const g=G.find(z=>z.k===x.dataset.goal);if(g){g.n=x.value;saveGoals();buildSheet();render()}return}
   if(x.dataset.s){const k=x.dataset.s;S[k]=+x.value||0;if(["saved","buf","lifePct","adults"].includes(k))persist();render()}
   else if(x.dataset.rw){const rw=x.dataset.rw,f=x.dataset.f,v=f==="a"?Math.max(0,parseA(x.value)):x.value;
-    if(x.dataset.rid){const r=ruleById(x.dataset.rid),k=mk(P.y,P.m);if(r){if(f==="n")r.n=v;else{const e=r.amts.find(z=>z.f===k);if(e)e.a=v;else{r.amts.push({f:k,a:v});r.amts.sort((a,b)=>a.f<b.f?-1:1)}}saveRule(r)}}
-    else{const i=+x.dataset.ix;if(rw==="split")splitEdit(s=>{if(s[i])s[i][f]=v});else editMonth(md=>{if(md[rw][i])md[rw][i][f]=v})}render()}});
+    if(x.dataset.rid){const r=ruleById(x.dataset.rid),k=mk(P.y,P.m);if(r){if(f==="n")r.n=v;else setForward(r,k,v);saveRule(r)}}
+    else if(rw==="split"){const g=x.dataset.k;splitEdit(s=>{const e=s.find(l=>l.k===g);if(e)e.a=v;else s.push({k:g,n:"",a:v})})}
+    else{const i=+x.dataset.ix;editMonth(md=>{if(md[rw][i])md[rw][i][f]=v})}render()}});
 document.addEventListener("focusout",e=>{const x=e.target;if(x.dataset&&x.dataset.rw&&x.dataset.f==="a")x.value=fmtA(parseA(x.value))});
-let RS=null;
-function paintRS(){$("rs_f").innerHTML=[["o","fO"],["m","fM"],["q","fQ"],["y","fY"]].map(([v,l])=>`<button class="${RS.f===v?"on":""}" data-rf="${v}">${t(l)}</button>`).join("");$("rs_l").textContent=t(RS.f==="o"?"pickOpt":RS.f==="m"?"pickOpt":"pickFirst");$("rs_h").textContent=RS.f==="o"?t("hO",mn(P.m).toLowerCase()):t(RS.f==="m"?"hM":RS.f==="q"?"hQ":"hY")}
-function openRS(rw,rid,ix){const r=rid?ruleById(rid):null,raw=rawMonth(P.y,P.m),x=r?null:raw[rw][+ix];if(!r&&!x)return;RS={rw,rid,ix:+ix,f:r?r.freq:"o"};$("rs_t").textContent=(r?r.n:x.n)||t("linePh");$("rs_d").value=r?(r.ds||r.freq!=="m"?r.date:""):(x.d||"");$("rs_no").textContent=t("cancel");$("rs_ok").textContent=t("saveW");paintRS();$("rs").classList.add("on")}
+let RS=null,RD=null;
+function openRD(id){const r=ruleById(id);if(!r)return;RD=id;const k=mk(P.y,P.m),M=mn(P.m).toLowerCase(),sk=(r.skip||[]).includes(k),o=[];
+  if(sk)o.push(["unskip",t("rdUn",M),""]);else{o.push(["end",t("rdEnd",M),t("rdEndS",M)]);o.push(["skip",t("rdSkip",M),t("rdSkipS")])}
+  if(r.end)o.push(["cont",t("rdCont"),t("rdContS")]);o.push(["kill",t("rdKill"),t("rdKillS")]);
+  $("rd_t").textContent=r.n||t("rdT");$("rd_s").textContent=t("rdT");$("rd_no").textContent=t("cancel");$("rd_o").innerHTML=o.map(([v,a,b])=>`<button class="opt ${v==="kill"?"bad":""}" data-rdo="${v}">${esc(a)}${b?`<small>${esc(b)}</small>`:""}</button>`).join("");$("rd").classList.add("on")}
+const closeRD=()=>{$("rd").classList.remove("on");RD=null};
+$("rd_no").onclick=closeRD;$("rd").addEventListener("click",e=>{if(e.target===$("rd"))closeRD()});
+function doRD(a){const r=ruleById(RD);if(!r)return closeRD();const k=mk(P.y,P.m),M=mn(P.m).toLowerCase();
+  if(a==="end"){r.end=nextKey(k);saveRule(r);toast(t("tEnd",M))}
+  else if(a==="skip"){r.skip=[...(r.skip||[]),k];saveRule(r);toast(t("tSkip",M))}
+  else if(a==="unskip"){r.skip=(r.skip||[]).filter(x=>x!==k);saveRule(r);toast(t("tBack"))}
+  else if(a==="cont"){r.end=null;saveRule(r);toast(t("tBack"))}
+  else if(a==="kill"){dropRule(r);toast(t("tKill"))}
+  closeRD();buildSheet();render()}
+$("g_add").onclick=()=>{const k="c"+Date.now();G.push({k,n:""});saveGoals();buildGoals();buildSheet();render();$("goal_"+k).focus()};
+function paintRS(){$("rs_f").innerHTML=[["o","fO"],["m","fM"],["q","fQ"],["y","fY"]].map(([v,l])=>`<button class="${RS.f===v?"on":""}" data-rf="${v}">${t(l)}</button>`).join("");$("rs_l").textContent=t(RS.f==="o"?"pickOpt":RS.f==="m"?"pickOpt":"pickFirst");$("rs_h").textContent=RS.f==="o"?t("hO",mn(P.m).toLowerCase()):t(RS.f==="m"?"hM":RS.f==="q"?"hQ":"hY");$("rs_amt").classList.toggle("hide",!RS.rid||RS.f==="o");$("rs_al").textContent=t("amtIn",mn(P.m).toLowerCase());$("rs_sc").innerHTML=[["fwd","scFwd"],["one","scOne"]].map(([v,l])=>`<button class="${RS.sc===v?"on":""}" data-sc="${v}">${t(l)}</button>`).join("")}
+function openRS(rw,rid,ix){const r=rid?ruleById(rid):null,raw=rawMonth(P.y,P.m),x=r?null:raw[rw][+ix];if(!r&&!x)return;RS={rw,rid,ix:+ix,f:r?r.freq:"o",sc:"fwd"};$("rs_a").value=r?fmtA(amtOf(r,mk(P.y,P.m))):"";$("rs_t").textContent=(r?r.n:x.n)||t("linePh");$("rs_d").value=r?(r.ds||r.freq!=="m"?r.date:""):(x.d||"");$("rs_no").textContent=t("cancel");$("rs_ok").textContent=t("saveW");paintRS();$("rs").classList.add("on")}
 const closeRS=()=>{$("rs").classList.remove("on");RS=null};
 $("rs_no").onclick=closeRS;$("rs").addEventListener("click",e=>{if(e.target===$("rs"))closeRS()});
 $("rs_ok").onclick=()=>{if(!RS)return;const{rw,rid,ix,f}=RS,d=$("rs_d").value,k=mk(P.y,P.m);if((f==="q"||f==="y")&&!d){toast(t("needDate"));return}
   const place=(n,a,dt)=>{const at=dt?dt.split("-").map(Number):[P.y,P.m+1],y=at[0],m=at[1]-1,row={n,a,...(dt?{d:dt}:{})};editMonth(md=>md[rw].push(row),y,m);if(y!==P.y||m!==P.m)toast(t("tMoved",mn(m).toLowerCase()))};
-  if(rid){const r=ruleById(rid);if(!r)return closeRS();if(f==="o"){const a=amtOf(r,k),n=r.n;ruleStop(r,k);place(n,a,d)}else{r.freq=f;if(d){r.date=d;r.ds=true}else if(f==="m")r.ds=false;saveRule(r)}}
+  if(rid){const r=ruleById(rid);if(!r)return closeRS();if(f==="o"){const a=amtOf(r,k),n=r.n;ruleStop(r,k);place(n,a,d)}else{const v=parseA($("rs_a").value);if(v!==amtOf(r,k)||(RS.sc==="fwd"&&r.over&&r.over[k]!=null)){if(RS.sc==="one")r.over={...(r.over||{}),[k]:v};else setForward(r,k,v)}r.freq=f;if(d){r.date=d;r.ds=true}else if(f==="m")r.ds=false;saveRule(r)}}
   else{const raw=rawMonth(P.y,P.m),x=raw[rw][ix];if(!x)return closeRS();if(f==="o"){const[dy,dm]=d?d.split("-").map(Number):[P.y,P.m+1];if(dy===P.y&&dm-1===P.m)editMonth(md=>{if(d)md[rw][ix].d=d;else delete md[rw][ix].d});else{editMonth(md=>{md[rw].splice(ix,1)});place(x.n,x.a,d)}}else{editMonth(md=>{md[rw].splice(ix,1)});newRule(rw,x.n,x.a,f,d||defDate(),!!d)}}
   closeRS();buildSheet();render()};
 let depBusy=false;
@@ -640,14 +677,17 @@ document.addEventListener("click",e=>{
   if(e.target.closest("[data-now]")){P={y:NOW.getFullYear(),m:NOW.getMonth()};refreshMonth();return}
   const ad=e.target.closest("[data-add]");
   if(ad){const rw=ad.dataset.add;let sel;
-    if(rw==="split"){splitEdit(s=>s.push({k:"c"+Date.now(),n:"",a:0}));buildSheet();render();sel="#split_n"+(planCalc(cur()).lines.length-1)}
-    else if(rw==="vars"){editMonth(md=>md.vars.push({n:"",a:0}));buildSheet();render();sel=`[data-rw="vars"][data-f="n"][data-ix="${rawMonth(P.y,P.m).vars.length-1}"]`}
+    if(rw==="vars"){editMonth(md=>md.vars.push({n:"",a:0}));buildSheet();render();sel=`[data-rw="vars"][data-f="n"][data-ix="${rawMonth(P.y,P.m).vars.length-1}"]`}
     else{const r=newRule(rw,"",0,"m",defDate(),false);buildSheet();render();sel=`[data-rid="${r.id}"][data-f="n"]`}
     const f=document.querySelector(sel);if(f)f.focus();return}
   const rs=e.target.closest("[data-rs]");if(rs){openRS(rs.dataset.rs,rs.dataset.rid,rs.dataset.ix);return}
   const rf=e.target.closest("[data-rf]");if(rf){RS.f=rf.dataset.rf;paintRS();return}
+  const sc=e.target.closest("[data-sc]");if(sc){RS.sc=sc.dataset.sc;paintRS();return}
   const dr=e.target.closest("[data-delrw]");
-  if(dr){const rw=dr.dataset.delrw;if(dr.dataset.rid){const r=ruleById(dr.dataset.rid);if(r){ruleStop(r,mk(P.y,P.m));toast(t("tStop",mn(P.m).toLowerCase()))}}else{const i=+dr.dataset.ix;if(rw==="split")splitEdit(s=>{s.splice(i,1)});else editMonth(md=>{md[rw].splice(i,1)})}buildSheet();render();return}
+  if(dr){const rw=dr.dataset.delrw;if(dr.dataset.rid){openRD(dr.dataset.rid);return}const i=+dr.dataset.ix;editMonth(md=>{md[rw].splice(i,1)});buildSheet();render();return}
+  const rdl=e.target.closest("[data-rdel]");if(rdl){openRD(rdl.dataset.rdel);return}
+  const rdo=e.target.closest("[data-rdo]");if(rdo){doRD(rdo.dataset.rdo);return}
+  const gd=e.target.closest("[data-gdel]");if(gd){G=G.filter(z=>z.k!==gd.dataset.gdel);saveGoals();buildGoals();buildSheet();render();toast(t("tKill"));return}
   const dp=e.target.closest("[data-dep]");
   if(dp){const l=planCalc(cur()).lines[+dp.dataset.dep];if(l){const left=Math.round(l.a-potIn(l.k,P.y,P.m));if(left>0)addDep(1,{amount:left,k:l.k})}return}
   const del=e.target.closest("[data-del]");
@@ -725,19 +765,23 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
   const importOld=async()=>{const u=await claude.use("user"),id=u&&await u.id();if(!id)return;const o=await db.collection("data/users/"+id).get();for(const d of o.docs)await col.doc(d.id).set({...d.data()})};
   col.onSnapshot(snap=>{
     if(!checked&&!snap.metadata.fromCache){checked=true;if(snap.empty)importOld().catch(()=>{})}
-    const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});const keepR=RULES.filter(r=>DIRTYR.has(r.id)),real=snap.docs.some(d=>/^(pm|rec|dep|exp)_/.test(d.id)),ex=exampleMode&&!real;if(!ex){exampleMode=false;PM={};RULES=[]}deps=[];exps=[];allIds=snap.docs.map(d=>d.id);const old=S.lang;
+    const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});const keepR=RULES.filter(r=>DIRTYR.has(r.id)),real=snap.docs.some(d=>/^(pm|rec|dep|exp)_/.test(d.id)),ex=exampleMode&&!real;if(!ex){exampleMode=false;PM={};RULES=[]}deps=[];exps=[];allIds=snap.docs.map(d=>d.id);const old=S.lang;let sawGoals=false;
     snap.docs.forEach(d=>{const v=d.data()||{};
       if(d.id==="plan"){["saved","buf","lifePct","adults"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
       else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
-      else if(v.kind==="rec"&&Array.isArray(v.amts)&&v.amts.length&&!ex)RULES.push({id:String(v.id),t:v.t,n:String(v.n||""),freq:v.freq,date:String(v.date),ds:!!v.ds,amts:v.amts.map(x=>({f:String(x.f),a:+x.a||0})),end:v.end||null});
+      else if(v.kind==="goals"){sawGoals=true;if(!goalsDirty&&Array.isArray(v.list))G=v.list.map(g=>({k:String(g.k),n:String(g.n||"")}))}
+      else if(v.kind==="rec"&&Array.isArray(v.amts)&&v.amts.length&&!ex)RULES.push({id:String(v.id),t:v.t,n:String(v.n||""),freq:v.freq,date:String(v.date),ds:!!v.ds,amts:v.amts.map(x=>({f:String(x.f),a:+x.a||0})),end:v.end||null,over:v.over&&typeof v.over==="object"?{...v.over}:{},skip:Array.isArray(v.skip)?[...v.skip]:[]});
       else if(v.kind==="exp"&&typeof v.amount==="number")exps.push({id:d.id,amount:v.amount,note:v.note||"",on:v.on||0});
       else if(typeof v.amount==="number")deps.push({id:d.id,amount:v.amount,note:v.note||"",at:v.at||0,pot:v.pot||"",potN:v.potN||""})});
-    Object.assign(PM,keep);keepR.forEach(r=>{const i=RULES.findIndex(x=>x.id===r.id);if(i>=0)RULES[i]=r;else RULES.push(r)});
+    Object.assign(PM,keep);
+    /* Older budgets kept goals inside each month: gather their custom goals into the shared list once. */
+    if(!exampleMode&&!sawGoals&&!goalsDirty){Object.keys(PM).sort().forEach(k=>(PM[k].split||[]).forEach(l=>{const g=G.find(z=>z.k===l.k);if(g){if(l.n)g.n=l.n}else G.push({k:l.k,n:l.n})}));saveGoals()}
+    keepR.forEach(r=>{const i=RULES.findIndex(x=>x.id===r.id);if(i>=0)RULES[i]=r;else RULES.push(r)});
     /* Budgets saved before repeating lines existed: the latest month's lines become monthly, as they used to carry over. */
     if(!exampleMode&&!S.recV){S.recV=1;persist();const ks=Object.keys(PM).sort(),K=ks[ks.length-1];if(!RULES.length&&K){const date=K.replace("_","-")+"-01";RW.forEach(tp=>{PM[K][tp].forEach(x=>{if(x.n||x.a)newRule(tp,x.n,x.a,"m",date,false)});PM[K][tp]=[]});col.doc("pm_"+K).set(pmDoc(K)).catch(()=>{})}}
     if(!seenData&&hasData()){seenData=true;if(!WIDE.matches)$("d_inc").open=false}
     applyTheme();
     if(S.lang!==old){applyLang();go(tab);return}
-    const ae=document.activeElement;if(!ae||!ae.closest("#b"))buildSheet();render()},()=>{col=null;render()});
+    {const ae=document.activeElement;if(!ae||!ae.closest("#b,#s_goals")){buildSheet();buildGoals()}}render()},()=>{col=null;render()});
 }catch(e){}})();
 </script>
