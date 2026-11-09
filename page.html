@@ -233,7 +233,7 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 .toast.win{animation:tin .34s cubic-bezier(.2,1.25,.35,1),glow 1s .1s,tout .3s 3.1s forwards}
 @keyframes tin{from{transform:translateY(-22px) scale(.95);opacity:0}}@keyframes glow{40%{box-shadow:0 0 0 3px color-mix(in srgb,var(--c3) 45%,transparent),var(--shadow)}}
 
-#b_per .mnav b{cursor:pointer}#b_per .mnav b::after{content:"";display:inline-block;width:7px;height:7px;margin-left:9px;vertical-align:4px;border-right:2px solid var(--soft);border-bottom:2px solid var(--soft);transform:rotate(45deg)}
+.mnav b{cursor:pointer}.mnav b::after{content:"";display:inline-block;width:7px;height:7px;margin-left:9px;vertical-align:4px;border-right:2px solid var(--soft);border-bottom:2px solid var(--soft);transform:rotate(45deg)}
 
 .lnk[data-add],#g_add{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:46px;margin-top:8px;padding:6px 12px;border:1.5px dashed color-mix(in srgb,var(--pen) 42%,transparent);border-radius:14px;background:color-mix(in srgb,var(--pen) 8%,transparent);color:var(--pen);font-size:15px;font-weight:650;text-align:center}
 .lnk[data-add]::before,#g_add::before{content:"";flex:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(var(--paper),var(--paper)) center/10px 2px no-repeat,linear-gradient(var(--paper),var(--paper)) center/2px 10px no-repeat,var(--pen)}
@@ -273,6 +273,9 @@ nav .nhead{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:up
 @media (min-width:700px){#l>:nth-child(1){grid-column:span 5}#l>:nth-child(2){grid-column:span 7}}
 
 .split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.split>div{min-width:0;display:flex;flex-direction:column;gap:3px}.split>div+div{border-left:1px solid var(--rule);padding-left:15px;margin-left:0}.split span{font-size:14px;font-weight:600;color:var(--soft)}.split b{font:700 clamp(21px,6.4vw,28px)/1.1 var(--hand);letter-spacing:-.02em;overflow-wrap:anywhere}
+
+#drawer>button[data-go="c"]{margin-top:auto}#drawer small{margin-top:10px}
+#yrs{bottom:auto;transform-origin:top center;transform:translateY(-14px) scale(.72,.2)}
 </style>
 
 <canvas id="fx" aria-hidden="true"></canvas>
@@ -280,7 +283,7 @@ nav .nhead{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:up
 <div id="modal"><div class="mbox"><b id="m_t"></b><p id="m_p"></p><div class="mact"><button class="btn out" id="m_no"></button><button class="btn" id="m_yes"></button></div></div></div>
 <aside id="drawer">
 <h2>Kronkoll</h2>
-<button data-go="e" data-i="ttlE"></button><div class="sideh" data-i="toolsH"></div><button data-go="x" data-i="ttlX"></button><button data-go="v" data-i="ttlV"></button><button data-go="l" data-i="ttlL"></button><div class="sideh" style="height:6px;padding:0"></div><button data-go="c" data-i="ttlC"></button>
+<button data-go="e" data-i="ttlE"></button><div class="sideh" data-i="toolsH"></div><button data-go="x" data-i="ttlX"></button><button data-go="v" data-i="ttlV"></button><button data-go="l" data-i="ttlL"></button><button data-go="c" data-i="ttlC"></button>
 <small data-i="disc"></small>
 </aside>
 <div id="rs"><div class="mbox"><b id="rs_t"></b><div class="seg" id="rs_f"></div><label for="rs_d" id="rs_l"></label><input id="rs_d" type="date"><p class="note" id="rs_h"></p><div id="rs_amt"><label for="rs_a" id="rs_al"></label><input id="rs_a" type="text" inputmode="decimal"><div class="seg" id="rs_sc"></div></div><div style="height:14px"></div><div class="mact"><button class="btn out" id="rs_no"></button><button class="btn" id="rs_ok"></button></div></div></div>
@@ -674,11 +677,10 @@ function render(){$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();r
 function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,taxT:S.taxT,taxPay:S.taxPay,taxPct:S.taxPct,taxMode:S.taxMode,payH:S.payH,payR:S.payR,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,click:S.click,recV:S.recV||0}).catch(()=>{}),150)}
 const yrOpen=()=>$("yrs").classList.contains("on");
 function closeYears(){$("yrs").classList.remove("on")}
-function openYears(){const y0=NOW.getFullYear(),ys=new Set([P.y]);for(let y=y0-5;y<=y0+10;y++)ys.add(y);[...deps.map(d=>d.at),...exps.map(e=>e.on)].forEach(x=>x&&ys.add(new Date(x).getFullYear()));Object.keys(PM).forEach(k=>ys.add(+k.slice(0,4)));
+addEventListener("scroll",()=>{if(yrOpen())closeYears()},{passive:true});
+function openYears(anchor){const y0=NOW.getFullYear(),ys=new Set([P.y]);for(let y=y0-5;y<=y0+10;y++)ys.add(y);[...deps.map(d=>d.at),...exps.map(e=>e.on)].forEach(x=>x&&ys.add(new Date(x).getFullYear()));Object.keys(PM).forEach(k=>ys.add(+k.slice(0,4)));
   $("yr_list").innerHTML=[...ys].sort((a,b)=>b-a).map(y=>`<button class="${y===P.y?"on":""}" data-yr="${y}">${y}</button>`).join("");
-  const nb=$("nav_b").getBoundingClientRect(),w=$("yrs").offsetWidth;
-  if(RAIL.matches){const h=$("yrs").offsetHeight;$("yrs").style.left=(nb.right+18)+"px";$("yrs").style.bottom=Math.max(12,Math.min(innerHeight-h-12,innerHeight-nb.top-nb.height/2-h/2))+"px"}
-  else{$("yrs").style.left=Math.max(12,Math.min(innerWidth-w-12,nb.left+nb.width/2-w/2))+"px";$("yrs").style.bottom=(innerHeight-document.querySelector("nav").getBoundingClientRect().top+8)+"px"}
+  const a=anchor.getBoundingClientRect(),w=$("yrs").offsetWidth;$("yrs").style.left=Math.max(12,Math.min(innerWidth-w-12,a.left+a.width/2-w/2))+"px";$("yrs").style.top=(a.bottom+10)+"px";
   const on=$("yr_list").querySelector(".on");if(on)$("yr_list").scrollTop=on.offsetTop-$("yr_list").offsetTop-96;
   $("yrs").classList.add("on")}
 function refreshMonth(){setDates();buildSheet();render()}
@@ -731,8 +733,8 @@ let rt;$("reset").onclick=async()=>{const b=$("reset");
   deps=[];exps=[];PM={};S.saved=0;seedExample();build();render();persist();toast(t("tDel"))};
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
-  if(g){const again=g.id==="nav_b"&&tab==="b",was=yrOpen();go(g.dataset.go);if(again&&!was)openYears();return}
-  if(e.target.closest("#b_per .mnav b")){if(yrOpen())closeYears();else openYears();return}
+  if(g){go(g.dataset.go);return}
+  const yt=e.target.closest(".mnav b");if(yt){if(yrOpen())closeYears();else openYears(yt);return}
   const yr=e.target.closest("[data-yr]");
   if(yr){P.y=+yr.dataset.yr;if(P.y===NOW.getFullYear())P.m=NOW.getMonth();closeYears();refreshMonth();return}
   if(yrOpen()&&!e.target.closest("#yrs"))closeYears();
