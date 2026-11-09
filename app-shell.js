@@ -11,9 +11,9 @@
   const snap=p=>{const m=data[p]||{},docs=Object.keys(m).sort().map(id=>({id,exists:true,data:()=>copy(m[id]),metadata:{fromCache:false,hasPendingWrites:false}}));return{docs,size:docs.length,empty:!docs.length,metadata:{fromCache:false,hasPendingWrites:false}}};
   const fire=p=>setTimeout(()=>(subs[p]||[]).forEach(f=>f(snap(p))),0);
   const col=p=>({path:p,doc:id=>({id,set:async d=>{fresh();(data[p]=data[p]||{})[id]=copy(d);write();fire(p)},update:async d=>{fresh();data[p][id]={...data[p][id],...copy(d)};write();fire(p)},delete:async()=>{fresh();if(data[p])delete data[p][id];write();fire(p)}}),get:async()=>snap(p),onSnapshot:n=>{(subs[p]=subs[p]||[]).push(n);setTimeout(()=>n(snap(p)),0);return()=>{subs[p]=subs[p].filter(f=>f!==n)}}});
-  const market={onSnapshot(next){const load=()=>fetch("market.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(v=>{if(v)next({exists:true,data:()=>v})}).catch(()=>{});load();document.addEventListener("visibilitychange",()=>{if(!document.hidden)load()});return()=>{}}};
+  const feed=file=>({onSnapshot(next){const load=()=>fetch(file,{cache:"no-store"}).then(r=>r.ok?r.json():null).then(v=>{if(v)next({exists:true,data:()=>v})}).catch(()=>{});load();document.addEventListener("visibilitychange",()=>{if(!document.hidden)load()});return()=>{}}});
   addEventListener("storage",e=>{if(e.key===KEY){fresh();Object.keys(subs).forEach(fire)}});
-  const db={collection:col,doc:p=>{if(p==="market/latest")return market;throw new TypeError("Unknown document "+p)}};
+  const db={collection:col,doc:p=>{if(p==="market/latest")return feed("market.json");if(p==="market/prices")return feed("prices.json");throw new TypeError("Unknown document "+p)}};
   window.claude={use:async n=>n==="db"?db:null};
   function backup(){const r=document.getElementById("reset");if(!r)return;
     const box=document.createElement("div");box.style.cssText="display:grid;gap:8px;margin-bottom:8px";
