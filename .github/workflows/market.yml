@@ -1,0 +1,28 @@
+name: Update market prices
+on:
+  schedule:
+    - cron: "17 7-21 * * 1-5"
+    - cron: "17 10 * * 0,6"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["tools/**", ".github/workflows/market.yml"]
+permissions:
+  contents: write
+concurrency: market
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/update_market.py
+      - name: Save new prices
+        run: |
+          git config user.name "kronkoll-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add prices.json market.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update market prices"
+          git pull --rebase origin main
+          git push
