@@ -180,6 +180,42 @@ nav .more{display:none}
 .ytable tr.sum td{font-weight:650}
 .ytable th.cur{color:var(--ink)}
 @media (min-width:700px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}.ybars{height:190px}.tile b{font-size:28px}}
+
+/* Repeating lines: a small chip under each line, opens the schedule sheet. */
+.freq{display:block;border:0;background:none;padding:0 0 8px;margin-top:-6px;color:var(--soft);font-size:13px;font-weight:600;text-align:left}
+.freq.on{color:var(--pen)}
+#rs{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));background:rgba(5,10,20,.55);opacity:0;pointer-events:none;transition:opacity .2s}
+#rs.on{opacity:1;pointer-events:auto}
+#rs .mbox b{display:block}
+.seg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:12px 0}
+.seg button{min-height:46px;border:1px solid var(--rule);border-radius:12px;background:none;font-size:15px;font-weight:600}.seg button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+#rs label{display:block;font-size:14px;color:var(--soft);margin-bottom:6px}
+#rs input{width:100%;height:48px;padding:0 12px;border:1px solid var(--rule);border-radius:12px;background:none}
+#rs .note{margin:8px 0 14px}
+.up{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:8px;align-items:baseline;padding-block:9px;border-bottom:1px solid var(--rule)}.up:last-child{border:0;padding-bottom:0}.up small{display:block;color:var(--soft);font-size:13px}.up b{font-weight:650;white-space:nowrap}.up .dt{color:var(--soft);font-size:14px}
+/* Compact year table for phones: one line per month, nothing to scroll. */
+table.mini th,table.mini td{position:static!important;background:none!important;min-width:0!important;padding:8px 0 8px 6px!important;font-size:13.5px}
+table.mini th:first-child,table.mini td:first-child{padding-left:0!important}
+table.mini tr.cur td{font-weight:750}table.mini tr.tot td{font-weight:750;border-top:2px solid var(--rule)}
+@media (max-width:699px){
+  main,section{gap:10px}
+  body{padding-block:10px calc(92px + env(safe-area-inset-bottom,0px))}
+  .top{border-radius:16px;padding-right:12px}h1{font-size:21px}.menu{width:40px;height:40px}
+  .sheet{padding:15px;border-radius:18px}
+  .big{font-size:clamp(40px,12.4vw,50px)}.big.verdict{font-size:30px;line-height:1.1}
+  .head{font-size:18px}.sumv{font-size:16px}.lbl,.note{font-size:13.5px}
+  .row{padding-block:8px;font-size:15px}.row b{font-size:15.5px}
+  .mnav{border-radius:16px}.mnav b{font-size:19px}.mnav button{width:40px;height:40px}
+  #h_keys,#y_keys{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px 10px}
+  .tiles{gap:6px}.tile{padding:10px 11px;border-radius:12px}.tile b{font-size:19px}.tile .lbl{font-size:12.5px}
+  .ybars{height:124px;margin-top:14px;gap:3px}
+  .ln .am{width:4.7em;font-size:16px}.ln input{font-size:16px;height:44px}
+  .lnw{padding-left:12px}
+  .find{padding-block:10px}.find p{font-size:14px}
+  .btn,.form input,.form select{min-height:46px;height:auto}.form input,.form select{height:46px}
+  nav{width:calc(100% - 20px);bottom:calc(7px + env(safe-area-inset-bottom,0px));padding:4px;border-radius:20px}
+  nav button{min-height:50px;font-size:10.5px;padding:5px 0 3px;border-radius:16px}nav svg{width:20px;height:20px;margin-bottom:2px}
+}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -192,6 +228,7 @@ nav .more{display:none}
 <button data-go="e" data-i="ttlE"></button><button data-go="x" data-i="ttlX"></button><button data-go="c" data-i="ttlC"></button>
 <small data-i="disc"></small>
 </aside>
+<div id="rs"><div class="mbox"><b id="rs_t"></b><div class="seg" id="rs_f"></div><label for="rs_d" id="rs_l"></label><input id="rs_d" type="date"><p class="note" id="rs_h"></p><div class="mact"><button class="btn out" id="rs_no"></button><button class="btn" id="rs_ok"></button></div></div></div>
 <div id="yrs"><p data-i="pickYear"></p><div id="yr_list"></div></div>
 
 <main>
@@ -204,6 +241,7 @@ nav .more{display:none}
 <div class="stack" id="h_stack"></div><div class="keys" id="h_keys"></div>
 </div>
 <div class="sheet" id="h_lines"></div>
+<div class="sheet hide" id="h_next"><p class="head" data-i="nextHead"></p><div id="h_up"></div></div>
 <div class="sheet" id="h_year"><div class="yhead"><p class="head" id="y_t" style="margin:0"></p><div class="ynav"><button data-hy="-1" aria-label="‹">‹</button><button data-hy="1" aria-label="›">›</button></div></div><div class="tiles" id="y_tiles"></div><div class="ybars" id="y_bars"></div><div class="keys" id="y_keys"></div><div class="scroll ytable" id="y_sc"><table id="y_tbl"></table></div></div>
 <div class="sheet"><div class="lbl" data-i="topNow"></div><div id="h_top"></div><button class="lnk" data-go="r" data-i="seeAll"></button></div>
 <button class="btn out" data-go="e" data-i="addBuy"></button>
@@ -304,14 +342,14 @@ leftIn:[m=>`Kvar att leva på i ${m}`,m=>`Left to live on in ${m}`],perDay:[(d,n
 needs:["Räkningar","Bills"],fixedL:["Fasta","Fixed"],varL:["Rörliga","Variable"],saving:["Sparande","Saving"],life:["Eget liv","Living"],
 in:["Inkomster","Income"],out:["Fasta utgifter","Fixed expenses"],varOut:["Rörliga utgifter","Variable expenses"],rem:["Återstående","Remaining"],totOut:["Summa utgifter","Total expenses"],sRate:["Sparkvot","Savings rate"],totSave:["Total sparad summa","Total saved"],yearT:[y=>`Hela ${y}`,y=>`All of ${y}`],total:["Totalt","Total"],savedIn:[m=>`Sparat i ${m}`,m=>`Saved in ${m}`],ofP:[(s,p)=>`${s} av ${p}`,(s,p)=>`${s} of ${p}`],
 topNow:["Viktigast just nu","Most important right now"],seeAll:["Se hela resultatet →","See all results →"],exNote:["Det här är exempelsiffror. Skriv över dem med era egna.","These are example figures. Replace them with your own."],exGo:["Öppna budgeten →","Open the budget →"],addBuy:["＋ Lägg till ett köp","＋ Add a purchase"],
-incHead:["Inkomster","Income"],outHead:["Fasta utgifter","Fixed expenses"],restHead:["Sparande","Saving"],restSub:["Fördela resten","Split the rest"],varHead:["Rörliga utgifter","Variable expenses"],newLine:["＋ Ny rad","＋ New line"],newGoal:["＋ Nytt sparmål","＋ New savings goal"],linePh:["Skriv här","Write here"],del:["Ta bort","Remove"],
+incHead:["Inkomster","Income"],outHead:["Fasta utgifter","Fixed expenses"],restHead:["Sparande mål","Savings goals"],restSub:["Fördela resten","Split the rest"],varHead:["Rörliga utgifter","Variable expenses"],newLine:["＋ Ny rad","＋ New line"],newGoal:["＋ Nytt mål","＋ New goal"],goalPh:["Namn på målet, t.ex. Resa","Goal name, e.g. Trip"],linePh:["Skriv här","Write here"],del:["Ta bort","Remove"],
 restIntro:[v=>`Efter utgifterna har ni ${v} kvar. Bestäm vad som ska sparas, resten är ert att leva på.`,v=>`After expenses you have ${v} left. Decide what to save, the rest is yours to live on.`],lifeRow:["Kvar att leva på","Left to live on"],
 overAlloc:[v=>`Ni har fördelat ${v} mer än ni har kvar. Sänk en rad.`,v=>`You have split ${v} more than you have left. Lower one line.`],useRec:["Återställ till förslaget","Reset to the suggestion"],
 aBuf:["Buffert","Buffer"],aGoal:["Studier & mål","Studies & goals"],aLong:["Långsiktigt","Long-term"],potOther:["Övrigt","Other"],
 depNow:[v=>"＋ Sätt in "+v,v=>"＋ Deposit "+v],potProg:[(s,p)=>`Insatt ${s} av ${p}`,(s,p)=>`Deposited ${s} of ${p}`],potDone:["Insatt ✓","Deposited ✓"],
 bufNote:[(t,m)=>`Buffertmålet ${t} nås om ca ${m} månader.`,(t,m)=>`You reach the ${t} buffer target in about ${m} months.`],
 addSaveHead:["Lägg till sparande","Add savings"],amountPh:["Belopp (kr)","Amount (kr)"],bSaved:["＋ Sparat","＋ Saved"],bWd:["− Tog ut","− Withdrew"],fSaved:["Redan sparat innan","Saved before this"],
-totSaved:["Totalt sparat","Total saved"],ofBuf:[(p,t)=>`${p} av buffertmålet ${t}`,(p,t)=>`${p} of the ${t} buffer target`],sMonth:[(m,s,p)=>`${m}: ${s} av ${p} planerat`,(m,s,p)=>`${m}: ${s} of ${p} planned`],potHead:["Per sparmål","By goal"],entries:["Poster","Entries"],none:["Inga poster den här månaden. Lägg till sparande längst ner i Budget.","No entries this month. Add savings at the bottom of Budget."],toMonth:["Till den här månaden","Back to this month"],
+totSaved:["Totalt sparat","Total saved"],ofBuf:[(p,t)=>`${p} av buffertmålet ${t}`,(p,t)=>`${p} of the ${t} buffer target`],sMonth:[(m,s,p)=>`${m}: ${s} av ${p} planerat`,(m,s,p)=>`${m}: ${s} of ${p} planned`],potHead:["Per sparande mål","By savings goal"],entries:["Poster","Entries"],none:["Inga poster den här månaden. Lägg till sparande längst ner i Budget.","No entries this month. Add savings at the bottom of Budget."],toMonth:["Till den här månaden","Back to this month"],
 changeHead:["Det här skulle jag ändra","What I would change"],cmpHead:["Er budget mot min","Your budget vs mine"],you:["Ni","You"],me:["Jag","Me"],diff:["Skillnad","Change"],cmpFood:["Mat","Food"],cmpSubs:["Prenumerationer","Subscriptions"],cmpOther:["Övriga räkningar","Other bills"],cmpSave:["Sparande","Saving"],cmpBuf:["till buffert","to buffer"],cmpFund:["till fonder på ISK","to funds in ISK"],cmpLife:["Kvar att leva på","Left to live on"],cmpNote:["Kronor per månad. Boende och lån låter jag stå kvar, de går sällan att ändra snabbt.","Kronor per month. I leave housing and loans as they are, since they are rarely quick to change."],
 ecoHead:["Ekonomin just nu","The economy right now"],howHead:["Så har jag räknat","How I calculated"],
 vLbl:[m=>`Min bedömning för ${m}`,m=>`My assessment for ${m}`],vMore:[v=>`Ni kan spara ${v} mer i månaden`,v=>`You could save ${v} more a month`],vMoreS:[v=>`Det blir ${v} på ett år, utan att ni får mindre att leva på än ni tål.`,v=>`That is ${v} a year, while keeping a liveable amount to spend.`],vFree:[v=>`Ni kan frigöra ${v} i månaden`,v=>`You could free up ${v} a month`],vFreeS:[v=>`Det blir ${v} på ett år, från mat och prenumerationer.`,v=>`That is ${v} a year, from food and subscriptions.`],vOk:["Er budget håller","Your budget holds up"],vOkS:["Inga stora ändringar behövs just nu.","No big changes needed right now."],vBad:["Utgifterna är för höga","Expenses are too high"],vBadS:[v=>`Det saknas ${v} i månaden för att räkningarna och lite eget liv ska gå ihop.`,v=>`You are ${v} short each month to cover bills and some personal spending.`],vInc:["Skriv in era inkomster","Add your income"],vIncS:["Resultatet bygger på er budget.","The results are based on your budget."],
@@ -334,7 +372,10 @@ riskNote:["Jag är ingen finansiell rådgivare, och det här är allmän informa
 leftNow:["Kvar att leva på den här månaden","Left to live on this month"],leftMon:[(m,y)=>`Kvar i ${m} ${y}`,(m,y)=>`Left in ${m} ${y}`],dayMsg:[(d,n,p)=>`Ca ${d} per dag i ${n} dagar${p?", efter "+p+" som är planerat":""}.`,(d,n,p)=>`About ${d} per day for ${n} days${p?", after "+p+" planned":""}.`],spentOf:[(u,l)=>`Använt ${u} av ${l}.`,(u,l)=>`Used ${u} of ${l}.`],overMsg:[(a,b,s)=>`Spara ${a} i stället för ${b} den månaden.${s?" Det fattas ändå "+s+". Skjut hellre något till nästa månad.":""}`,(a,b,s)=>`Save ${a} instead of ${b} that month.${s?" Still "+s+" short. Move something to next month.":""}`],
 whatFor:["Vad gäller det?","What for?"],add:["Lägg till","Add"],spendNote:["Dagens datum för något ni köpt, ett senare datum för något som kommer.","Today's date for something bought, a later date for something coming up."],planned:["planerad","planned"],noneP:["Inget den här månaden.","Nothing this month."],
 netMo:["Nettolön per månad","Net pay per month"],testNote:["Uppskattning med testvärden, inte verifierade svenska satser. Använd Skatteverkets räknare för riktiga siffror.","Estimate using test values, not verified Swedish rates. Use Skatteverket's calculators for real numbers."],fGross:["Bruttolön / månad","Gross salary / month"],fRatef:["Kommun + region %","Municipal + region %"],adv:["Avancerat (testvärden)","Advanced (test values)"],advG:["Grundavdrag / år","Basic deduction / yr"],advJ:["Jobbskatteavdrag / år","Job credit / yr"],advT:["Skiktgräns","State threshold"],advR:["Statlig skatt %","State rate %"],advF:["Avgifter %","Fees %"],taxMo:["Skatt / månad","Tax / month"],eff:["Effektiv","Effective"],
-theme:["Tema","Theme"],auto:["Auto","Auto"],light:["Ljust","Light"],dark:["Mörkt","Dark"],notif:["Notiser i appen","In-app notifications"],on:["På","On"],off:["Av","Off"],lang:["Språk","Language"],motion:["Rörlig bakgrund","Moving background"],
+theme:["Tema","Theme"],auto:["Auto","Auto"],light:["Ljust","Light"],dark:["Mörkt","Dark"],notif:["Notiser i appen","In-app notifications"],on:["På","On"],off:["Av","Off"],lang:["Språk","Language"],
+fO:["Bara en gång","One time"],fM:["Varje månad","Every month"],fQ:["Varje kvartal","Every quarter"],fY:["Varje år","Every year"],chO:["Engång","One time"],chEv:["↻ ","↻ "],pickDate:["Datum","Date"],pickFirst:["Första betalning","First payment"],pickOpt:["Datum (valfritt)","Date (optional)"],cancel:["Avbryt","Cancel"],saveW:["Spara","Save"],
+hO:[m=>`Finns bara i ${m}. Välj ett datum i en annan månad för att flytta den dit.`,m=>`Only in ${m}. Pick a date in another month to move it there.`],hM:["Kopieras automatiskt till alla kommande månader.","Copies automatically to all coming months."],hQ:["Läggs in var tredje månad, räknat från datumet.","Added every third month, counting from the date."],hY:["Läggs in en gång per år på datumet.","Added once a year on the date."],needDate:["Välj ett datum först","Pick a date first"],
+tStop:[m=>`Borttagen från och med ${m}`,m=>`Removed from ${m} onward`],tMoved:[m=>`Finns nu i ${m}`,m=>`Now in ${m}`],nextHead:["Kommande betalningar","Coming payments"],short:["Kvartal","Quarter"],yearly:["År","Year"],once:["Engång","One time"],moIn:["In","In"],moOut:["Ut","Out"],moSave:["Spar","Saved"],moLeft:["Kvar","Left"],moName:["Mån","Mon"],motion:["Rörlig bakgrund","Moving background"],
 fAdults:["Vuxna i hushållet","Adults in the household"],bufF:["Buffert, månader av räkningar","Buffer, months of bills"],lifeF:["Minst kvar till eget liv, %","Minimum for personal life, %"],hBufSet:["Under 2 månader är kort, riktlinjen är 2–3.","Under 2 months is short; the guideline is 2–3."],hLifeSet:["Under 10 % till eget liv gör planer svåra att hålla.","Under 10% for personal life makes plans hard to keep."],
 yourData:["Er data","Your data"],dStore:["Budgeten är gemensam. Alla som har tillgång till sidan ser och ändrar samma siffror.","The budget is shared. Everyone with access to this page sees and edits the same figures."],dOff:["Inte ansluten: inget sparas när sidan stängs.","Not connected: nothing is saved when the page closes."],reset:["Radera all data","Delete all data"],resetAgain:["Tryck igen för att radera allt","Tap again to delete everything"],
 tNeedAmt:["Skriv ett belopp först","Type an amount first"],tSaved:[(a,t)=>`Sparade ${a} · totalt ${t}`,(a,t)=>`Saved ${a} · total ${t}`],tWd:[(a,t)=>`Tog ut ${a} · totalt ${t}`,(a,t)=>`Withdrew ${a} · total ${t}`],tBuf:["Bufferten är klar 🎉","Buffer complete 🎉"],tStart:["En månads buffert är nådd 🎉","One month of buffer reached 🎉"],tOver:[(o,m)=>`Över budget med ${o} i ${m}`,(o,m)=>`Over budget by ${o} in ${m}`],tAddExp:[(a,l,m)=>`${a} tillagd · ${l} kvar i ${m}`,(a,l,m)=>`${a} added · ${l} left in ${m}`],tFail:["Kunde inte spara. Kontrollera anslutningen och försök igen.","Could not save. Check your connection and try again."],tRem:["Post borttagen","Entry removed"],tRec:["Fördelningen återställd","Split reset"],tDel:["All data raderades","All data was deleted"],tNotif:["Notiser på","Notifications on"],tDelFail:["Kunde inte radera allt. Försök igen.","Could not delete everything. Try again."],
@@ -357,16 +398,36 @@ const defaults=()=>S.lang==="sv"?{inc:[["Lön 1",24000],["Lön 2",24000]],items:
 const pair=a=>a.map(([n,x])=>({n,a:x}));
 const mk=(y,m)=>y+"_"+String(m+1).padStart(2,"0");
 const pmSel=()=>({y:P.y,m:P.m});
-const clone=s=>({inc:s.inc.map(i=>({...i})),items:s.items.map(i=>({...i})),vars:s.vars.map(i=>({...i})),...(Array.isArray(s.split)?{split:s.split.map(l=>({...l}))}:{})});
-function monthData(y,m){const k=mk(y,m);if(PM[k])return PM[k];const ks=Object.keys(PM).filter(x=>x<k).sort();if(ks.length)return clone(PM[ks[ks.length-1]]);const d=defaults();return{inc:pair(d.inc),items:pair(d.items),vars:pair(d.vars)}}
+/* Repeating lines are rules that appear in every month they are due; one-time lines live in their own month. */
+const RW=["inc","items","vars"];let RULES=[],exampleMode=false;
+const startKey=r=>{const[y,m]=r.date.split("-");return y+"_"+m};
+function due(r,y,m){const k=mk(y,m),[sy,sm]=r.date.split("-").map(Number);if(k<startKey(r)||(r.end&&k>=r.end))return false;const n=y*12+m-(sy*12+sm-1);return r.freq==="m"||(r.freq==="q"?n%3===0:n%12===0)}
+function amtOf(r,k){let v=r.amts[0].a;r.amts.forEach(x=>{if(x.f<=k)v=x.a});return v}
+function rawMonth(y,m){const k=mk(y,m);if(PM[k])return PM[k];const ks=Object.keys(PM).filter(x=>x<k&&Array.isArray(PM[x].split)).sort(),s=ks.length?PM[ks[ks.length-1]].split:null;return{inc:[],items:[],vars:[],...(s?{split:s.map(l=>({...l}))}:{})}}
+function monthData(y,m){const k=mk(y,m),raw=rawMonth(y,m),v={};RW.forEach(t=>{v[t]=[...RULES.filter(r=>r.t===t&&due(r,y,m)).map(r=>({n:r.n,a:amtOf(r,k),rid:r.id,freq:r.freq,date:r.date})),...raw[t].map((x,i)=>({...x,ix:i}))]});if(Array.isArray(raw.split))v.split=raw.split;return v}
+const isoOf=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const defDate=()=>isNow()?isoOf(NOW):P.y+"-"+String(P.m+1).padStart(2,"0")+"-01";
+const newId=()=>"r"+Date.now()+Math.floor(Math.random()*1e3);
+function seedExample(){const d=defaults(),s=isoOf(new Date(NOW.getFullYear(),NOW.getMonth(),1));RULES=[];[["inc",d.inc],["items",d.items],["vars",d.vars]].forEach(([t,a])=>a.forEach(([n,x],i)=>RULES.push({id:"ex"+t+i,t,n,freq:"m",date:s,ds:false,amts:[{f:"0",a:x}],end:null})));PM={};exampleMode=true}
 const cur=()=>monthData(P.y,P.m),nowMd=()=>monthData(NOW.getFullYear(),NOW.getMonth());
-const hasData=()=>Object.keys(PM).length>0||deps.length>0;
+const hasData=()=>!exampleMode;
 const TM={},DIRTY=new Set();
-function editMonth(fn){const{y,m}=pmSel(),k=mk(y,m);if(!PM[k])PM[k]=monthData(y,m);fn(PM[k]);if(!col)return;DIRTY.add(k);clearTimeout(TM[k]);TM[k]=setTimeout(()=>{DIRTY.delete(k);const w=PM[k];if(w)col.doc("pm_"+k).set({kind:"pm",inc:w.inc,items:w.items,vars:w.vars,...(Array.isArray(w.split)?{split:w.split}:{})}).catch(()=>toast(t("tFail")))},600)}
+const pmDoc=k=>{const w=PM[k];return{kind:"pm",inc:w.inc,items:w.items,vars:w.vars,...(Array.isArray(w.split)?{split:w.split}:{})}};
+const ruleDoc=r=>({kind:"rec",id:r.id,t:r.t,n:r.n,freq:r.freq,date:r.date,ds:!!r.ds,amts:r.amts,end:r.end||null});
+const DIRTYR=new Set(),TR={};
+function leaveExample(){if(!exampleMode)return;exampleMode=false;if(!col)return;RULES.forEach(r=>col.doc("rec_"+r.id).set(ruleDoc(r)).catch(()=>{}));Object.keys(PM).forEach(k=>col.doc("pm_"+k).set(pmDoc(k)).catch(()=>{}))}
+function editMonth(fn,y=P.y,m=P.m){leaveExample();const k=mk(y,m);if(!PM[k])PM[k]=rawMonth(y,m);fn(PM[k]);if(!col)return;DIRTY.add(k);clearTimeout(TM[k]);TM[k]=setTimeout(()=>{DIRTY.delete(k);if(PM[k])col.doc("pm_"+k).set(pmDoc(k)).catch(()=>toast(t("tFail")))},400)}
+function saveRule(r){leaveExample();if(!col)return;DIRTYR.add(r.id);clearTimeout(TR[r.id]);TR[r.id]=setTimeout(()=>{DIRTYR.delete(r.id);col.doc("rec_"+r.id).set(ruleDoc(r)).catch(()=>toast(t("tFail")))},400)}
+function dropRule(r){leaveExample();RULES=RULES.filter(x=>x!==r);DIRTYR.delete(r.id);clearTimeout(TR[r.id]);if(col)col.doc("rec_"+r.id).delete().catch(()=>{})}
+function newRule(tp,n,a,freq,date,ds){const r={id:newId(),t:tp,n,freq,date,ds,amts:[{f:"0",a}],end:null};RULES.push(r);saveRule(r);return r}
+function ruleStop(r,k){if(startKey(r)>=k)dropRule(r);else{r.end=k;saveRule(r)}}
+const ruleById=id=>RULES.find(r=>r.id===id);
+function chip(r){const dt=s=>{const[y,m,d]=s.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString(loc(),{day:"numeric",month:"short"})};if(r.rid)return "↻ "+t(r.freq==="m"?"fM":r.freq==="q"?"fQ":"fY")+(r.freq==="m"?"":" · "+dt(r.date));return t("chO")+(r.d?" · "+dt(r.d):"")}
+function upcoming(){const out=[],t0=new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()).getTime();for(let o=0;o<=13;o++){const d=new Date(NOW.getFullYear(),NOW.getMonth()+o,1),y=d.getFullYear(),m=d.getMonth(),k=mk(y,m);RULES.filter(r=>r.freq!=="m"&&due(r,y,m)).forEach(r=>{const day=Math.min(+r.date.split("-")[2],new Date(y,m+1,0).getDate()),at=new Date(y,m,day).getTime();if(at>=t0&&!out.some(u=>u.id===r.id))out.push({id:r.id,at,n:r.n,a:amtOf(r,k),tp:r.t,f:r.freq})});if(PM[k])RW.forEach(tp=>PM[k][tp].forEach(x=>{if(x.d){const at=new Date(x.d+"T12:00:00").getTime();if(at>=t0)out.push({at,n:x.n,a:x.a,tp,f:"o"})}}))}return out.sort((a,b)=>a.at-b.at).slice(0,5)}
 const POTS={buf:"aBuf",goal:"aGoal",long:"aLong"};
 const rowName=l=>l.n||(POTS[l.k]?t(POTS[l.k]):"");
 const potName=l=>rowName(l)||t("potOther");
-function splitEdit(fn){editMonth(md=>{if(!Array.isArray(md.split))md.split=planCalc(md).lines.map(l=>({k:l.k,n:l.n,a:Math.round(l.a)}));fn(md.split)})}
+function splitEdit(fn){const base=planCalc(cur()).lines;editMonth(md=>{if(!Array.isArray(md.split))md.split=base.map(l=>({k:l.k,n:l.n,a:Math.round(l.a)}));fn(md.split)})}
 function potIn(k,y,m){const a=new Date(y,m,1).getTime(),b=new Date(y,m+1,1).getTime();return deps.filter(d=>(d.pot||"")===k&&d.at>=a&&d.at<b).reduce((s,d)=>s+d.amount,0)}
 function depTs(){const{y,m}=pmSel();return y===NOW.getFullYear()&&m===NOW.getMonth()?Date.now():new Date(y,m,1,12).getTime()}
 const total=()=>S.saved+deps.reduce((s,d)=>s+d.amount,0);
@@ -419,28 +480,30 @@ function renderHome(){
   $("h_lines").innerHTML=[[t("in"),kr(p.inc)],[t("out"),kr(p.fixed)],[t("varOut"),kr(p.vars)],[t("savedIn",mName),t("ofP",kr(got),kr(p.save))],[t("rem"),kr(p.life)]].map(r=>`<div class="row"><span>${r[0]}</span><b>${r[1]}</b></div>`).join("");
   const f=a.F[0];$("h_top").innerHTML=`<p class="head" style="margin-top:4px">${esc(f[0])}</p><p class="note">${esc(f[1])}</p>`;
   $("h_ex").classList.toggle("hide",hasData());
+  const up=upcoming();$("h_next").classList.toggle("hide",!up.length);
+  $("h_up").innerHTML=up.map(u=>`<div class="up"><span class="dt">${new Date(u.at).toLocaleDateString(loc(),{day:"numeric",month:"short"})}</span><span>${esc(u.n||"–")}<small>${t(u.f==="q"?"short":u.f==="y"?"yearly":"once")}</small></span><b class="${u.tp==="inc"?"ok":""}">${u.tp==="inc"?"+":""}${kr(u.a)}</b></div>`).join("");
   renderYear();
 }
 let HY=NOW.getFullYear();
-function yearData(y){const nowK=mk(NOW.getFullYear(),NOW.getMonth());return MNS[0].map((_,m)=>{const k=mk(y,m);let md=PM[k];if(!md&&k<=nowK&&(Object.keys(PM).some(x=>x<k)||(!hasData()&&k===nowK)))md=monthData(y,m);return md?planCalc(md):null})}
+function yearData(y){const nowK=mk(NOW.getFullYear(),NOW.getMonth());return MNS[0].map((_,m)=>{const v=monthData(y,m);if(!v.inc.length&&!v.items.length&&!v.vars.length&&!PM[mk(y,m)])return null;const p=planCalc(v);if(mk(y,m)>nowK&&!p.custom)return{...p,save:0,life:p.inc-p.needs};return p})}
 function renderYear(){
   const D=yearData(HY),nf=v=>Math.round(v).toLocaleString("sv-SE").replace("-","−"),tot=k=>D.reduce((s,p)=>s+(p?p[k]:0),0),I=tot("inc"),O=tot("needs"),Sv=tot("save"),L=tot("life"),isY=HY===NOW.getFullYear();
   $("y_t").textContent=t("yearT",HY);
   $("y_tiles").innerHTML=[[t("rem"),kr(L),L<0],[t("totOut"),kr(O)],[t("sRate"),I>0?pc(Sv/I):"–"],[t("totSave"),kr(Sv)]].map(r=>`<div class="tile"><span class="lbl">${r[0]}</span><b class="${r[2]?"er":""}">${r[1]}</b></div>`).join("");
-  const mx=Math.max(1,...D.map(p=>p?Math.max(p.inc,p.needs+p.save):0)),H=WIDE.matches?160:122,cs=[["fixed","--c1","fixedL"],["vars","--c4","varL"],["life","--c3","life"],["save","--c2","saving"]];
+  const mx=Math.max(1,...D.map(p=>p?Math.max(p.inc,p.needs+p.save):0)),H=WIDE.matches?160:94,cs=[["fixed","--c1","fixedL"],["vars","--c4","varL"],["life","--c3","life"],["save","--c2","saving"]];
   $("y_bars").innerHTML=D.map((p,m)=>`<button class="ymo ${isY&&m===NOW.getMonth()?"cur":""}" data-jump="${m}" aria-label="${mn(m)}" title="${p?mn(m)+": "+cs.map(c=>t(c[2])+" "+kr(Math.max(0,p[c[0]]))).join(", "):mn(m)}">${p?`<span class="st">${cs.filter(c=>p[c[0]]>0).map(c=>`<i style="height:${Math.max(2,Math.round(p[c[0]]/mx*H))}px;background:var(${c[1]})"></i>`).join("")}</span>`:'<span class="none"></span>'}${ms(m)[0]}</button>`).join("");
   $("y_keys").innerHTML=cs.map(c=>`<span><span class="dot" style="background:var(${c[1]})"></span>${t(c[2])}</span>`).join("");
   const row=(l,k,cl)=>`<tr class="${cl||""}"><td>${l}</td>${D.map(p=>`<td>${p?nf(p[k]):"–"}</td>`).join("")}<td class="tot">${nf(tot(k))}</td></tr>`;
-  $("y_tbl").innerHTML=`<thead><tr><th>kr</th>${MNS[0].map((_,m)=>`<th class="${isY&&m===NOW.getMonth()?"cur":""}">${ms(m)}</th>`).join("")}<th>${t("total")}</th></tr></thead><tbody>`+row(t("in"),"inc")+row(t("out"),"fixed")+row(t("varOut"),"vars")+row(t("restHead"),"save")+row(t("totOut"),"needs","sum")+row(t("rem"),"life","sum")+`<tr><td>${t("sRate")}</td>${D.map(p=>`<td>${p&&p.inc>0?pc(p.save/p.inc):"–"}</td>`).join("")}<td class="tot">${I>0?pc(Sv/I):"–"}</td></tr></tbody>`;
+  $("y_tbl").className=WIDE.matches?"":"mini";
+  if(!WIDE.matches)$("y_tbl").innerHTML=`<thead><tr><th>${t("moName")}</th><th>${t("moIn")}</th><th>${t("moOut")}</th><th>${t("moSave")}</th><th>${t("moLeft")}</th></tr></thead><tbody>`+D.map((p,m)=>p?`<tr class="${isY&&m===NOW.getMonth()?"cur":""}"><td>${ms(m)}</td><td>${nf(p.inc)}</td><td>${nf(p.needs)}</td><td>${nf(p.save)}</td><td class="${p.life<0?"er":""}">${nf(p.life)}</td></tr>`:"").join("")+`<tr class="tot"><td>${t("total")}</td><td>${nf(I)}</td><td>${nf(O)}</td><td>${nf(Sv)}</td><td>${nf(L)}</td></tr></tbody>`;
+  else $("y_tbl").innerHTML=`<thead><tr><th>kr</th>${MNS[0].map((_,m)=>`<th class="${isY&&m===NOW.getMonth()?"cur":""}">${ms(m)}</th>`).join("")}<th>${t("total")}</th></tr></thead><tbody>`+row(t("in"),"inc")+row(t("out"),"fixed")+row(t("varOut"),"vars")+row(t("saving"),"save")+row(t("totOut"),"needs","sum")+row(t("rem"),"life","sum")+`<tr><td>${t("sRate")}</td>${D.map(p=>`<td>${p&&p.inc>0?pc(p.save/p.inc):"–"}</td>`).join("")}<td class="tot">${I>0?pc(Sv/I):"–"}</td></tr></tbody>`;
 }
 function yearScroll(){const sc=$("y_sc"),th=sc.querySelector("th.cur"),first=sc.querySelector("th");if(!sc.clientWidth)return;sc.scrollLeft=th?Math.max(0,th.offsetLeft-first.offsetWidth-120):0}
 const fmtA=v=>Math.round(v)?Math.round(v).toLocaleString("sv-SE"):"",parseA=v=>+String(v).replace(/\s/g,"").replace(",",".")||0;
-function rowHtml(rw,name,amt,i,extra){return `<div class="lnw"><div class="ln"><input class="nm" type="text" id="${rw}_n${i}" data-rw="${rw}" data-f="n" data-ix="${i}" value="${esc(name)}" maxlength="40" placeholder="${t("linePh")}" aria-label="${t("linePh")}"><span class="amw"><input class="am" type="text" inputmode="decimal" id="${rw}_a${i}" data-rw="${rw}" data-f="a" data-ix="${i}" value="${fmtA(amt)}" placeholder="0" aria-label="kr"><span>kr</span></span><button class="x" data-delrw="${rw}" data-ix="${i}" aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>${extra||""}</div>`}
+function rowHtml(rw,name,amt,i,extra,key){const k=key||`data-ix="${i}"`,ph=rw==="split"?t("goalPh"):t("linePh");return `<div class="lnw"><div class="ln"><input class="nm" type="text" id="${rw}_n${i}" data-rw="${rw}" data-f="n" ${k} value="${esc(name)}" maxlength="40" placeholder="${ph}" aria-label="${ph}"><span class="amw"><input class="am" type="text" inputmode="decimal" id="${rw}_a${i}" data-rw="${rw}" data-f="a" ${k} value="${fmtA(amt)}" placeholder="0" aria-label="kr"><span>kr</span></span><button class="x" data-delrw="${rw}" ${k} aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>${extra||""}</div>`}
 let splitSig=null;
 function buildSheet(){const md=cur(),p=planCalc(md);
-  $("l_inc").innerHTML=md.inc.map((r,i)=>rowHtml("inc",r.n,r.a,i)).join("");
-  $("l_items").innerHTML=md.items.map((r,i)=>rowHtml("items",r.n,r.a,i)).join("");
-  $("l_vars").innerHTML=md.vars.map((r,i)=>rowHtml("vars",r.n,r.a,i)).join("");
+  RW.forEach(rw=>{$("l_"+rw).innerHTML=md[rw].map((r,i)=>{const key=r.rid?`data-rid="${r.rid}"`:`data-ix="${r.ix}"`;return rowHtml(rw,r.n,r.a,i,`<button class="freq ${r.rid?"on":""}" data-rs="${rw}" ${key}>${esc(chip(r))}</button>`,key)}).join("")});
   splitSig=p.lines.map(l=>l.k).join();
   $("l_split").innerHTML=p.lines.map((l,i)=>rowHtml("split",rowName(l),l.a,i,`<div class="spst" data-spst="${i}"></div>`)).join("")}
 function renderBudget(){
@@ -520,7 +583,7 @@ function build(){
 }
 function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render()}
 function render(){$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderSpend();renderTax();renderResults();renderMarket();renderSettings();FX.sync(planCalc(nowMd()))}
-let t0;function persist(){if(!col)return;clearTimeout(t0);t0=setTimeout(()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,theme:S.theme,toasts:S.toasts,motion:S.motion}).catch(()=>{}),600)}
+let t0;function persist(){if(!col)return;clearTimeout(t0);t0=setTimeout(()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,theme:S.theme,toasts:S.toasts,motion:S.motion,recV:S.recV||0}).catch(()=>{}),600)}
 const yrOpen=()=>$("yrs").classList.contains("on");
 function closeYears(){$("yrs").classList.remove("on")}
 function openYears(){const y0=NOW.getFullYear(),ys=new Set([P.y]);for(let y=y0-5;y<=y0+10;y++)ys.add(y);[...deps.map(d=>d.at),...exps.map(e=>e.on)].forEach(x=>x&&ys.add(new Date(x).getFullYear()));Object.keys(PM).forEach(k=>ys.add(+k.slice(0,4)));
@@ -536,8 +599,20 @@ $("menu").onclick=()=>{$("drawer").classList.add("on");$("scrim").classList.add(
 
 document.addEventListener("input",e=>{const x=e.target;
   if(x.dataset.s){const k=x.dataset.s;S[k]=+x.value||0;if(["saved","buf","lifePct","adults"].includes(k))persist();render()}
-  else if(x.dataset.rw){const rw=x.dataset.rw,f=x.dataset.f,i=+x.dataset.ix,v=f==="a"?Math.max(0,parseA(x.value)):x.value;if(rw==="split")splitEdit(s=>{if(s[i])s[i][f]=v});else editMonth(md=>{if(md[rw][i])md[rw][i][f]=v});render()}});
+  else if(x.dataset.rw){const rw=x.dataset.rw,f=x.dataset.f,v=f==="a"?Math.max(0,parseA(x.value)):x.value;
+    if(x.dataset.rid){const r=ruleById(x.dataset.rid),k=mk(P.y,P.m);if(r){if(f==="n")r.n=v;else{const e=r.amts.find(z=>z.f===k);if(e)e.a=v;else{r.amts.push({f:k,a:v});r.amts.sort((a,b)=>a.f<b.f?-1:1)}}saveRule(r)}}
+    else{const i=+x.dataset.ix;if(rw==="split")splitEdit(s=>{if(s[i])s[i][f]=v});else editMonth(md=>{if(md[rw][i])md[rw][i][f]=v})}render()}});
 document.addEventListener("focusout",e=>{const x=e.target;if(x.dataset&&x.dataset.rw&&x.dataset.f==="a")x.value=fmtA(parseA(x.value))});
+let RS=null;
+function paintRS(){$("rs_f").innerHTML=[["o","fO"],["m","fM"],["q","fQ"],["y","fY"]].map(([v,l])=>`<button class="${RS.f===v?"on":""}" data-rf="${v}">${t(l)}</button>`).join("");$("rs_l").textContent=t(RS.f==="o"?"pickOpt":RS.f==="m"?"pickOpt":"pickFirst");$("rs_h").textContent=RS.f==="o"?t("hO",mn(P.m).toLowerCase()):t(RS.f==="m"?"hM":RS.f==="q"?"hQ":"hY")}
+function openRS(rw,rid,ix){const r=rid?ruleById(rid):null,raw=rawMonth(P.y,P.m),x=r?null:raw[rw][+ix];if(!r&&!x)return;RS={rw,rid,ix:+ix,f:r?r.freq:"o"};$("rs_t").textContent=(r?r.n:x.n)||t("linePh");$("rs_d").value=r?(r.ds||r.freq!=="m"?r.date:""):(x.d||"");$("rs_no").textContent=t("cancel");$("rs_ok").textContent=t("saveW");paintRS();$("rs").classList.add("on")}
+const closeRS=()=>{$("rs").classList.remove("on");RS=null};
+$("rs_no").onclick=closeRS;$("rs").addEventListener("click",e=>{if(e.target===$("rs"))closeRS()});
+$("rs_ok").onclick=()=>{if(!RS)return;const{rw,rid,ix,f}=RS,d=$("rs_d").value,k=mk(P.y,P.m);if((f==="q"||f==="y")&&!d){toast(t("needDate"));return}
+  const place=(n,a,dt)=>{const at=dt?dt.split("-").map(Number):[P.y,P.m+1],y=at[0],m=at[1]-1,row={n,a,...(dt?{d:dt}:{})};editMonth(md=>md[rw].push(row),y,m);if(y!==P.y||m!==P.m)toast(t("tMoved",mn(m).toLowerCase()))};
+  if(rid){const r=ruleById(rid);if(!r)return closeRS();if(f==="o"){const a=amtOf(r,k),n=r.n;ruleStop(r,k);place(n,a,d)}else{r.freq=f;if(d){r.date=d;r.ds=true}else if(f==="m")r.ds=false;saveRule(r)}}
+  else{const raw=rawMonth(P.y,P.m),x=raw[rw][ix];if(!x)return closeRS();if(f==="o"){const[dy,dm]=d?d.split("-").map(Number):[P.y,P.m+1];if(dy===P.y&&dm-1===P.m)editMonth(md=>{if(d)md[rw][ix].d=d;else delete md[rw][ix].d});else{editMonth(md=>{md[rw].splice(ix,1)});place(x.n,x.a,d)}}else{editMonth(md=>{md[rw].splice(ix,1)});newRule(rw,x.n,x.a,f,d||defDate(),!!d)}}
+  closeRS();buildSheet();render()};
 let depBusy=false;
 async function addDep(sign,row){if(depBusy)return;
   const a=Math.abs(row?row.amount:+$("s_amt").value);if(!a){toast(t("tNeedAmt"));return}
@@ -560,7 +635,7 @@ let rt;$("reset").onclick=async()=>{const b=$("reset");
   if(b.dataset.arm!=="1"){b.dataset.arm="1";b.textContent=t("resetAgain");clearTimeout(rt);rt=setTimeout(()=>{b.dataset.arm="0";b.textContent=t("reset")},4000);return}
   b.dataset.arm="0";b.textContent=t("reset");
   if(col){try{await Promise.all(allIds.map(id=>col.doc(id).delete()))}catch(e){toast(t("tDelFail"));return}}
-  deps=[];exps=[];PM={};S.saved=0;build();render();persist();toast(t("tDel"))};
+  deps=[];exps=[];PM={};S.saved=0;seedExample();build();render();persist();toast(t("tDel"))};
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
   if(g){const was=yrOpen();go(g.dataset.go);if(g.id==="nav_b"&&!was)openYears();return}
@@ -572,9 +647,15 @@ document.addEventListener("click",e=>{
   const mv=e.target.closest("[data-mv]");if(mv){const d=new Date(P.y,P.m+ +mv.dataset.mv,1);P={y:d.getFullYear(),m:d.getMonth()};refreshMonth();return}
   if(e.target.closest("[data-now]")){P={y:NOW.getFullYear(),m:NOW.getMonth()};refreshMonth();return}
   const ad=e.target.closest("[data-add]");
-  if(ad){const rw=ad.dataset.add;if(rw==="split")splitEdit(s=>s.push({k:"c"+Date.now(),n:"",a:0}));else editMonth(md=>md[rw].push({n:"",a:0}));buildSheet();render();const c=rw==="split"?planCalc(cur()).lines.length:cur()[rw].length,f=$(rw+"_n"+(c-1));if(f)f.focus();return}
+  if(ad){const rw=ad.dataset.add;let sel;
+    if(rw==="split"){splitEdit(s=>s.push({k:"c"+Date.now(),n:"",a:0}));buildSheet();render();sel="#split_n"+(planCalc(cur()).lines.length-1)}
+    else if(rw==="vars"){editMonth(md=>md.vars.push({n:"",a:0}));buildSheet();render();sel=`[data-rw="vars"][data-f="n"][data-ix="${rawMonth(P.y,P.m).vars.length-1}"]`}
+    else{const r=newRule(rw,"",0,"m",defDate(),false);buildSheet();render();sel=`[data-rid="${r.id}"][data-f="n"]`}
+    const f=document.querySelector(sel);if(f)f.focus();return}
+  const rs=e.target.closest("[data-rs]");if(rs){openRS(rs.dataset.rs,rs.dataset.rid,rs.dataset.ix);return}
+  const rf=e.target.closest("[data-rf]");if(rf){RS.f=rf.dataset.rf;paintRS();return}
   const dr=e.target.closest("[data-delrw]");
-  if(dr){const rw=dr.dataset.delrw,i=+dr.dataset.ix;if(rw==="split")splitEdit(s=>{s.splice(i,1)});else editMonth(md=>{md[rw].splice(i,1)});buildSheet();render();return}
+  if(dr){const rw=dr.dataset.delrw;if(dr.dataset.rid){const r=ruleById(dr.dataset.rid);if(r){ruleStop(r,mk(P.y,P.m));toast(t("tStop",mn(P.m).toLowerCase()))}}else{const i=+dr.dataset.ix;if(rw==="split")splitEdit(s=>{s.splice(i,1)});else editMonth(md=>{md[rw].splice(i,1)})}buildSheet();render();return}
   const dp=e.target.closest("[data-dep]");
   if(dp){const l=planCalc(cur()).lines[+dp.dataset.dep];if(l){const left=Math.round(l.a-potIn(l.k,P.y,P.m));if(left>0)addDep(1,{amount:left,k:l.k})}return}
   const del=e.target.closest("[data-del]");
@@ -642,7 +723,7 @@ const WIDE=matchMedia("(min-width:700px)"),RAIL=matchMedia("(min-width:1024px)")
 function layout(){const D=["d_inc","d_out","d_var","d_rest"].map(x=>$(x));if(WIDE.matches)D.forEach(d=>{d.removeAttribute("name");d.open=true});else{D.forEach(d=>{d.open=false;d.setAttribute("name","bud")});if(!hasData())D[0].open=true}}
 [WIDE,RAIL].forEach(m=>m.addEventListener("change",()=>{closeYears();layout();render()}));
 $("b").addEventListener("click",e=>{if(WIDE.matches&&e.target.closest("summary"))e.preventDefault()});
-applyTheme();setDates();applyLang();go("h");layout();
+seedExample();applyTheme();setDates();applyLang();go("h");layout();
 document.addEventListener("visibilitychange",()=>{if(document.hidden)return;const d=new Date(),same=d.getMonth()===NOW.getMonth()&&d.getFullYear()===NOW.getFullYear();NOW=d;if(same){render();return}P={y:d.getFullYear(),m:d.getMonth()};refreshMonth()});
 /* One shared household budget, so both people see the same figures. The page works without storage. */
 (async()=>{try{
@@ -652,13 +733,16 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
   const importOld=async()=>{const u=await claude.use("user"),id=u&&await u.id();if(!id)return;const o=await db.collection("data/users/"+id).get();for(const d of o.docs)await col.doc(d.id).set({...d.data()})};
   col.onSnapshot(snap=>{
     if(!checked&&!snap.metadata.fromCache){checked=true;if(snap.empty)importOld().catch(()=>{})}
-    const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});deps=[];exps=[];PM={};allIds=snap.docs.map(d=>d.id);const old=S.lang;
+    const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});const keepR=RULES.filter(r=>DIRTYR.has(r.id)),real=snap.docs.some(d=>/^(pm|rec|dep|exp)_/.test(d.id)),ex=exampleMode&&!real;if(!ex){exampleMode=false;PM={};RULES=[]}deps=[];exps=[];allIds=snap.docs.map(d=>d.id);const old=S.lang;
     snap.docs.forEach(d=>{const v=d.data()||{};
-      if(d.id==="plan"){["saved","buf","lifePct","adults"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
-      else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
+      if(d.id==="plan"){["saved","buf","lifePct","adults"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
+      else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
+      else if(v.kind==="rec"&&Array.isArray(v.amts)&&v.amts.length&&!ex)RULES.push({id:String(v.id),t:v.t,n:String(v.n||""),freq:v.freq,date:String(v.date),ds:!!v.ds,amts:v.amts.map(x=>({f:String(x.f),a:+x.a||0})),end:v.end||null});
       else if(v.kind==="exp"&&typeof v.amount==="number")exps.push({id:d.id,amount:v.amount,note:v.note||"",on:v.on||0});
       else if(typeof v.amount==="number")deps.push({id:d.id,amount:v.amount,note:v.note||"",at:v.at||0,pot:v.pot||"",potN:v.potN||""})});
-    Object.assign(PM,keep);
+    Object.assign(PM,keep);keepR.forEach(r=>{const i=RULES.findIndex(x=>x.id===r.id);if(i>=0)RULES[i]=r;else RULES.push(r)});
+    /* Budgets saved before repeating lines existed: the latest month's lines become monthly, as they used to carry over. */
+    if(!exampleMode&&!S.recV){S.recV=1;persist();const ks=Object.keys(PM).sort(),K=ks[ks.length-1];if(!RULES.length&&K){const date=K.replace("_","-")+"-01";RW.forEach(tp=>{PM[K][tp].forEach(x=>{if(x.n||x.a)newRule(tp,x.n,x.a,"m",date,false)});PM[K][tp]=[]});col.doc("pm_"+K).set(pmDoc(K)).catch(()=>{})}}
     if(!seenData&&hasData()){seenData=true;if(!WIDE.matches)$("d_inc").open=false}
     applyTheme();
     if(S.lang!==old){applyLang();go(tab);return}
