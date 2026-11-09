@@ -4,12 +4,20 @@ import json,pathlib,time,urllib.parse,urllib.request,datetime,zoneinfo
 R=pathlib.Path(__file__).resolve().parent.parent
 UA={"User-Agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126 Safari/537.36","Accept":"application/json"}
 TZ=zoneinfo.ZoneInfo("Europe/Stockholm");NOW=datetime.datetime.now(TZ)
+START=time.time();MAX=330;seen=set()
 def get(u):
-    for a in range(3):
-        try:
-            with urllib.request.urlopen(urllib.request.Request(u,headers=UA),timeout=20) as r:return json.load(r)
-        except Exception as e:
-            err=e;time.sleep(2+a*3)
+    err=None
+    for a in range(2):
+        if time.time()-START>MAX:raise TimeoutError("out of time")
+        for host in ("query1","query2"):
+            url=u.replace("query1.",host+".").replace("query2.",host+".") if "finance.yahoo" in u else u
+            try:
+                with urllib.request.urlopen(urllib.request.Request(url,headers=UA),timeout=9) as r:return json.load(r)
+            except Exception as e:
+                err=e;k=url.split("/")[2]+" "+repr(e)[:120]
+                if k not in seen:seen.add(k);print("first error:",k,flush=True)
+            if "finance.yahoo" not in u:break
+        time.sleep(1+a*2)
     raise err
 def chart(sym):
     d=get("https://query1.finance.yahoo.com/v8/finance/chart/"+urllib.parse.quote(sym)+"?range=5d&interval=1d")["chart"]["result"][0];m=d["meta"]
@@ -45,6 +53,7 @@ def add(sym,name,typ):
     time.sleep(.25)
 for s,n,t in cat.get("symbols",[]):
     if t!="skip":add(s,n,t)
+    if ok==0 and fail>=4:print("source unreachable, stopping early",flush=True);break
 for n in cat.get("funds",[]):
     try:s=fund(n)
     except Exception as e:print("search fail",n,e);s=None

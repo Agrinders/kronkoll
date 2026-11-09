@@ -13,10 +13,10 @@ concurrency: market
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 9
     steps:
       - uses: actions/checkout@v4
-      - run: python3 tools/update_market.py
+      - run: python3 -u tools/update_market.py
       - name: Save new prices
         run: |
           git config user.name "kronkoll-bot"
