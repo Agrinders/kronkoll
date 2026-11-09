@@ -264,16 +264,17 @@ button{transition:transform .22s cubic-bezier(.3,1.9,.5,1),background .2s,color 
 button:active{transform:scale(.93);transition-duration:.06s}
 nav button:active{transform:scale(.9)}.freq:active,.lnk:not([data-add]):active{transform:scale(.97)}
 summary{transition:transform .2s cubic-bezier(.3,1.9,.5,1);-webkit-user-select:none;user-select:none}summary:active{transform:scale(.98)}
-.btn,.chip,nav button,.opt,.mini,.x,.mnav button,.gnav button,.ynav button,.seg button,.pick,.lnk[data-add],#g_add,#yr_list button,#drawer>button{position:relative;overflow:hidden}
+.btn,.chip,nav button,.opt,.mini,.x,.mnav button,.gnav button,.ynav button,.tt button,.seg button,.pick,.lnk[data-add],#g_add,#yr_list button,#drawer>button{position:relative;overflow:hidden}
 .rp{position:absolute;border-radius:50%;background:currentColor;opacity:.24;transform:scale(0);pointer-events:none;animation:rp .5s cubic-bezier(.2,.7,.3,1) forwards}
 @keyframes rp{to{transform:scale(1);opacity:0}}
 nav button.on svg{animation:pop .34s cubic-bezier(.3,1.9,.5,1)}@keyframes pop{from{transform:scale(.72) translateY(3px)}}
 
 .sideh{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);padding:14px 12px 4px}
 nav .nhead{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);padding:12px 14px 2px}
-@media (min-width:700px){#l>:nth-child(1),#v>:nth-child(1){grid-column:span 5}#l>:nth-child(2),#v>:nth-child(2){grid-column:span 7}}
-.tool .set{border-bottom:1px solid var(--rule);padding-block:5px;margin:0}.tool .set:last-of-type{border-bottom:0}.tool .set input{width:124px}.tool .set input[type=date]{width:150px;padding:0 8px}.tool .set input.wide{width:min(56%,190px);text-align:left}
-.tool .btn{width:100%;margin-top:14px}
+
+.tt{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0}.tt button{flex:none;width:40px;height:40px;border:0;border-radius:12px;background:var(--rule);font-size:20px;padding:0}.tt span{font:650 17px var(--ui)}
+.ttw{max-height:360px;overflow-y:auto;overscroll-behavior:contain}.ttw th{position:sticky;top:0;background:var(--paper);z-index:1}
+@media (min-width:700px){.ttw{max-height:none}}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -361,17 +362,12 @@ nav .nhead{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:up
 <section id="x" class="hide">
 <div class="sheet"><div class="lbl" data-i="netMo"></div><div class="big" id="x_big"></div><div class="keys" id="x_leg"></div><p class="note wn" data-i="testNote"></p></div>
 <div class="sheet" id="x_in"></div>
+<div class="sheet"><p class="head" data-i="ttHead"></p><p class="note" style="margin-top:-4px" data-i="ttNote"></p><div class="tt"><button data-tt="-1" aria-label="‹">‹</button><span id="tt_l"></span><button data-tt="1" aria-label="›">›</button></div><div class="ttw"><table id="tt_t"></table></div><p class="note"><a href="https://www.skatteverket.se/foretag/arbetsgivare/arbetsgivaravgifterochskatteavdrag/skattetabeller" target="_blank" rel="noopener" data-i="ttLink"></a></p></div>
 </section>
 
-<section id="v" class="hide tool">
-<div class="sheet"><div class="lbl" id="v_lbl"></div><div class="big" id="v_big"></div><div class="lbl" id="v_sub"></div><div id="v_rows" style="margin-top:12px"></div><p class="note" id="v_save"></p><button class="btn" id="v_goal"></button></div>
-<div class="sheet"><p class="head" data-i="tripHead"></p><div class="set"><label for="t_trip_name" data-i="tName"></label><input id="t_trip_name" class="wide" type="text" maxlength="40" data-tool="trip.name" data-p="tNamePh"></div><div class="set"><label for="t_trip_people" data-i="tPeople"></label><input id="t_trip_people" type="text" inputmode="numeric" data-tool="trip.people"></div><div class="set"><label for="t_trip_nights" data-i="tNights"></label><input id="t_trip_nights" type="text" inputmode="numeric" data-tool="trip.nights"></div><div class="set"><label for="t_trip_travel" data-i="tTravel"></label><input id="t_trip_travel" type="text" inputmode="decimal" data-tool="trip.travel"></div><div class="set"><label for="t_trip_stay" data-i="tStay"></label><input id="t_trip_stay" type="text" inputmode="decimal" data-tool="trip.stay"></div><div class="set"><label for="t_trip_food" data-i="tFood"></label><input id="t_trip_food" type="text" inputmode="decimal" data-tool="trip.food"></div><div class="set"><label for="t_trip_other" data-i="tOther"></label><input id="t_trip_other" type="text" inputmode="decimal" data-tool="trip.other"></div><div class="set"><label for="t_trip_buffer" data-i="tBuffer"></label><input id="t_trip_buffer" type="text" inputmode="decimal" data-tool="trip.buffer"></div><div class="set"><label for="t_trip_date" data-i="tDate"></label><input id="t_trip_date" type="date" data-tool="trip.date"></div></div>
-</section>
+<section id="v" class="hide"></section>
 
-<section id="l" class="hide tool">
-<div class="sheet"><div class="lbl" data-i="payNet"></div><div class="big" id="l_big"></div><div class="lbl" id="l_sub"></div><div id="l_rows" style="margin-top:12px"></div><button class="btn" id="l_add"></button></div>
-<div class="sheet"><p class="head" data-i="payHead"></p><div class="set"><label for="t_pay_fixed" data-i="pFixed"></label><input id="t_pay_fixed" type="text" inputmode="decimal" data-tool="pay.fixed"></div><div class="set"><label for="t_pay_rate" data-i="pRate"></label><input id="t_pay_rate" type="text" inputmode="decimal" data-tool="pay.rate"></div><div class="set"><label for="t_pay_hours" data-i="pHours"></label><input id="t_pay_hours" type="text" inputmode="decimal" data-tool="pay.hours"></div><div class="set"><label for="t_pay_ob" data-i="pOb"></label><input id="t_pay_ob" type="text" inputmode="decimal" data-tool="pay.ob"></div><div class="set"><label for="t_pay_sem" data-i="pSem"></label><input id="t_pay_sem" type="text" inputmode="decimal" data-tool="pay.sem"></div><div class="set"><label for="t_pay_tax" data-i="pTax"></label><input id="t_pay_tax" type="text" inputmode="decimal" data-tool="pay.tax"></div><p class="note" data-i="payNote"></p></div>
-</section>
+<section id="l" class="hide"></section>
 
 <section id="c" class="hide">
 <div class="sheet"><div class="lbl" data-i="theme"></div><div class="chips" id="c_th"></div><div class="lbl" data-i="notif"></div><div class="chips" id="c_tg"></div><div class="lbl" data-i="sound"></div><div class="chips" id="c_sn"></div><div class="lbl" data-i="clickL"></div><div class="chips" id="c_ck"></div><div class="lbl" data-i="lang"></div><div class="chips" id="c_lg"></div><div class="lbl" data-i="motion"></div><div class="chips" id="c_mo"></div></div>
@@ -383,7 +379,7 @@ nav .nhead{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:up
 
 <script>
 const $=id=>document.getElementById(id);
-const S={lang:"sv",saved:0,buf:3,lifePct:15,adults:2,theme:"auto",toasts:true,sound:true,click:true,motion:true,gx:35000,rate:30,ga:20000,jk:10000,ts:600000,tr:20,fe:.1};
+const S={lang:"sv",saved:0,buf:3,lifePct:15,adults:2,taxT:32,theme:"auto",toasts:true,sound:true,click:true,motion:true,gx:35000,rate:30,ga:20000,jk:10000,ts:600000,tr:20,fe:.1};
 let NOW=new Date();
 const MNS=[["Januari","Februari","Mars","April","Maj","Juni","Juli","Augusti","September","Oktober","November","December"],["January","February","March","April","May","June","July","August","September","October","November","December"]];
 const li=()=>S.lang==="sv"?0:1,mn=i=>MNS[li()][i],ms=i=>mn(i).slice(0,3),loc=()=>S.lang==="sv"?"sv-SE":"en-GB";
@@ -404,10 +400,7 @@ const SRC=[["https://www.riksbank.se/sv/press-och-publicerat/nyheter-och-pressme
 /* every UI string: [Swedish, English]; functions take values */
 const T={
 nH:["Översikt","Overview"],nB:["Budget","Budget"],nS:["Sparande","Savings"],nR:["Resultat","Results"],nM:["Marknad","Market"],
-ttlH:["Översikt","Overview"],ttlB:["Budget","Budget"],ttlS:["Sparande","Savings"],ttlR:["Resultat","Results"],ttlM:["Marknad","Market"],ttlE:["Köp & oväntat","Purchases"],ttlX:["Skatt","Tax"],ttlC:["Inställningar","Settings"],ttlV:["Preliminär resa","Trip estimate"],ttlL:["Preliminär lön","Pay estimate"],toolsH:["Verktyg","Tools"],
-tripHead:["Fyll i resan","Trip details"],tName:["Namn","Name"],tNamePh:["T.ex. Italien","E.g. Italy"],tPeople:["Antal personer","People"],tNights:["Antal nätter","Nights"],tTravel:["Resa per person, kr","Travel per person, kr"],tStay:["Boende per natt, kr","Stay per night, kr"],tFood:["Mat per person och dag, kr","Food per person per day, kr"],tOther:["Aktiviteter och övrigt, kr","Activities and other, kr"],tBuffer:["Buffert, %","Buffer, %"],tDate:["Avresa","Departure"],
-vLbl:["Preliminär kostnad","Estimated cost"],vLblN:[n=>`Preliminär kostnad, ${n}`,n=>`Estimated cost, ${n}`],vSub:[(p,d)=>`${p} per person · ${d} per dag`,(p,d)=>`${p} per person · ${d} per day`],rTravel:["Resa","Travel"],rStay:["Boende","Stay"],rFood:["Mat","Food"],rOther:["Aktiviteter och övrigt","Activities and other"],rBuf:["Buffert","Buffer"],vSave:[(a,n)=>`Spara ${a} i månaden i ${n} ${n===1?"månad":"månader"} så är resan betald.`,(a,n)=>`Save ${a} a month for ${n} ${n===1?"month":"months"} and the trip is paid for.`],vPast:["Avresan har redan varit. Välj ett senare datum.","The departure has passed. Pick a later date."],vMake:["Skapa sparande mål","Create savings goal"],vUpd:["Uppdatera sparande mål","Update savings goal"],tripDef:["Resa","Trip"],tGoalNew:[n=>`Sparande mål skapat · ${n}`,n=>`Savings goal created · ${n}`],tGoalUp:[n=>`Sparande mål uppdaterat · ${n}`,n=>`Savings goal updated · ${n}`],
-payHead:["Fyll i lönen","Pay details"],payNet:["Preliminär nettolön","Estimated net pay"],pFixed:["Fast månadslön, kr","Fixed monthly pay, kr"],pRate:["Timlön, kr","Hourly pay, kr"],pHours:["Timmar","Hours"],pOb:["OB och tillägg, kr","Extras and OB, kr"],pSem:["Semesterersättning, %","Holiday pay, %"],pTax:["Skatt, %","Tax, %"],payNote:["Uppskattning. Ta skatteprocenten från din lönespec, så blir det närmast verkligheten. Semesterersättning betalas oftast vid timlön och är normalt minst 12 %. Har du fast lön och semesterdagar, sätt den till 0.","Estimate only. Take the tax percentage from your payslip for the closest result. Holiday pay usually applies to hourly work and is normally at least 12%. With fixed pay and holiday days, set it to 0."],lSub:[(g,t)=>`Brutto ${g} · Skatt ${t}`,(g,t)=>`Gross ${g} · Tax ${t}`],rBase:["Lön","Pay"],rOb:["OB och tillägg","Extras and OB"],rSem:["Semesterersättning","Holiday pay"],rGross:["Bruttolön","Gross pay"],rTax:["Skatt","Tax"],payAdd:[m=>`Lägg in i Budget för ${m}`,m=>`Add to Budget for ${m}`],payLine:["Preliminär lön","Pay estimate"],tPayAdd:[(m,a)=>`Inlagd i ${m} · ${a}`,(m,a)=>`Added to ${m} · ${a}`],
+ttlH:["Översikt","Overview"],ttlB:["Budget","Budget"],ttlS:["Sparande","Savings"],ttlR:["Resultat","Results"],ttlM:["Marknad","Market"],ttlE:["Köp & oväntat","Purchases"],ttlX:["Skatt","Tax"],ttlC:["Inställningar","Settings"],ttHead:["Skattetabell 2026","Tax table 2026"],ttNote:["Skatteverkets månadstabeller, kolumn 1: lön om du var under 66 år vid årets början. Visas per 1 000 kr. Ditt tabellnummer står på lönespecen.","Skatteverket's monthly tables, column 1: salary if you were under 66 at the start of the year. Shown per 1,000 kr. Your table number is on your payslip."],ttNum:[n=>"Tabell "+n,n=>"Table "+n],ttPay:["Lön","Salary"],ttTax:["Skatt","Tax"],ttLeft:["Kvar","Left"],ttLink:["Hela tabellerna hos Skatteverket","Full tables at Skatteverket"],ttlV:["Preliminär resa","Trip estimate"],ttlL:["Preliminär lön","Pay estimate"],toolsH:["Verktyg","Tools"],
 disc:["Uppskattningar. Ingen finansiell rådgivning.","Estimates only. Not financial advice."],pickYear:["Välj år","Pick a year"],
 leftIn:[m=>`Kvarvarande i ${m}`,m=>`Remaining in ${m}`],perDay:[(d,n)=>`Ca ${d} per dag i ${n} dagar`,(d,n)=>`About ${d} per day for ${n} days`],overBy:[n=>`Över med ${n}`,n=>`Over by ${n}`],
 needs:["Räkningar","Bills"],fixedL:["Fasta","Fixed"],varL:["Rörliga","Variable"],saving:["Sparande","Saving"],life:["Eget liv","Living"],
@@ -465,7 +458,7 @@ const sum=x=>x.reduce((s,i)=>s+i.a,0);
 const VARS=/(^|\s)(mat|livsmedel|food|groceries|transport|skånetrafiken|nöjen|kläder|hotell|katterna|hälsa|skola)(\s|$)/i,CREDIT=/klarna|delbetal|kredit|avbetal|credit|instal|leasing|billån|(^|\s)(lån|lan|loan)(\s|$)/i,MORT=/bolån|bolan|mortgage/i,FOOD=/(^|\s)(mat|livsmedel|food|groceries|ica|coop|willys|hemköp)(\s|$)/i,SUBS=/netflix|spotify|hbo|\bmax\b|viaplay|disney|streaming|prenumer|subscription|youtube|storytel|apple tv/i;
 
 /* Each message key has a kind, which picks its icon, color and sound. */
-const KIND={tPayAdd:"ok",tGoalNew:"win",tGoalUp:"ok",tSaved:"save",tBuf:"win",tStart:"win",tWd:"out",tNeedAmt:"warn",needDate:"warn",tFail:"bad",tDelFail:"bad",tRem:"del",tKill:"del",tStop:"del",tDel:"del",tOver:"bad",tAddExp:"ok",tEnd:"out",tSkip:"out"};
+const KIND={tSaved:"save",tBuf:"win",tStart:"win",tWd:"out",tNeedAmt:"warn",needDate:"warn",tFail:"bad",tDelFail:"bad",tRem:"del",tKill:"del",tStop:"del",tDel:"del",tOver:"bad",tAddExp:"ok",tEnd:"out",tSkip:"out"};
 const TICON={save:'<path d="M12 19V5M6 11l6-6 6 6"/>',ok:'<path d="m5 12.5 4.5 4.5L19 7"/>',win:'<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/>',out:'<path d="M12 5v14M6 13l6 6 6-6"/>',warn:'<path d="M12 4 2.8 20h18.4z"/><path d="M12 10v4.5M12 17.5h.01"/>',bad:'<circle cx="12" cy="12" r="8.5"/><path d="M12 8v5M12 16h.01"/>',del:'<path d="M5 7h14M10 7V4.5h4V7M7 7l1 13h8l1-13M10.5 11v5M13.5 11v5"/>',info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11.5V16M12 8h.01"/>'};
 const TUNE={save:[[659,0],[988,.09]],ok:[[784,0],[1047,.08]],win:[[523,0],[659,.1],[784,.2],[1047,.3]],out:[[587,0],[440,.1]],warn:[[494,0],[494,.13]],bad:[[330,0],[247,.13]],del:[[392,0],[294,.09]],info:[[880,0]]};
 let AC=null;
@@ -575,22 +568,7 @@ function renderHome(){
   $("h_up").innerHTML=up.map(u=>`<div class="up"><span class="dt">${new Date(u.at).toLocaleDateString(loc(),{day:"numeric",month:"short"})}</span><span>${esc(u.n||"–")}<small>${t(u.f==="q"?"short":u.f==="y"?"yearly":"once")}</small></span><b class="${u.tp==="inc"?"ok":""}">${u.tp==="inc"?"+":""}${kr(u.a)}</b></div>`).join("");
   renderYear();
 }
-let HY=NOW.getFullYear(),SG="",toolsDirty=false;
-const toolDefaults=()=>({pay:{fixed:0,rate:160,hours:80,ob:0,sem:12,tax:30},trip:{name:"",people:2,nights:5,travel:2500,stay:1200,food:400,other:3000,buffer:10,date:"",goal:""}});
-let TOOLS=toolDefaults();
-function saveTools(){if(!col)return;toolsDirty=true;later("tools",()=>{toolsDirty=false;col.doc("tools").set({kind:"tools",pay:TOOLS.pay,trip:TOOLS.trip}).catch(()=>toast(t("tFail")))},150)}
-const fmtN=v=>(+v||0).toLocaleString("sv-SE",{maximumFractionDigits:2});
-const rowsHtml=a=>a.filter(r=>r[2]||r[1]).map(r=>`<div class="row"><span>${r[0]}</span><b>${kr(r[1])}</b></div>`).join("");
-function renderTools(){
-  const ae=document.activeElement;document.querySelectorAll("[data-tool]").forEach(x=>{if(x===ae)return;const[a,b]=x.dataset.tool.split("."),v=TOOLS[a][b];x.value=x.type==="date"||b==="name"?(v||""):fmtN(v)});
-  const P1=TOOLS.pay,base=P1.fixed+P1.rate*P1.hours,sem=(P1.rate*P1.hours+P1.ob)*P1.sem/100,gross=base+P1.ob+sem,tax=gross*P1.tax/100,net=gross-tax;
-  $("l_big").textContent=kr(net);$("l_sub").textContent=t("lSub",kr(gross),kr(tax));$("l_rows").innerHTML=rowsHtml([[t("rBase"),base,1],[t("rOb"),P1.ob],[t("rSem"),sem],[t("rGross"),gross,1],[t("rTax"),-tax,1]]);$("l_add").textContent=t("payAdd",mn(P.m).toLowerCase());$("l_add").dataset.net=Math.round(net);
-  const T1=TOOLS.trip,days=T1.nights+1,travel=T1.people*T1.travel,stay=T1.nights*T1.stay,food=T1.people*days*T1.food,sub=travel+stay+food+T1.other,buf=sub*T1.buffer/100,tot=sub+buf;
-  $("v_lbl").textContent=T1.name?t("vLblN",T1.name):t("vLbl");$("v_big").textContent=kr(tot);$("v_sub").textContent=t("vSub",kr(T1.people?tot/T1.people:0),kr(days&&T1.people?tot/days/T1.people:0));
-  $("v_rows").innerHTML=rowsHtml([[t("rTravel"),travel],[t("rStay"),stay],[t("rFood"),food],[t("rOther"),T1.other],[t("rBuf"),buf]]);
-  let msg="";if(T1.date){const[y,m]=T1.date.split("-").map(Number),n=(y*12+m-1)-(NOW.getFullYear()*12+NOW.getMonth());msg=new Date(T1.date+"T23:59:00")<NOW?t("vPast"):t("vSave",kr(tot/Math.max(1,n)),Math.max(1,n))}$("v_save").textContent=msg;
-  $("v_goal").textContent=G.some(g=>g.k===T1.goal)?t("vUpd"):t("vMake");$("v_goal").dataset.tot=Math.round(tot);
-}
+let HY=NOW.getFullYear(),SG="";
 function yearData(y){return MNS[0].map((_,m)=>{const v=monthData(y,m);if(!v.inc.length&&!v.items.length&&!v.vars.length&&!PM[mk(y,m)])return null;return planCalc(v)})}
 function renderYear(){
   const D=yearData(HY),nf=v=>Math.round(v).toLocaleString("sv-SE").replace("-","−"),tot=k=>D.reduce((s,p)=>s+(p?p[k]:0),0),I=tot("inc"),O=tot("needs"),Sv=tot("save"),L=tot("life"),isY=HY===NOW.getFullYear();
@@ -664,7 +642,10 @@ function renderSpend(){
   else $("e_msg").textContent=t("overBy",kr(-s.left));
   $("e_list").innerHTML=s.list.map(e=>`<div class="dep"><span>${kr(e.amount)} <span class="lbl">${fmtD(e.on)}${e.on>Date.now()?" · "+t("planned"):""} ${esc(e.note||"")}</span></span><button class="x" data-del="${e.id}" aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>`).join("")||`<p class="note">${t("noneP")}</p>`;
 }
-function renderTax(){const g=S.gx*12,ga=Math.min(g,S.ga),ti=g-ga,it=ti*S.rate/100+Math.max(0,ti-S.ts)*S.tr/100,cr=Math.min(it,S.jk),tot=it-cr+ti*S.fe/100,net=g-tot;$("x_big").textContent=kr(net/12);$("x_leg").innerHTML=`<span>${t("taxMo")} <b>${kr(tot/12)}</b></span><span>${t("eff")} <b>${g?pc(tot/g):"–"}</b></span>`}
+/* Skatteverket, allmänna tabeller månad 2026 (SKVFS 2025:20), kolumn 1. */
+const TAX_PAY=[10000,11000,12000,13000,14000,15000,16000,17000,18000,19000,20000,21000,22000,23000,24000,25000,26000,27000,28000,29000,30000,31000,32000,33000,34000,35000,36000,37000,38000,39000,40000,41000,42000,43000,44000,45000,46000,47000,48000,49000,50000,55000,60000],TAX_T={"29":[1061,1243,1425,1607,1787,1962,2137,2350,2563,2776,2989,3202,3415,3628,3849,4070,4292,4513,4734,4955,5177,5398,5619,5840,6062,6283,6504,6726,6947,7168,7399,7689,7979,8269,8559,8849,9139,9429,9719,10009,10299,11749,14192],"30":[1095,1283,1471,1659,1845,2026,2207,2428,2648,2869,3089,3310,3530,3751,3979,4208,4437,4666,4894,5123,5352,5581,5810,6038,6267,6496,6725,6953,7182,7411,7650,7950,8250,8550,8850,9150,9450,9750,10050,10350,10650,12150,14643],"31":[1129,1323,1517,1711,1904,2090,2278,2506,2734,2962,3190,3418,3646,3874,4110,4346,4582,4819,5055,5291,5527,5764,6000,6236,6472,6709,6945,7181,7417,7654,7900,8210,8520,8830,9140,9450,9760,10070,10380,10690,11000,12550,15094],"32":[1163,1363,1563,1763,1962,2155,2348,2584,2819,3055,3290,3526,3761,3997,4240,4484,4728,4972,5215,5459,5703,5947,6190,6434,6678,6922,7165,7409,7653,7896,8151,8471,8791,9111,9431,9751,10071,10391,10711,11031,11351,12951,15544],"33":[1196,1403,1609,1815,2020,2219,2419,2662,2905,3148,3391,3634,3877,4120,4371,4622,4873,5124,5376,5627,5878,6129,6381,6632,6883,7134,7386,7637,7888,8139,8402,8732,9062,9392,9722,10052,10382,10712,11042,11372,11702,13352,15995],"34":[1230,1443,1655,1868,2078,2284,2489,2740,2990,3241,3491,3742,3992,4243,4501,4760,5019,5277,5536,5795,6054,6312,6571,6830,7088,7347,7606,7865,8123,8382,8652,8992,9332,9672,10012,10352,10692,11032,11372,11712,12052,13752,16446],"35":[1264,1483,1701,1920,2137,2348,2560,2818,3076,3334,3592,3850,4108,4366,4632,4898,5164,5430,5696,5963,6229,6495,6761,7028,7294,7560,7826,8092,8359,8625,8903,9253,9603,9953,10303,10653,11003,11353,11703,12053,12403,14153,16896],"36":[1298,1522,1747,1972,2195,2412,2630,2896,3161,3427,3692,3958,4223,4489,4762,5036,5309,5583,5857,6131,6404,6678,6952,7225,7499,7773,8047,8320,8594,8867,9154,9514,9874,10234,10594,10954,11314,11674,12034,12394,12754,14554,17347],"37":[1331,1562,1793,2024,2253,2477,2701,2974,3247,3520,3793,4066,4339,4612,4892,5174,5455,5736,6017,6298,6580,6861,7142,7423,7704,7986,8267,8548,8829,9110,9404,9774,10144,10514,10884,11254,11624,11994,12364,12734,13104,14954,17798],"38":[1365,1602,1839,2076,2311,2541,2771,3052,3332,3613,3893,4174,4454,4734,5023,5312,5600,5889,6178,6466,6755,7044,7332,7621,7910,8199,8487,8776,9065,9353,9655,10035,10415,10795,11175,11555,11935,12315,12695,13075,13455,15355,18248],"39":[1399,1642,1885,2128,2370,2606,2842,3130,3418,3706,3994,4282,4569,4857,5153,5450,5746,6042,6338,6634,6930,7227,7523,7819,8115,8411,8708,9004,9300,9596,9906,10296,10686,11076,11466,11856,12246,12636,13026,13416,13806,15756,18699],"40":[1433,1682,1931,2180,2428,2670,2912,3208,3503,3799,4094,4390,4685,4980,5284,5587,5891,6195,6498,6802,7106,7409,7713,8017,8320,8624,8928,9232,9535,9839,10156,10556,10956,11356,11756,12156,12556,12956,13356,13756,14156,16156,19150],"41":[1467,1722,1977,2233,2486,2734,2983,3286,3589,3892,4195,4497,4800,5103,5414,5725,6037,6348,6659,6970,7281,7592,7904,8215,8526,8837,9148,9459,9770,10081,10407,10817,11227,11637,12047,12457,12867,13277,13687,14097,14507,16557,19600],"42":[1500,1762,2023,2285,2544,2799,3053,3364,3674,3985,4295,4605,4916,5226,5545,5863,6182,6501,6819,7138,7457,7775,8094,8413,8731,9050,9368,9687,10006,10324,10658,11078,11498,11918,12338,12758,13178,13598,14018,14438,14858,16958,20051]};
+function renderTaxTable(){const n=S.taxT,row=TAX_T[n],f=v=>v.toLocaleString("sv-SE");$("tt_l").textContent=t("ttNum",n);$("tt_t").innerHTML=`<thead><tr><th>${t("ttPay")}</th><th>${t("ttTax")}</th><th>${t("ttLeft")}</th></tr></thead><tbody>`+TAX_PAY.map((p,i)=>`<tr><td>${f(p)}</td><td>${f(row[i])}</td><td>${f(p-row[i])}</td></tr>`).join("")+`</tbody>`}
+function renderTax(){renderTaxTable();const g=S.gx*12,ga=Math.min(g,S.ga),ti=g-ga,it=ti*S.rate/100+Math.max(0,ti-S.ts)*S.tr/100,cr=Math.min(it,S.jk),tot=it-cr+ti*S.fe/100,net=g-tot;$("x_big").textContent=kr(net/12);$("x_leg").innerHTML=`<span>${t("taxMo")} <b>${kr(tot/12)}</b></span><span>${t("eff")} <b>${g?pc(tot/g):"–"}</b></span>`}
 function renderSettings(){
   $("c_th").innerHTML=["auto","light","dark"].map(v=>`<button class="chip ${S.theme===v?"on":""}" data-th="${v}">${t(v)}</button>`).join("");
   $("c_tg").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.toasts?"1":"0")===v?"on":""}" data-tg="${v}">${t(k)}</button>`).join("");
@@ -683,8 +664,8 @@ function build(){
   buildSheet();buildGoals();
 }
 function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render()}
-function render(){$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderSpend();renderTax();renderResults();renderMarket();renderSettings();renderTools();FX.sync(planCalc(nowMd()))}
-function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,click:S.click,recV:S.recV||0}).catch(()=>{}),150)}
+function render(){$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderSpend();renderTax();renderResults();renderMarket();renderSettings();FX.sync(planCalc(nowMd()))}
+function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,taxT:S.taxT,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,click:S.click,recV:S.recV||0}).catch(()=>{}),150)}
 const yrOpen=()=>$("yrs").classList.contains("on");
 function closeYears(){$("yrs").classList.remove("on")}
 function openYears(){const y0=NOW.getFullYear(),ys=new Set([P.y]);for(let y=y0-5;y<=y0+10;y++)ys.add(y);[...deps.map(d=>d.at),...exps.map(e=>e.on)].forEach(x=>x&&ys.add(new Date(x).getFullYear()));Object.keys(PM).forEach(k=>ys.add(+k.slice(0,4)));
@@ -699,7 +680,6 @@ function go(x){$("ps").classList.remove("on");tab=x;try{sessionStorage.setItem("
 $("menu").onclick=()=>{$("drawer").classList.add("on");$("scrim").classList.add("on")};$("scrim").onclick=()=>{$("drawer").classList.remove("on");$("scrim").classList.remove("on")};
 
 document.addEventListener("input",e=>{const x=e.target;
-  if(x.dataset.tool){const[a,b]=x.dataset.tool.split(".");TOOLS[a][b]=x.type==="date"||b==="name"?x.value:Math.max(0,parseA(x.value));saveTools();renderTools();return}
   if(x.dataset.gt){const g=G.find(z=>z.k===x.dataset.gt);if(g){g.t=Math.max(0,parseA(x.value));saveGoals();renderSaving()}return}
   if(x.dataset.gs){const g=G.find(z=>z.k===x.dataset.gs);if(g){g.s=Math.max(0,parseA(x.value));saveGoals();render()}return}
   if(x.dataset.goal){const g=G.find(z=>z.k===x.dataset.goal);if(g){g.n=x.value;saveGoals();buildSheet();render()}return}
@@ -707,26 +687,8 @@ document.addEventListener("input",e=>{const x=e.target;
   else if(x.dataset.rw){const rw=x.dataset.rw,f=x.dataset.f,v=f==="a"?Math.max(0,parseA(x.value)):x.value;
     if(x.dataset.rid){const r=ruleById(x.dataset.rid),k=mk(P.y,P.m);if(r){if(f==="n")r.n=v;else setForward(r,k,v);saveRule(r)}}
     else{const i=+x.dataset.ix;editMonth(md=>{if(md[rw][i])md[rw][i][f]=v})}render()}});
-document.addEventListener("focusout",e=>{const x=e.target;if(x.dataset&&((x.dataset.tool&&x.type!=="date"&&!x.dataset.tool.endsWith("name"))?(x.value=fmtN(parseA(x.value)),false):x.dataset.gs||x.dataset.gt||(x.dataset.rw&&x.dataset.f==="a")))x.value=fmtA(parseA(x.value))});
+document.addEventListener("focusout",e=>{const x=e.target;if(x.dataset&&(x.dataset.gs||x.dataset.gt||(x.dataset.rw&&x.dataset.f==="a")))x.value=fmtA(parseA(x.value))});
 let RS=null,RD=null,potPicked=false;
-$("l_add").onclick=()=>{const a=+$("l_add").dataset.net||0;if(!a){toast(t("tNeedAmt"));return}editMonth(md=>md.inc.push({n:t("payLine"),a}));buildSheet();render();toast(t("tPayAdd",mn(P.m).toLowerCase(),kr(a)))};
-$("v_goal").onclick=()=>{const tg=+$("v_goal").dataset.tot||0,T1=TOOLS.trip,name=T1.name||t("tripDef");if(!tg){toast(t("tNeedAmt"));return}let g=G.find(z=>z.k===T1.goal);const isNew=!g;if(g){g.t=tg;g.n=name}else{g={k:"t"+Date.now(),n:name,s:0,t:tg};G.push(g);T1.goal=g.k;saveTools()}saveGoals();buildGoals();buildSheet();render();toast(t(isNew?"tGoalNew":"tGoalUp",name))};
-function openPS(){const sel=$("s_pot"),rows=[...planCalc(cur()).lines.map(l=>[l.k,potName(l)]),["",t("potOther")]];$("ps_o").innerHTML=rows.map(([k,n])=>{const g=G.find(z=>z.k===k),got=(g?g.s||0:0)+deps.filter(d=>(d.pot||"")===k).reduce((s,d)=>s+d.amount,0);return `<button class="opt pk ${sel.value===k?"on":""}" data-pk="${esc(k)}"><span>${esc(n)}<small>${t("ptSaved",kr(got))}</small></span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"/></svg></i></button>`}).join("");$("ps").classList.add("on")}
-$("s_pot_b").onclick=openPS;$("ps_no").onclick=()=>$("ps").classList.remove("on");$("ps").addEventListener("click",e=>{if(e.target===$("ps"))$("ps").classList.remove("on")});
-function openRD(id){const r=ruleById(id);if(!r)return;RD=id;const k=mk(P.y,P.m),M=mn(P.m).toLowerCase(),sk=(r.skip||[]).includes(k),o=[];
-  if(sk)o.push(["unskip",t("rdUn",M),""]);else{o.push(["end",t("rdEnd",M),t("rdEndS",M)]);o.push(["skip",t("rdSkip",M),t("rdSkipS")])}
-  if(r.end)o.push(["cont",t("rdCont"),t("rdContS")]);o.push(["kill",t("rdKill"),t("rdKillS")]);
-  $("rd_t").textContent=r.n||t("rdT");$("rd_s").textContent=t("rdT");$("rd_no").textContent=t("cancel");$("rd_o").innerHTML=o.map(([v,a,b])=>`<button class="opt ${v==="kill"?"bad":""}" data-rdo="${v}">${esc(a)}${b?`<small>${esc(b)}</small>`:""}</button>`).join("");$("rd").classList.add("on")}
-const closeRD=()=>{$("rd").classList.remove("on");RD=null};
-$("rd_no").onclick=closeRD;$("rd").addEventListener("click",e=>{if(e.target===$("rd"))closeRD()});
-function doRD(a){const r=ruleById(RD);if(!r)return closeRD();const k=mk(P.y,P.m),M=mn(P.m).toLowerCase();
-  if(a==="end"){r.end=nextKey(k);saveRule(r);toast(t("tEnd",M))}
-  else if(a==="skip"){r.skip=[...(r.skip||[]),k];saveRule(r);toast(t("tSkip",M))}
-  else if(a==="unskip"){r.skip=(r.skip||[]).filter(x=>x!==k);saveRule(r);toast(t("tBack"))}
-  else if(a==="cont"){r.end=null;saveRule(r);toast(t("tBack"))}
-  else if(a==="kill"){dropRule(r);toast(t("tKill"))}
-  closeRD();buildSheet();render()}
-$("g_add").onclick=()=>{const k="c"+Date.now();G.push({k,n:""});saveGoals();buildGoals();buildSheet();render();$("goal_"+k).focus()};
 function paintRS(){$("rs_f").innerHTML=[["o","fO"],["m","fM"],["q","fQ"],["y","fY"]].map(([v,l])=>`<button class="${RS.f===v?"on":""}" data-rf="${v}">${t(l)}</button>`).join("");$("rs_l").classList.toggle("hide",RS.f==="o");$("rs_d").classList.toggle("hide",RS.f==="o");$("rs_l").textContent=t(RS.f==="m"?"pickOpt":"pickFirst");$("rs_h").textContent=RS.f==="o"?t("hO",mn(P.m).toLowerCase()):t(RS.f==="m"?"hM":RS.f==="q"?"hQ":"hY");$("rs_amt").classList.toggle("hide",!RS.rid||RS.f==="o");$("rs_al").textContent=t("amtIn",mn(P.m).toLowerCase());$("rs_sc").innerHTML=[["fwd","scFwd"],["one","scOne"]].map(([v,l])=>`<button class="${RS.sc===v?"on":""}" data-sc="${v}">${t(l)}</button>`).join("")}
 function openRS(rw,rid,ix){const r=rid?ruleById(rid):null,raw=rawMonth(P.y,P.m),x=r?null:raw[rw][+ix];if(!r&&!x)return;RS={rw,rid,ix:+ix,f:r?r.freq:"o",sc:"fwd"};$("rs_a").value=r?fmtA(amtOf(r,mk(P.y,P.m))):"";$("rs_t").textContent=(r?r.n:x.n)||t("linePh");$("rs_d").value=r?(r.ds||r.freq!=="m"?r.date:""):(x.d||"");$("rs_no").textContent=t("cancel");$("rs_ok").textContent=t("saveW");paintRS();$("rs").classList.add("on")}
 const closeRS=()=>{$("rs").classList.remove("on");RS=null};
@@ -757,7 +719,7 @@ let rt;$("reset").onclick=async()=>{const b=$("reset");
   if(b.dataset.arm!=="1"){b.dataset.arm="1";b.textContent=t("resetAgain");clearTimeout(rt);rt=setTimeout(()=>{b.dataset.arm="0";b.textContent=t("reset")},4000);return}
   b.dataset.arm="0";b.textContent=t("reset");
   if(col){try{await Promise.all(allIds.map(id=>col.doc(id).delete()))}catch(e){toast(t("tDelFail"));return}}
-  deps=[];exps=[];PM={};S.saved=0;TOOLS=toolDefaults();seedExample();build();render();persist();toast(t("tDel"))};
+  deps=[];exps=[];PM={};S.saved=0;seedExample();build();render();persist();toast(t("tDel"))};
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
   if(g){const again=g.id==="nav_b"&&tab==="b",was=yrOpen();go(g.dataset.go);if(again&&!was)openYears();return}
@@ -766,6 +728,7 @@ document.addEventListener("click",e=>{
   if(yr){P.y=+yr.dataset.yr;if(P.y===NOW.getFullYear())P.m=NOW.getMonth();closeYears();refreshMonth();return}
   if(yrOpen()&&!e.target.closest("#yrs"))closeYears();
   const pk=e.target.closest("[data-pk]");if(pk){potPicked=true;$("s_pot").value=pk.dataset.pk;$("s_pot_t").textContent=$("s_pot").selectedOptions[0].text;$("ps").classList.remove("on");return}
+  const tt=e.target.closest("[data-tt]");if(tt){S.taxT=Math.min(42,Math.max(29,S.taxT+ +tt.dataset.tt));persist();renderTaxTable();return}
   const gv=e.target.closest("[data-gv]");if(gv){const v=["",...G.map(z=>z.k)],i=v.indexOf(SG);SG=v[(i+ +gv.dataset.gv+v.length)%v.length];renderSaving();return}
   const hy=e.target.closest("[data-hy]");if(hy){HY+=+hy.dataset.hy;renderYear();yearScroll();return}
   const jm=e.target.closest("[data-jump]");if(jm){P={y:HY,m:+jm.dataset.jump};refreshMonth();go("b");return}
@@ -860,9 +823,8 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     if(!checked&&!snap.metadata.fromCache){checked=true;if(snap.empty)importOld().catch(()=>{})}
     const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});const keepR=RULES.filter(r=>DIRTYR.has(r.id)),real=snap.docs.some(d=>/^(pm|rec|dep|exp)_|^started$/.test(d.id)),ex=exampleMode&&!real;if(!ex){exampleMode=false;PM={};RULES=[]}deps=[];exps=[];allIds=snap.docs.map(d=>d.id);const old=S.lang;let sawGoals=false;
     snap.docs.forEach(d=>{const v=d.data()||{};
-      if(d.id==="plan"){["saved","buf","lifePct","adults"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.sound==="boolean")S.sound=v.sound;if(typeof v.click==="boolean")S.click=v.click;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
+      if(d.id==="plan"){["saved","buf","lifePct","adults","taxT"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.sound==="boolean")S.sound=v.sound;if(typeof v.click==="boolean")S.click=v.click;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
       else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
-      else if(v.kind==="tools"){if(!toolsDirty){const d=toolDefaults();TOOLS={pay:{...d.pay,...(v.pay||{})},trip:{...d.trip,...(v.trip||{})}}}}
       else if(v.kind==="goals"){sawGoals=true;if(!goalsDirty&&Array.isArray(v.list))G=v.list.map(g=>({k:String(g.k),n:String(g.n||""),s:+g.s||0,t:+g.t||0}))}
       else if(v.kind==="rec"&&Array.isArray(v.amts)&&v.amts.length&&!ex)RULES.push({id:String(v.id),t:v.t,n:String(v.n||""),freq:v.freq,date:String(v.date),ds:!!v.ds,amts:v.amts.map(x=>({f:String(x.f),a:+x.a||0})),end:v.end||null,over:v.over&&typeof v.over==="object"?{...v.over}:{},skip:Array.isArray(v.skip)?[...v.skip]:[]});
       else if(v.kind==="exp"&&typeof v.amount==="number")exps.push({id:d.id,amount:v.amount,note:v.note||"",on:v.on||0});
