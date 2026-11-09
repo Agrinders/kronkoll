@@ -308,6 +308,9 @@ nav .nhead{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:up
 #hs label{display:block;font-size:14px;color:var(--soft);margin-top:12px}#hs label+input{margin-top:6px}
 #hs_r{max-height:300px;overflow-y:auto;margin-top:10px}.hr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;width:100%;padding:10px 12px;margin-bottom:6px;border:1px solid var(--rule);border-radius:12px;background:none;text-align:left;font-size:15px;font-weight:600}.hr small{display:block;font-size:13px;font-weight:500;color:var(--soft)}.hr span:last-child{white-space:nowrap;font-size:14px;color:var(--soft);font-weight:500;align-self:center}
 #hs_sel{margin-top:12px;font-weight:650;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.top{position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--top-gap,12px));z-index:15;background:color-mix(in srgb,var(--paper) 86%,transparent);backdrop-filter:blur(18px) saturate(1.5);-webkit-backdrop-filter:blur(18px) saturate(1.5)}
+@media (max-width:699px){.top{--top-gap:10px}}
+@media (min-width:1024px){.top{--top-gap:16px}}
 </style>
 
 <canvas id="fx" aria-hidden="true"></canvas>
