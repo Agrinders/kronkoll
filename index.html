@@ -268,6 +268,12 @@ summary{transition:transform .2s cubic-bezier(.3,1.9,.5,1);-webkit-user-select:n
 .rp{position:absolute;border-radius:50%;background:currentColor;opacity:.24;transform:scale(0);pointer-events:none;animation:rp .5s cubic-bezier(.2,.7,.3,1) forwards}
 @keyframes rp{to{transform:scale(1);opacity:0}}
 nav button.on svg{animation:pop .34s cubic-bezier(.3,1.9,.5,1)}@keyframes pop{from{transform:scale(.72) translateY(3px)}}
+
+.sideh{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);padding:14px 12px 4px}
+nav .nhead{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--soft);padding:12px 14px 2px}
+@media (min-width:700px){#l>:nth-child(1),#v>:nth-child(1){grid-column:span 5}#l>:nth-child(2),#v>:nth-child(2){grid-column:span 7}}
+.tool .set{border-bottom:1px solid var(--rule);padding-block:5px;margin:0}.tool .set:last-of-type{border-bottom:0}.tool .set input{width:124px}.tool .set input[type=date]{width:150px;padding:0 8px}.tool .set input.wide{width:min(56%,190px);text-align:left}
+.tool .btn{width:100%;margin-top:14px}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -277,7 +283,7 @@ nav button.on svg{animation:pop .34s cubic-bezier(.3,1.9,.5,1)}@keyframes pop{fr
 <div id="modal"><div class="mbox"><b id="m_t"></b><p id="m_p"></p><div class="mact"><button class="btn out" id="m_no"></button><button class="btn" id="m_yes"></button></div></div></div>
 <aside id="drawer">
 <h2>Kronkoll</h2>
-<button data-go="e" data-i="ttlE"></button><button data-go="x" data-i="ttlX"></button><button data-go="c" data-i="ttlC"></button>
+<button data-go="e" data-i="ttlE"></button><div class="sideh" data-i="toolsH"></div><button data-go="x" data-i="ttlX"></button><button data-go="v" data-i="ttlV"></button><button data-go="l" data-i="ttlL"></button><div class="sideh" style="height:6px;padding:0"></div><button data-go="c" data-i="ttlC"></button>
 <small data-i="disc"></small>
 </aside>
 <div id="rs"><div class="mbox"><b id="rs_t"></b><div class="seg" id="rs_f"></div><label for="rs_d" id="rs_l"></label><input id="rs_d" type="date"><p class="note" id="rs_h"></p><div id="rs_amt"><label for="rs_a" id="rs_al"></label><input id="rs_a" type="text" inputmode="decimal"><div class="seg" id="rs_sc"></div></div><div style="height:14px"></div><div class="mact"><button class="btn out" id="rs_no"></button><button class="btn" id="rs_ok"></button></div></div></div>
@@ -357,13 +363,23 @@ nav button.on svg{animation:pop .34s cubic-bezier(.3,1.9,.5,1)}@keyframes pop{fr
 <div class="sheet" id="x_in"></div>
 </section>
 
+<section id="v" class="hide tool">
+<div class="sheet"><div class="lbl" id="v_lbl"></div><div class="big" id="v_big"></div><div class="lbl" id="v_sub"></div><div id="v_rows" style="margin-top:12px"></div><p class="note" id="v_save"></p><button class="btn" id="v_goal"></button></div>
+<div class="sheet"><p class="head" data-i="tripHead"></p><div class="set"><label for="t_trip_name" data-i="tName"></label><input id="t_trip_name" class="wide" type="text" maxlength="40" data-tool="trip.name" data-p="tNamePh"></div><div class="set"><label for="t_trip_people" data-i="tPeople"></label><input id="t_trip_people" type="text" inputmode="numeric" data-tool="trip.people"></div><div class="set"><label for="t_trip_nights" data-i="tNights"></label><input id="t_trip_nights" type="text" inputmode="numeric" data-tool="trip.nights"></div><div class="set"><label for="t_trip_travel" data-i="tTravel"></label><input id="t_trip_travel" type="text" inputmode="decimal" data-tool="trip.travel"></div><div class="set"><label for="t_trip_stay" data-i="tStay"></label><input id="t_trip_stay" type="text" inputmode="decimal" data-tool="trip.stay"></div><div class="set"><label for="t_trip_food" data-i="tFood"></label><input id="t_trip_food" type="text" inputmode="decimal" data-tool="trip.food"></div><div class="set"><label for="t_trip_other" data-i="tOther"></label><input id="t_trip_other" type="text" inputmode="decimal" data-tool="trip.other"></div><div class="set"><label for="t_trip_buffer" data-i="tBuffer"></label><input id="t_trip_buffer" type="text" inputmode="decimal" data-tool="trip.buffer"></div><div class="set"><label for="t_trip_date" data-i="tDate"></label><input id="t_trip_date" type="date" data-tool="trip.date"></div></div>
+</section>
+
+<section id="l" class="hide tool">
+<div class="sheet"><div class="lbl" data-i="payNet"></div><div class="big" id="l_big"></div><div class="lbl" id="l_sub"></div><div id="l_rows" style="margin-top:12px"></div><button class="btn" id="l_add"></button></div>
+<div class="sheet"><p class="head" data-i="payHead"></p><div class="set"><label for="t_pay_fixed" data-i="pFixed"></label><input id="t_pay_fixed" type="text" inputmode="decimal" data-tool="pay.fixed"></div><div class="set"><label for="t_pay_rate" data-i="pRate"></label><input id="t_pay_rate" type="text" inputmode="decimal" data-tool="pay.rate"></div><div class="set"><label for="t_pay_hours" data-i="pHours"></label><input id="t_pay_hours" type="text" inputmode="decimal" data-tool="pay.hours"></div><div class="set"><label for="t_pay_ob" data-i="pOb"></label><input id="t_pay_ob" type="text" inputmode="decimal" data-tool="pay.ob"></div><div class="set"><label for="t_pay_sem" data-i="pSem"></label><input id="t_pay_sem" type="text" inputmode="decimal" data-tool="pay.sem"></div><div class="set"><label for="t_pay_tax" data-i="pTax"></label><input id="t_pay_tax" type="text" inputmode="decimal" data-tool="pay.tax"></div><p class="note" data-i="payNote"></p></div>
+</section>
+
 <section id="c" class="hide">
 <div class="sheet"><div class="lbl" data-i="theme"></div><div class="chips" id="c_th"></div><div class="lbl" data-i="notif"></div><div class="chips" id="c_tg"></div><div class="lbl" data-i="sound"></div><div class="chips" id="c_sn"></div><div class="lbl" data-i="clickL"></div><div class="chips" id="c_ck"></div><div class="lbl" data-i="lang"></div><div class="chips" id="c_lg"></div><div class="lbl" data-i="motion"></div><div class="chips" id="c_mo"></div></div>
 <div class="sheet"><div id="set_in"></div><div id="h_c"></div></div>
 <div class="sheet"><div class="lbl" data-i="yourData"></div><p class="note" id="c_st"></p><button class="btn out" id="reset" style="width:100%;margin-top:10px"></button></div>
 </section>
 </main>
-<nav><button data-go="h"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6 6"/></svg><em data-i="nH" style="font-style:normal"></em></button><button data-go="b" id="nav_b"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14M5 12h14M5 18.5h8"/></svg><em data-i="nB" style="font-style:normal"></em></button><button data-go="s"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16.5c0-5 3.6-9 8-9s8 4 8 9"/><path d="M4 16.5h16M12 7.5V4.5"/></svg><em data-i="nS" style="font-style:normal"></em></button><button data-go="r"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.4"/></svg><em data-i="nR" style="font-style:normal"></em></button><button data-go="m"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l5.5-6 4 3.5L20 7"/><path d="M15 7h5v5"/></svg><em data-i="nM" style="font-style:normal"></em></button><button class="more first" data-go="e"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17l-3-2-3 2-3-2-3 2z"/><path d="M9.5 8.5h5M9.5 12.5h5"/></svg><em data-i="ttlE" style="font-style:normal"></em></button><button class="more" data-go="x"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><circle cx="7.5" cy="7.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg><em data-i="ttlX" style="font-style:normal"></em></button><button class="more" data-go="c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M18 7h2M4 17h2M11 17h9"/><circle cx="15.5" cy="7" r="2.5"/><circle cx="8.5" cy="17" r="2.5"/></svg><em data-i="ttlC" style="font-style:normal"></em></button></nav>
+<nav><button data-go="h"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6 6"/></svg><em data-i="nH" style="font-style:normal"></em></button><button data-go="b" id="nav_b"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14M5 12h14M5 18.5h8"/></svg><em data-i="nB" style="font-style:normal"></em></button><button data-go="s"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16.5c0-5 3.6-9 8-9s8 4 8 9"/><path d="M4 16.5h16M12 7.5V4.5"/></svg><em data-i="nS" style="font-style:normal"></em></button><button data-go="r"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.4"/></svg><em data-i="nR" style="font-style:normal"></em></button><button data-go="m"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l5.5-6 4 3.5L20 7"/><path d="M15 7h5v5"/></svg><em data-i="nM" style="font-style:normal"></em></button><button class="more first" data-go="e"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17l-3-2-3 2-3-2-3 2z"/><path d="M9.5 8.5h5M9.5 12.5h5"/></svg><em data-i="ttlE" style="font-style:normal"></em></button><div class="more nhead" data-i="toolsH"></div><button class="more" data-go="x"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><circle cx="7.5" cy="7.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg><em data-i="ttlX" style="font-style:normal"></em></button><button class="more" data-go="v"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 11 18-7-7 18-3-8z"/></svg><em data-i="ttlV" style="font-style:normal"></em></button><button class="more" data-go="l"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6.5" width="17" height="12" rx="2.5"/><circle cx="12" cy="12.5" r="2.4"/></svg><em data-i="ttlL" style="font-style:normal"></em></button><button class="more" data-go="c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M18 7h2M4 17h2M11 17h9"/><circle cx="15.5" cy="7" r="2.5"/><circle cx="8.5" cy="17" r="2.5"/></svg><em data-i="ttlC" style="font-style:normal"></em></button></nav>
 
 <script>
 const $=id=>document.getElementById(id);
@@ -388,7 +404,10 @@ const SRC=[["https://www.riksbank.se/sv/press-och-publicerat/nyheter-och-pressme
 /* every UI string: [Swedish, English]; functions take values */
 const T={
 nH:["Översikt","Overview"],nB:["Budget","Budget"],nS:["Sparande","Savings"],nR:["Resultat","Results"],nM:["Marknad","Market"],
-ttlH:["Översikt","Overview"],ttlB:["Budget","Budget"],ttlS:["Sparande","Savings"],ttlR:["Resultat","Results"],ttlM:["Marknad","Market"],ttlE:["Köp & oväntat","Purchases"],ttlX:["Skatt","Tax"],ttlC:["Inställningar","Settings"],
+ttlH:["Översikt","Overview"],ttlB:["Budget","Budget"],ttlS:["Sparande","Savings"],ttlR:["Resultat","Results"],ttlM:["Marknad","Market"],ttlE:["Köp & oväntat","Purchases"],ttlX:["Skatt","Tax"],ttlC:["Inställningar","Settings"],ttlV:["Preliminär resa","Trip estimate"],ttlL:["Preliminär lön","Pay estimate"],toolsH:["Verktyg","Tools"],
+tripHead:["Fyll i resan","Trip details"],tName:["Namn","Name"],tNamePh:["T.ex. Italien","E.g. Italy"],tPeople:["Antal personer","People"],tNights:["Antal nätter","Nights"],tTravel:["Resa per person, kr","Travel per person, kr"],tStay:["Boende per natt, kr","Stay per night, kr"],tFood:["Mat per person och dag, kr","Food per person per day, kr"],tOther:["Aktiviteter och övrigt, kr","Activities and other, kr"],tBuffer:["Buffert, %","Buffer, %"],tDate:["Avresa","Departure"],
+vLbl:["Preliminär kostnad","Estimated cost"],vLblN:[n=>`Preliminär kostnad, ${n}`,n=>`Estimated cost, ${n}`],vSub:[(p,d)=>`${p} per person · ${d} per dag`,(p,d)=>`${p} per person · ${d} per day`],rTravel:["Resa","Travel"],rStay:["Boende","Stay"],rFood:["Mat","Food"],rOther:["Aktiviteter och övrigt","Activities and other"],rBuf:["Buffert","Buffer"],vSave:[(a,n)=>`Spara ${a} i månaden i ${n} ${n===1?"månad":"månader"} så är resan betald.`,(a,n)=>`Save ${a} a month for ${n} ${n===1?"month":"months"} and the trip is paid for.`],vPast:["Avresan har redan varit. Välj ett senare datum.","The departure has passed. Pick a later date."],vMake:["Skapa sparande mål","Create savings goal"],vUpd:["Uppdatera sparande mål","Update savings goal"],tripDef:["Resa","Trip"],tGoalNew:[n=>`Sparande mål skapat · ${n}`,n=>`Savings goal created · ${n}`],tGoalUp:[n=>`Sparande mål uppdaterat · ${n}`,n=>`Savings goal updated · ${n}`],
+payHead:["Fyll i lönen","Pay details"],payNet:["Preliminär nettolön","Estimated net pay"],pFixed:["Fast månadslön, kr","Fixed monthly pay, kr"],pRate:["Timlön, kr","Hourly pay, kr"],pHours:["Timmar","Hours"],pOb:["OB och tillägg, kr","Extras and OB, kr"],pSem:["Semesterersättning, %","Holiday pay, %"],pTax:["Skatt, %","Tax, %"],payNote:["Uppskattning. Ta skatteprocenten från din lönespec, så blir det närmast verkligheten. Semesterersättning betalas oftast vid timlön och är normalt minst 12 %. Har du fast lön och semesterdagar, sätt den till 0.","Estimate only. Take the tax percentage from your payslip for the closest result. Holiday pay usually applies to hourly work and is normally at least 12%. With fixed pay and holiday days, set it to 0."],lSub:[(g,t)=>`Brutto ${g} · Skatt ${t}`,(g,t)=>`Gross ${g} · Tax ${t}`],rBase:["Lön","Pay"],rOb:["OB och tillägg","Extras and OB"],rSem:["Semesterersättning","Holiday pay"],rGross:["Bruttolön","Gross pay"],rTax:["Skatt","Tax"],payAdd:[m=>`Lägg in i Budget för ${m}`,m=>`Add to Budget for ${m}`],payLine:["Preliminär lön","Pay estimate"],tPayAdd:[(m,a)=>`Inlagd i ${m} · ${a}`,(m,a)=>`Added to ${m} · ${a}`],
 disc:["Uppskattningar. Ingen finansiell rådgivning.","Estimates only. Not financial advice."],pickYear:["Välj år","Pick a year"],
 leftIn:[m=>`Kvarvarande i ${m}`,m=>`Remaining in ${m}`],perDay:[(d,n)=>`Ca ${d} per dag i ${n} dagar`,(d,n)=>`About ${d} per day for ${n} days`],overBy:[n=>`Över med ${n}`,n=>`Over by ${n}`],
 needs:["Räkningar","Bills"],fixedL:["Fasta","Fixed"],varL:["Rörliga","Variable"],saving:["Sparande","Saving"],life:["Eget liv","Living"],
@@ -446,7 +465,7 @@ const sum=x=>x.reduce((s,i)=>s+i.a,0);
 const VARS=/(^|\s)(mat|livsmedel|food|groceries|transport|skånetrafiken|nöjen|kläder|hotell|katterna|hälsa|skola)(\s|$)/i,CREDIT=/klarna|delbetal|kredit|avbetal|credit|instal|leasing|billån|(^|\s)(lån|lan|loan)(\s|$)/i,MORT=/bolån|bolan|mortgage/i,FOOD=/(^|\s)(mat|livsmedel|food|groceries|ica|coop|willys|hemköp)(\s|$)/i,SUBS=/netflix|spotify|hbo|\bmax\b|viaplay|disney|streaming|prenumer|subscription|youtube|storytel|apple tv/i;
 
 /* Each message key has a kind, which picks its icon, color and sound. */
-const KIND={tSaved:"save",tBuf:"win",tStart:"win",tWd:"out",tNeedAmt:"warn",needDate:"warn",tFail:"bad",tDelFail:"bad",tRem:"del",tKill:"del",tStop:"del",tDel:"del",tOver:"bad",tAddExp:"ok",tEnd:"out",tSkip:"out"};
+const KIND={tPayAdd:"ok",tGoalNew:"win",tGoalUp:"ok",tSaved:"save",tBuf:"win",tStart:"win",tWd:"out",tNeedAmt:"warn",needDate:"warn",tFail:"bad",tDelFail:"bad",tRem:"del",tKill:"del",tStop:"del",tDel:"del",tOver:"bad",tAddExp:"ok",tEnd:"out",tSkip:"out"};
 const TICON={save:'<path d="M12 19V5M6 11l6-6 6 6"/>',ok:'<path d="m5 12.5 4.5 4.5L19 7"/>',win:'<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/>',out:'<path d="M12 5v14M6 13l6 6 6-6"/>',warn:'<path d="M12 4 2.8 20h18.4z"/><path d="M12 10v4.5M12 17.5h.01"/>',bad:'<circle cx="12" cy="12" r="8.5"/><path d="M12 8v5M12 16h.01"/>',del:'<path d="M5 7h14M10 7V4.5h4V7M7 7l1 13h8l1-13M10.5 11v5M13.5 11v5"/>',info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11.5V16M12 8h.01"/>'};
 const TUNE={save:[[659,0],[988,.09]],ok:[[784,0],[1047,.08]],win:[[523,0],[659,.1],[784,.2],[1047,.3]],out:[[587,0],[440,.1]],warn:[[494,0],[494,.13]],bad:[[330,0],[247,.13]],del:[[392,0],[294,.09]],info:[[880,0]]};
 let AC=null;
@@ -556,7 +575,22 @@ function renderHome(){
   $("h_up").innerHTML=up.map(u=>`<div class="up"><span class="dt">${new Date(u.at).toLocaleDateString(loc(),{day:"numeric",month:"short"})}</span><span>${esc(u.n||"–")}<small>${t(u.f==="q"?"short":u.f==="y"?"yearly":"once")}</small></span><b class="${u.tp==="inc"?"ok":""}">${u.tp==="inc"?"+":""}${kr(u.a)}</b></div>`).join("");
   renderYear();
 }
-let HY=NOW.getFullYear(),SG="";
+let HY=NOW.getFullYear(),SG="",toolsDirty=false;
+const toolDefaults=()=>({pay:{fixed:0,rate:160,hours:80,ob:0,sem:12,tax:30},trip:{name:"",people:2,nights:5,travel:2500,stay:1200,food:400,other:3000,buffer:10,date:"",goal:""}});
+let TOOLS=toolDefaults();
+function saveTools(){if(!col)return;toolsDirty=true;later("tools",()=>{toolsDirty=false;col.doc("tools").set({kind:"tools",pay:TOOLS.pay,trip:TOOLS.trip}).catch(()=>toast(t("tFail")))},150)}
+const fmtN=v=>(+v||0).toLocaleString("sv-SE",{maximumFractionDigits:2});
+const rowsHtml=a=>a.filter(r=>r[2]||r[1]).map(r=>`<div class="row"><span>${r[0]}</span><b>${kr(r[1])}</b></div>`).join("");
+function renderTools(){
+  const ae=document.activeElement;document.querySelectorAll("[data-tool]").forEach(x=>{if(x===ae)return;const[a,b]=x.dataset.tool.split("."),v=TOOLS[a][b];x.value=x.type==="date"||b==="name"?(v||""):fmtN(v)});
+  const P1=TOOLS.pay,base=P1.fixed+P1.rate*P1.hours,sem=(P1.rate*P1.hours+P1.ob)*P1.sem/100,gross=base+P1.ob+sem,tax=gross*P1.tax/100,net=gross-tax;
+  $("l_big").textContent=kr(net);$("l_sub").textContent=t("lSub",kr(gross),kr(tax));$("l_rows").innerHTML=rowsHtml([[t("rBase"),base,1],[t("rOb"),P1.ob],[t("rSem"),sem],[t("rGross"),gross,1],[t("rTax"),-tax,1]]);$("l_add").textContent=t("payAdd",mn(P.m).toLowerCase());$("l_add").dataset.net=Math.round(net);
+  const T1=TOOLS.trip,days=T1.nights+1,travel=T1.people*T1.travel,stay=T1.nights*T1.stay,food=T1.people*days*T1.food,sub=travel+stay+food+T1.other,buf=sub*T1.buffer/100,tot=sub+buf;
+  $("v_lbl").textContent=T1.name?t("vLblN",T1.name):t("vLbl");$("v_big").textContent=kr(tot);$("v_sub").textContent=t("vSub",kr(T1.people?tot/T1.people:0),kr(days&&T1.people?tot/days/T1.people:0));
+  $("v_rows").innerHTML=rowsHtml([[t("rTravel"),travel],[t("rStay"),stay],[t("rFood"),food],[t("rOther"),T1.other],[t("rBuf"),buf]]);
+  let msg="";if(T1.date){const[y,m]=T1.date.split("-").map(Number),n=(y*12+m-1)-(NOW.getFullYear()*12+NOW.getMonth());msg=new Date(T1.date+"T23:59:00")<NOW?t("vPast"):t("vSave",kr(tot/Math.max(1,n)),Math.max(1,n))}$("v_save").textContent=msg;
+  $("v_goal").textContent=G.some(g=>g.k===T1.goal)?t("vUpd"):t("vMake");$("v_goal").dataset.tot=Math.round(tot);
+}
 function yearData(y){return MNS[0].map((_,m)=>{const v=monthData(y,m);if(!v.inc.length&&!v.items.length&&!v.vars.length&&!PM[mk(y,m)])return null;return planCalc(v)})}
 function renderYear(){
   const D=yearData(HY),nf=v=>Math.round(v).toLocaleString("sv-SE").replace("-","−"),tot=k=>D.reduce((s,p)=>s+(p?p[k]:0),0),I=tot("inc"),O=tot("needs"),Sv=tot("save"),L=tot("life"),isY=HY===NOW.getFullYear();
@@ -649,7 +683,7 @@ function build(){
   buildSheet();buildGoals();
 }
 function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render()}
-function render(){$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderSpend();renderTax();renderResults();renderMarket();renderSettings();FX.sync(planCalc(nowMd()))}
+function render(){$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderSpend();renderTax();renderResults();renderMarket();renderSettings();renderTools();FX.sync(planCalc(nowMd()))}
 function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,click:S.click,recV:S.recV||0}).catch(()=>{}),150)}
 const yrOpen=()=>$("yrs").classList.contains("on");
 function closeYears(){$("yrs").classList.remove("on")}
@@ -661,10 +695,11 @@ function openYears(){const y0=NOW.getFullYear(),ys=new Set([P.y]);for(let y=y0-5
   const on=$("yr_list").querySelector(".on");if(on)$("yr_list").scrollTop=on.offsetTop-$("yr_list").offsetTop-96;
   $("yrs").classList.add("on")}
 function refreshMonth(){setDates();buildSheet();render()}
-function go(x){$("ps").classList.remove("on");tab=x;try{sessionStorage.setItem("kronkoll.tab",x)}catch(e){}closeYears();FX.tab(x);setTimeout(yearScroll,0);["h","b","s","r","m","e","x","c"].forEach(s=>$(s).classList.toggle("hide",s!==x));document.querySelectorAll("nav button,#drawer>button").forEach(b=>b.classList.toggle("on",b.dataset.go===x));$("drawer").classList.remove("on");$("scrim").classList.remove("on");$("ttl").textContent=t("ttl"+x.toUpperCase());window.scrollTo(0,0)}
+function go(x){$("ps").classList.remove("on");tab=x;try{sessionStorage.setItem("kronkoll.tab",x)}catch(e){}closeYears();FX.tab(x);setTimeout(yearScroll,0);["h","b","s","r","m","e","x","v","l","c"].forEach(s=>$(s).classList.toggle("hide",s!==x));document.querySelectorAll("nav button,#drawer>button").forEach(b=>b.classList.toggle("on",b.dataset.go===x));$("drawer").classList.remove("on");$("scrim").classList.remove("on");$("ttl").textContent=t("ttl"+x.toUpperCase());window.scrollTo(0,0)}
 $("menu").onclick=()=>{$("drawer").classList.add("on");$("scrim").classList.add("on")};$("scrim").onclick=()=>{$("drawer").classList.remove("on");$("scrim").classList.remove("on")};
 
 document.addEventListener("input",e=>{const x=e.target;
+  if(x.dataset.tool){const[a,b]=x.dataset.tool.split(".");TOOLS[a][b]=x.type==="date"||b==="name"?x.value:Math.max(0,parseA(x.value));saveTools();renderTools();return}
   if(x.dataset.gt){const g=G.find(z=>z.k===x.dataset.gt);if(g){g.t=Math.max(0,parseA(x.value));saveGoals();renderSaving()}return}
   if(x.dataset.gs){const g=G.find(z=>z.k===x.dataset.gs);if(g){g.s=Math.max(0,parseA(x.value));saveGoals();render()}return}
   if(x.dataset.goal){const g=G.find(z=>z.k===x.dataset.goal);if(g){g.n=x.value;saveGoals();buildSheet();render()}return}
@@ -672,8 +707,10 @@ document.addEventListener("input",e=>{const x=e.target;
   else if(x.dataset.rw){const rw=x.dataset.rw,f=x.dataset.f,v=f==="a"?Math.max(0,parseA(x.value)):x.value;
     if(x.dataset.rid){const r=ruleById(x.dataset.rid),k=mk(P.y,P.m);if(r){if(f==="n")r.n=v;else setForward(r,k,v);saveRule(r)}}
     else{const i=+x.dataset.ix;editMonth(md=>{if(md[rw][i])md[rw][i][f]=v})}render()}});
-document.addEventListener("focusout",e=>{const x=e.target;if(x.dataset&&(x.dataset.gs||x.dataset.gt||(x.dataset.rw&&x.dataset.f==="a")))x.value=fmtA(parseA(x.value))});
+document.addEventListener("focusout",e=>{const x=e.target;if(x.dataset&&((x.dataset.tool&&x.type!=="date"&&!x.dataset.tool.endsWith("name"))?(x.value=fmtN(parseA(x.value)),false):x.dataset.gs||x.dataset.gt||(x.dataset.rw&&x.dataset.f==="a")))x.value=fmtA(parseA(x.value))});
 let RS=null,RD=null,potPicked=false;
+$("l_add").onclick=()=>{const a=+$("l_add").dataset.net||0;if(!a){toast(t("tNeedAmt"));return}editMonth(md=>md.inc.push({n:t("payLine"),a}));buildSheet();render();toast(t("tPayAdd",mn(P.m).toLowerCase(),kr(a)))};
+$("v_goal").onclick=()=>{const tg=+$("v_goal").dataset.tot||0,T1=TOOLS.trip,name=T1.name||t("tripDef");if(!tg){toast(t("tNeedAmt"));return}let g=G.find(z=>z.k===T1.goal);const isNew=!g;if(g){g.t=tg;g.n=name}else{g={k:"t"+Date.now(),n:name,s:0,t:tg};G.push(g);T1.goal=g.k;saveTools()}saveGoals();buildGoals();buildSheet();render();toast(t(isNew?"tGoalNew":"tGoalUp",name))};
 function openPS(){const sel=$("s_pot"),rows=[...planCalc(cur()).lines.map(l=>[l.k,potName(l)]),["",t("potOther")]];$("ps_o").innerHTML=rows.map(([k,n])=>{const g=G.find(z=>z.k===k),got=(g?g.s||0:0)+deps.filter(d=>(d.pot||"")===k).reduce((s,d)=>s+d.amount,0);return `<button class="opt pk ${sel.value===k?"on":""}" data-pk="${esc(k)}"><span>${esc(n)}<small>${t("ptSaved",kr(got))}</small></span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"/></svg></i></button>`}).join("");$("ps").classList.add("on")}
 $("s_pot_b").onclick=openPS;$("ps_no").onclick=()=>$("ps").classList.remove("on");$("ps").addEventListener("click",e=>{if(e.target===$("ps"))$("ps").classList.remove("on")});
 function openRD(id){const r=ruleById(id);if(!r)return;RD=id;const k=mk(P.y,P.m),M=mn(P.m).toLowerCase(),sk=(r.skip||[]).includes(k),o=[];
@@ -720,7 +757,7 @@ let rt;$("reset").onclick=async()=>{const b=$("reset");
   if(b.dataset.arm!=="1"){b.dataset.arm="1";b.textContent=t("resetAgain");clearTimeout(rt);rt=setTimeout(()=>{b.dataset.arm="0";b.textContent=t("reset")},4000);return}
   b.dataset.arm="0";b.textContent=t("reset");
   if(col){try{await Promise.all(allIds.map(id=>col.doc(id).delete()))}catch(e){toast(t("tDelFail"));return}}
-  deps=[];exps=[];PM={};S.saved=0;seedExample();build();render();persist();toast(t("tDel"))};
+  deps=[];exps=[];PM={};S.saved=0;TOOLS=toolDefaults();seedExample();build();render();persist();toast(t("tDel"))};
 document.addEventListener("click",e=>{
   const g=e.target.closest("[data-go]");
   if(g){const again=g.id==="nav_b"&&tab==="b",was=yrOpen();go(g.dataset.go);if(again&&!was)openYears();return}
@@ -811,7 +848,7 @@ const WIDE=matchMedia("(min-width:700px)"),RAIL=matchMedia("(min-width:1024px)")
 function layout(){const D=["d_inc","d_out","d_var"].map(x=>$(x));if(WIDE.matches)D.forEach(d=>{d.removeAttribute("name");d.open=true});else{D.forEach(d=>{d.open=false;d.setAttribute("name","bud")});if(!hasData())D[0].open=true}}
 [WIDE,RAIL].forEach(m=>m.addEventListener("change",()=>{closeYears();layout();render()}));
 $("b").addEventListener("click",e=>{if(WIDE.matches&&e.target.closest("summary"))e.preventDefault()});
-seedExample();applyTheme();setDates();applyLang();let startTab="h";try{const s=sessionStorage.getItem("kronkoll.tab");if(s&&$(s)&&"hbsrmexc".includes(s))startTab=s}catch(e){}go(startTab);layout();
+seedExample();applyTheme();setDates();applyLang();let startTab="h";try{const s=sessionStorage.getItem("kronkoll.tab");if(s&&$(s)&&"hbsrmexvlc".includes(s))startTab=s}catch(e){}go(startTab);layout();
 document.addEventListener("visibilitychange",()=>{if(document.hidden)return;const d=new Date(),same=d.getMonth()===NOW.getMonth()&&d.getFullYear()===NOW.getFullYear();NOW=d;if(same){render();return}P={y:d.getFullYear(),m:d.getMonth()};refreshMonth()});
 /* One shared household budget, so both people see the same figures. The page works without storage. */
 (async()=>{try{
@@ -825,6 +862,7 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     snap.docs.forEach(d=>{const v=d.data()||{};
       if(d.id==="plan"){["saved","buf","lifePct","adults"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.sound==="boolean")S.sound=v.sound;if(typeof v.click==="boolean")S.click=v.click;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
       else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
+      else if(v.kind==="tools"){if(!toolsDirty){const d=toolDefaults();TOOLS={pay:{...d.pay,...(v.pay||{})},trip:{...d.trip,...(v.trip||{})}}}}
       else if(v.kind==="goals"){sawGoals=true;if(!goalsDirty&&Array.isArray(v.list))G=v.list.map(g=>({k:String(g.k),n:String(g.n||""),s:+g.s||0,t:+g.t||0}))}
       else if(v.kind==="rec"&&Array.isArray(v.amts)&&v.amts.length&&!ex)RULES.push({id:String(v.id),t:v.t,n:String(v.n||""),freq:v.freq,date:String(v.date),ds:!!v.ds,amts:v.amts.map(x=>({f:String(x.f),a:+x.a||0})),end:v.end||null,over:v.over&&typeof v.over==="object"?{...v.over}:{},skip:Array.isArray(v.skip)?[...v.skip]:[]});
       else if(v.kind==="exp"&&typeof v.amount==="number")exps.push({id:d.id,amount:v.amount,note:v.note||"",on:v.on||0});
