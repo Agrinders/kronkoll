@@ -416,8 +416,8 @@ const mk=(y,m)=>y+"_"+String(m+1).padStart(2,"0");
 const pmSel=()=>({y:P.y,m:P.m});
 /* Repeating lines are rules that appear in every month they are due; one-time lines live in their own month. */
 const RW=["inc","items","vars"];let RULES=[],exampleMode=false;
-const defaultGoals=()=>[{k:"buf",n:""},{k:"goal",n:""},{k:"long",n:""}];let G=defaultGoals(),goalsDirty=false,goalsT;
-function saveGoals(){leaveExample();if(!col)return;goalsDirty=true;clearTimeout(goalsT);goalsT=setTimeout(()=>{goalsDirty=false;col.doc("goals").set({kind:"goals",list:G}).catch(()=>toast(t("tFail")))},300)}
+const defaultGoals=()=>[{k:"buf",n:""},{k:"goal",n:""},{k:"long",n:""}];let G=defaultGoals(),goalsDirty=false;
+function saveGoals(){leaveExample();if(!col)return;goalsDirty=true;later("goals",()=>{goalsDirty=false;col.doc("goals").set({kind:"goals",list:G}).catch(()=>toast(t("tFail")))},150)}
 const startKey=r=>{const[y,m]=r.date.split("-");return y+"_"+m};
 function due(r,y,m){const k=mk(y,m),[sy,sm]=r.date.split("-").map(Number);if(k<startKey(r)||(r.end&&k>=r.end))return false;const n=y*12+m-(sy*12+sm-1);return r.freq==="m"||(r.freq==="q"?n%3===0:n%12===0)}
 function amtOf(r,k){if((r.skip||[]).includes(k))return 0;if(r.over&&r.over[k]!=null)return r.over[k];let v=r.amts[0].a;r.amts.forEach(x=>{if(x.f<=k)v=x.a});return v}
@@ -429,14 +429,19 @@ const newId=()=>"r"+Date.now()+Math.floor(Math.random()*1e3);
 function seedExample(){G=defaultGoals();const d=defaults(),s=isoOf(new Date(NOW.getFullYear(),NOW.getMonth(),1));RULES=[];[["inc",d.inc],["items",d.items],["vars",d.vars]].forEach(([t,a])=>a.forEach(([n,x],i)=>RULES.push({id:"ex"+t+i,t,n,freq:"m",date:s,ds:false,amts:[{f:"0",a:x}],end:null})));PM={};exampleMode=true}
 const cur=()=>monthData(P.y,P.m),nowMd=()=>monthData(NOW.getFullYear(),NOW.getMonth());
 const hasData=()=>!exampleMode;
-const TM={},DIRTY=new Set();
+const DIRTY=new Set(),PEND=new Map();
+/* Saves are batched briefly while typing, and always written before the app closes or refreshes. */
+function later(key,fn,ms){const old=PEND.get(key);if(old)clearTimeout(old.t);const e={fn,t:setTimeout(()=>{PEND.delete(key);fn()},ms)};PEND.set(key,e)}
+function cancelSave(key){const e=PEND.get(key);if(e){clearTimeout(e.t);PEND.delete(key)}}
+function flushSaves(){PEND.forEach(e=>{clearTimeout(e.t);e.fn()});PEND.clear()}
+addEventListener("pagehide",flushSaves);addEventListener("beforeunload",flushSaves);document.addEventListener("visibilitychange",()=>{if(document.hidden)flushSaves()});
 const pmDoc=k=>{const w=PM[k];return{kind:"pm",inc:w.inc,items:w.items,vars:w.vars,...(Array.isArray(w.split)?{split:w.split}:{})}};
 const ruleDoc=r=>({kind:"rec",id:r.id,t:r.t,n:r.n,freq:r.freq,date:r.date,ds:!!r.ds,amts:r.amts,end:r.end||null,over:r.over||{},skip:r.skip||[]});
-const DIRTYR=new Set(),TR={};
-function leaveExample(){if(!exampleMode)return;exampleMode=false;if(!col)return;RULES.forEach(r=>col.doc("rec_"+r.id).set(ruleDoc(r)).catch(()=>{}));Object.keys(PM).forEach(k=>col.doc("pm_"+k).set(pmDoc(k)).catch(()=>{}))}
-function editMonth(fn,y=P.y,m=P.m){leaveExample();const k=mk(y,m);if(!PM[k])PM[k]=rawMonth(y,m);fn(PM[k]);if(!col)return;DIRTY.add(k);clearTimeout(TM[k]);TM[k]=setTimeout(()=>{DIRTY.delete(k);if(PM[k])col.doc("pm_"+k).set(pmDoc(k)).catch(()=>toast(t("tFail")))},400)}
-function saveRule(r){leaveExample();if(!col)return;DIRTYR.add(r.id);clearTimeout(TR[r.id]);TR[r.id]=setTimeout(()=>{DIRTYR.delete(r.id);col.doc("rec_"+r.id).set(ruleDoc(r)).catch(()=>toast(t("tFail")))},400)}
-function dropRule(r){leaveExample();RULES=RULES.filter(x=>x!==r);DIRTYR.delete(r.id);clearTimeout(TR[r.id]);if(col)col.doc("rec_"+r.id).delete().catch(()=>{})}
+const DIRTYR=new Set();
+function leaveExample(){if(!exampleMode)return;exampleMode=false;if(!col)return;col.doc("started").set({kind:"started"}).catch(()=>{});RULES.forEach(r=>col.doc("rec_"+r.id).set(ruleDoc(r)).catch(()=>{}));Object.keys(PM).forEach(k=>col.doc("pm_"+k).set(pmDoc(k)).catch(()=>{}))}
+function editMonth(fn,y=P.y,m=P.m){leaveExample();const k=mk(y,m);if(!PM[k])PM[k]=rawMonth(y,m);fn(PM[k]);if(!col)return;DIRTY.add(k);later("m"+k,()=>{DIRTY.delete(k);if(PM[k])col.doc("pm_"+k).set(pmDoc(k)).catch(()=>toast(t("tFail")))},150)}
+function saveRule(r){leaveExample();if(!col)return;DIRTYR.add(r.id);later("r"+r.id,()=>{DIRTYR.delete(r.id);col.doc("rec_"+r.id).set(ruleDoc(r)).catch(()=>toast(t("tFail")))},150)}
+function dropRule(r){leaveExample();RULES=RULES.filter(x=>x!==r);DIRTYR.delete(r.id);cancelSave("r"+r.id);if(col)col.doc("rec_"+r.id).delete().catch(()=>{})}
 function newRule(tp,n,a,freq,date,ds){const r={id:newId(),t:tp,n,freq,date,ds,amts:[{f:"0",a}],end:null};RULES.push(r);saveRule(r);return r}
 function setForward(r,k,v){if(r.over)delete r.over[k];const e=r.amts.find(z=>z.f===k);if(e)e.a=v;else{r.amts.push({f:k,a:v});r.amts.sort((a,b)=>a.f<b.f?-1:1)}}
 const nextKey=k=>{const[y,m]=k.split("_").map(Number),d=new Date(y,m,1);return mk(d.getFullYear(),d.getMonth())};
@@ -604,7 +609,7 @@ function build(){
 }
 function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render()}
 function render(){$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderSpend();renderTax();renderResults();renderMarket();renderSettings();FX.sync(planCalc(nowMd()))}
-let t0;function persist(){if(!col)return;clearTimeout(t0);t0=setTimeout(()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,theme:S.theme,toasts:S.toasts,motion:S.motion,recV:S.recV||0}).catch(()=>{}),600)}
+function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,theme:S.theme,toasts:S.toasts,motion:S.motion,recV:S.recV||0}).catch(()=>{}),150)}
 const yrOpen=()=>$("yrs").classList.contains("on");
 function closeYears(){$("yrs").classList.remove("on")}
 function openYears(){const y0=NOW.getFullYear(),ys=new Set([P.y]);for(let y=y0-5;y<=y0+10;y++)ys.add(y);[...deps.map(d=>d.at),...exps.map(e=>e.on)].forEach(x=>x&&ys.add(new Date(x).getFullYear()));Object.keys(PM).forEach(k=>ys.add(+k.slice(0,4)));
@@ -773,7 +778,7 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
   const importOld=async()=>{const u=await claude.use("user"),id=u&&await u.id();if(!id)return;const o=await db.collection("data/users/"+id).get();for(const d of o.docs)await col.doc(d.id).set({...d.data()})};
   col.onSnapshot(snap=>{
     if(!checked&&!snap.metadata.fromCache){checked=true;if(snap.empty)importOld().catch(()=>{})}
-    const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});const keepR=RULES.filter(r=>DIRTYR.has(r.id)),real=snap.docs.some(d=>/^(pm|rec|dep|exp)_/.test(d.id)),ex=exampleMode&&!real;if(!ex){exampleMode=false;PM={};RULES=[]}deps=[];exps=[];allIds=snap.docs.map(d=>d.id);const old=S.lang;let sawGoals=false;
+    const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});const keepR=RULES.filter(r=>DIRTYR.has(r.id)),real=snap.docs.some(d=>/^(pm|rec|dep|exp)_|^started$/.test(d.id)),ex=exampleMode&&!real;if(!ex){exampleMode=false;PM={};RULES=[]}deps=[];exps=[];allIds=snap.docs.map(d=>d.id);const old=S.lang;let sawGoals=false;
     snap.docs.forEach(d=>{const v=d.data()||{};
       if(d.id==="plan"){["saved","buf","lifePct","adults"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
       else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
@@ -787,7 +792,8 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     keepR.forEach(r=>{const i=RULES.findIndex(x=>x.id===r.id);if(i>=0)RULES[i]=r;else RULES.push(r)});
     /* Budgets saved before repeating lines existed: the latest month's lines become monthly, as they used to carry over. */
     if(!exampleMode&&!S.recV){S.recV=1;persist();const ks=Object.keys(PM).sort(),K=ks[ks.length-1];if(!RULES.length&&K){const date=K.replace("_","-")+"-01";RW.forEach(tp=>{PM[K][tp].forEach(x=>{if(x.n||x.a)newRule(tp,x.n,x.a,"m",date,false)});PM[K][tp]=[]});col.doc("pm_"+K).set(pmDoc(K)).catch(()=>{})}}
-    if(!seenData&&hasData()){seenData=true;if(!WIDE.matches)$("d_inc").open=false}
+    if(!seenData){seenData=true;if(hasData()&&!WIDE.matches)$("d_inc").open=false}
+    if(!exampleMode&&real&&!snap.docs.some(d=>d.id==="started"))col.doc("started").set({kind:"started"}).catch(()=>{});
     applyTheme();
     if(S.lang!==old){applyLang();go(tab);return}
     {const ae=document.activeElement;if(!ae||!ae.closest("#b,#s_goals")){buildSheet();buildGoals()}}render()},()=>{col=null;render()});
