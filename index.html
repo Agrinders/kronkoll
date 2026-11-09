@@ -708,6 +708,22 @@ document.addEventListener("input",e=>{const x=e.target;
     else{const i=+x.dataset.ix;editMonth(md=>{if(md[rw][i])md[rw][i][f]=v})}render()}});
 document.addEventListener("focusout",e=>{const x=e.target;if(x.id==="l_h"||x.id==="l_r"){setTimeout(renderPay,0);return}if(x.id==="x_pay"||x.id==="x_pct"){setTimeout(renderTax,0);return}if(x.dataset&&(x.dataset.gs||x.dataset.gt||(x.dataset.rw&&x.dataset.f==="a")))x.value=fmtA(parseA(x.value))});
 let RS=null,RD=null,potPicked=false;
+function openPS(){const sel=$("s_pot"),rows=[...planCalc(cur()).lines.map(l=>[l.k,potName(l)]),["",t("potOther")]];$("ps_o").innerHTML=rows.map(([k,n])=>{const g=G.find(z=>z.k===k),got=(g?g.s||0:0)+deps.filter(d=>(d.pot||"")===k).reduce((s,d)=>s+d.amount,0);return `<button class="opt pk ${sel.value===k?"on":""}" data-pk="${esc(k)}"><span>${esc(n)}<small>${t("ptSaved",kr(got))}</small></span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"/></svg></i></button>`}).join("");$("ps").classList.add("on")}
+$("s_pot_b").onclick=openPS;$("ps_no").onclick=()=>$("ps").classList.remove("on");$("ps").addEventListener("click",e=>{if(e.target===$("ps"))$("ps").classList.remove("on")});
+function openRD(id){const r=ruleById(id);if(!r)return;RD=id;const k=mk(P.y,P.m),M=mn(P.m).toLowerCase(),sk=(r.skip||[]).includes(k),o=[];
+  if(sk)o.push(["unskip",t("rdUn",M),""]);else{o.push(["end",t("rdEnd",M),t("rdEndS",M)]);o.push(["skip",t("rdSkip",M),t("rdSkipS")])}
+  if(r.end)o.push(["cont",t("rdCont"),t("rdContS")]);o.push(["kill",t("rdKill"),t("rdKillS")]);
+  $("rd_t").textContent=r.n||t("rdT");$("rd_s").textContent=t("rdT");$("rd_no").textContent=t("cancel");$("rd_o").innerHTML=o.map(([v,a,b])=>`<button class="opt ${v==="kill"?"bad":""}" data-rdo="${v}">${esc(a)}${b?`<small>${esc(b)}</small>`:""}</button>`).join("");$("rd").classList.add("on")}
+const closeRD=()=>{$("rd").classList.remove("on");RD=null};
+$("rd_no").onclick=closeRD;$("rd").addEventListener("click",e=>{if(e.target===$("rd"))closeRD()});
+function doRD(a){const r=ruleById(RD);if(!r)return closeRD();const k=mk(P.y,P.m),M=mn(P.m).toLowerCase();
+  if(a==="end"){r.end=nextKey(k);saveRule(r);toast(t("tEnd",M))}
+  else if(a==="skip"){r.skip=[...(r.skip||[]),k];saveRule(r);toast(t("tSkip",M))}
+  else if(a==="unskip"){r.skip=(r.skip||[]).filter(x=>x!==k);saveRule(r);toast(t("tBack"))}
+  else if(a==="cont"){r.end=null;saveRule(r);toast(t("tBack"))}
+  else if(a==="kill"){dropRule(r);toast(t("tKill"))}
+  closeRD();buildSheet();render()}
+$("g_add").onclick=()=>{const k="c"+Date.now();G.push({k,n:""});saveGoals();buildGoals();buildSheet();render();$("goal_"+k).focus()};
 function paintRS(){$("rs_f").innerHTML=[["o","fO"],["m","fM"],["q","fQ"],["y","fY"]].map(([v,l])=>`<button class="${RS.f===v?"on":""}" data-rf="${v}">${t(l)}</button>`).join("");$("rs_l").classList.toggle("hide",RS.f==="o");$("rs_d").classList.toggle("hide",RS.f==="o");$("rs_l").textContent=t(RS.f==="m"?"pickOpt":"pickFirst");$("rs_h").textContent=RS.f==="o"?t("hO",mn(P.m).toLowerCase()):t(RS.f==="m"?"hM":RS.f==="q"?"hQ":"hY");$("rs_amt").classList.toggle("hide",!RS.rid||RS.f==="o");$("rs_al").textContent=t("amtIn",mn(P.m).toLowerCase());$("rs_sc").innerHTML=[["fwd","scFwd"],["one","scOne"]].map(([v,l])=>`<button class="${RS.sc===v?"on":""}" data-sc="${v}">${t(l)}</button>`).join("")}
 function openRS(rw,rid,ix){const r=rid?ruleById(rid):null,raw=rawMonth(P.y,P.m),x=r?null:raw[rw][+ix];if(!r&&!x)return;RS={rw,rid,ix:+ix,f:r?r.freq:"o",sc:"fwd"};$("rs_a").value=r?fmtA(amtOf(r,mk(P.y,P.m))):"";$("rs_t").textContent=(r?r.n:x.n)||t("linePh");$("rs_d").value=r?(r.ds||r.freq!=="m"?r.date:""):(x.d||"");$("rs_no").textContent=t("cancel");$("rs_ok").textContent=t("saveW");paintRS();$("rs").classList.add("on")}
 const closeRS=()=>{$("rs").classList.remove("on");RS=null};
