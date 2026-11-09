@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
+<title>Kronkoll</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Glass panels floating over a live liquid map of the month's money. One idea per panel. */
+:root{--desk:#e8ecf3;--paper:#ffffff;--glass:rgba(255,255,255,.74);--glass2:rgba(255,255,255,.62);--rule:rgba(24,36,66,.12);--ink:#141c30;--soft:#515d75;--pen:#2747b8;--c1:#3556a8;--c2:#2c8a5c;--c3:#c98a1e;--c4:#c04f7c;--good:#1c6d46;--warn:#855208;--bad:#ad2f2f;--f1:#7d9bf0;--f2:#55c99a;--f3:#f4b45c;--fbg:#e8ecf3;--dk:0;--hand:"Bricolage Grotesque",Figtree,system-ui,sans-serif;--ui:Figtree,system-ui,-apple-system,"Segoe UI",sans-serif;--shadow:0 12px 34px rgba(24,36,66,.12)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--desk:#090d15;--paper:#121927;--glass:rgba(14,20,32,.72);--glass2:rgba(14,20,32,.6);--rule:rgba(226,235,255,.13);--ink:#edf2fb;--soft:#a7b3c9;--pen:#a7bffa;--c1:#6688dc;--c2:#3b9f70;--c3:#b98a2c;--c4:#c9648c;--good:#79dcac;--warn:#efc67a;--bad:#f4a3a3;--f1:#3b62e0;--f2:#14ad7c;--f3:#e08f24;--fbg:#090d15;--dk:1;--shadow:0 14px 40px rgba(0,0,0,.4);color-scheme:dark}}
+:root[data-theme="dark"]{--desk:#090d15;--paper:#121927;--glass:rgba(14,20,32,.72);--glass2:rgba(14,20,32,.6);--rule:rgba(226,235,255,.13);--ink:#edf2fb;--soft:#a7b3c9;--pen:#a7bffa;--c1:#6688dc;--c2:#3b9f70;--c3:#b98a2c;--c4:#c9648c;--good:#79dcac;--warn:#efc67a;--bad:#f4a3a3;--f1:#3b62e0;--f2:#14ad7c;--f3:#e08f24;--fbg:#090d15;--dk:1;--shadow:0 14px 40px rgba(0,0,0,.4);color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{background:radial-gradient(70vmax 60vmax at 15% 10%,color-mix(in srgb,var(--f1) 38%,transparent),transparent),radial-gradient(60vmax 60vmax at 90% 60%,color-mix(in srgb,var(--f2) 30%,transparent),transparent),var(--desk);background-attachment:fixed;color:var(--ink);font:16px/1.45 var(--ui);min-height:100%;margin:0;padding-block:12px calc(112px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));overflow-x:hidden;font-variant-numeric:tabular-nums}
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:-1;display:block}
+main{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+section{display:flex;flex-direction:column;gap:12px;min-width:0;animation:rise .38s cubic-bezier(.2,.9,.3,1)}
+@keyframes rise{from{transform:translateY(10px);opacity:.5}}
+.hide{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer;transition:transform .15s,background .2s,color .2s}button:active{transform:scale(.96)}
+input,select{font:inherit;color:var(--ink);min-width:0}
+a{color:var(--pen)}
+:focus-visible{outline:2px solid var(--pen);outline-offset:2px}
+.top,.sheet,.mnav,nav,#yrs{backdrop-filter:blur(12px) saturate(1.5);-webkit-backdrop-filter:blur(12px) saturate(1.5);background:var(--glass);border:1px solid var(--rule);box-shadow:var(--shadow)}
+.top{display:flex;align-items:center;gap:8px;padding:4px 14px 4px 4px;border-radius:18px}
+.menu{width:44px;height:44px;border:0;background:none;padding:0;display:grid;place-items:center}
+h1{font:650 25px/1.1 var(--hand);letter-spacing:-.02em;margin:0;text-wrap:balance}
+.sheet{min-width:0;padding:18px;border-radius:22px}
+.lbl{font-size:14px;color:var(--soft)}
+.big{font:700 54px/1.02 var(--hand);letter-spacing:-.035em;overflow-wrap:anywhere}
+.head{font:650 21px/1.2 var(--hand);letter-spacing:-.015em;margin:0}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-block:10px;border-bottom:1px solid var(--rule)}
+.row:first-child{padding-top:0}.row:last-child{border-bottom:0;padding-bottom:0}
+.row>span{min-width:0}.row b{font:650 18px/1.2 var(--ui);white-space:nowrap}
+.ok{color:var(--good)}.wn{color:var(--warn)}.er{color:var(--bad)}
+.stack{display:flex;gap:3px;height:12px;margin-top:18px}
+.stack i{display:block;min-width:3px;border-radius:3px;transition:flex-grow .5s}.stack i:first-child{border-radius:8px 3px 3px 8px}.stack i:last-child{border-radius:3px 8px 8px 3px}
+.keys{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:14px;color:var(--soft)}
+.keys b{font-weight:650;color:var(--ink)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.btn{border:0;border-radius:14px;padding:12px 14px;font-weight:700;color:var(--paper);background:var(--ink);min-height:48px}
+.btn.out{background:var(--glass);color:var(--ink);border:1px solid var(--rule);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px)}
+.lnk{border:0;background:none;padding:8px 0;color:var(--pen);font-size:15px;font-weight:650;text-align:left}
+.mnav{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px;border-radius:18px}
+.mnav b{font:650 21px/1.2 var(--hand);letter-spacing:-.015em;text-align:center}
+.mnav button{width:44px;height:44px;border:0;border-radius:14px;background:none;font-size:22px;padding:0}
+.now{display:block;margin:0 auto;padding:6px 14px;border-radius:99px;background:var(--glass)}
+details>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;min-height:44px}
+details>summary::-webkit-details-marker{display:none}
+details>summary::after{content:"";width:8px;height:8px;margin:-3px 4px 0 2px;border-right:2px solid var(--soft);border-bottom:2px solid var(--soft);transform:rotate(45deg);transition:transform .25s}
+details[open]>summary::after{transform:rotate(225deg);margin-top:5px}
+.sumv{margin-left:auto;font:650 18px/1 var(--ui);white-space:nowrap}
+.ln{display:grid;grid-template-columns:minmax(0,1fr) 92px 30px;align-items:center;gap:6px;border-bottom:1px solid var(--rule)}
+.ln input{border:0;background:none;height:46px;padding:0;font:500 17px/1 var(--ui);width:100%;border-radius:0}
+.ln input:focus{outline:0;box-shadow:inset 0 -2px 0 var(--pen)}
+.ln .am{text-align:right;font-weight:650}
+.ln input::placeholder{color:var(--soft)}
+.x{border:0;background:none;color:var(--soft);height:44px;padding:0;font-size:13px}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}input[type=number]{-moz-appearance:textfield;appearance:textfield}
+.spst{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:48px;font-size:14px;color:var(--soft);border-bottom:1px solid var(--rule)}
+.mini{flex:none;min-height:36px;padding:4px 12px;border-radius:99px;border:0;background:color-mix(in srgb,var(--good) 16%,transparent);color:var(--good);font-size:14px;font-weight:700}
+.total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-top:14px}
+.total span{font-weight:600}.total b{font:700 28px/1 var(--hand);letter-spacing:-.02em;white-space:nowrap}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.form>*{min-width:0}.span2{grid-column:1/-1}
+.form input,.form select{width:100%;height:48px;padding:0 12px;border:1px solid var(--rule);border-radius:14px;background:var(--glass2)}
+.note{font-size:14px;color:var(--soft);margin:8px 0 0}
+.bar{height:8px;border-radius:99px;background:var(--rule);overflow:hidden;margin-top:10px}.bar i{display:block;height:100%;background:var(--c2);border-radius:99px;transition:width .5s}
+.cols{display:flex;align-items:flex-end;gap:5px;height:92px;margin-top:14px}.cols div{flex:1;min-width:0;text-align:center;font-size:12px;color:var(--soft)}.cols i{display:block;border-radius:5px 5px 2px 2px;background:var(--rule);min-height:3px;margin-bottom:4px;transition:height .5s}
+.dep{display:flex;justify-content:space-between;align-items:center;gap:8px;padding-block:6px;border-bottom:1px solid var(--rule);font-size:15px}.dep:last-child{border:0}.dep span{min-width:0}
+.find{display:grid;grid-template-columns:26px minmax(0,1fr);gap:4px 8px;padding-block:13px;border-bottom:1px solid var(--rule)}.find:last-child{border:0;padding-bottom:0}
+.find u{text-decoration:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--paper);font-size:13px;font-weight:700}
+.find b{font-weight:650}.find p{grid-column:2;margin:0;font-size:15px;color:var(--soft)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th{font-size:13px;font-weight:600;color:var(--soft);text-align:right;padding:6px 0 6px 10px;border-bottom:1px solid var(--rule)}th:first-child,td:first-child{text-align:left;padding-left:0}
+td{text-align:right;padding:9px 0 9px 10px;border-bottom:1px solid var(--rule);font-size:15px;white-space:nowrap}td:first-child{white-space:normal}
+tr:last-child td{border-bottom:0}
+tr.sub td{font-size:14px;color:var(--soft)}tr.sub td:first-child{padding-left:12px}
+.stamp{display:inline-block;padding:4px 11px;border-radius:99px;border:1px solid currentColor;font-size:13px;font-weight:650}
+.links{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.links a{display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:14px;background:var(--ink);color:var(--paper);font-weight:700;text-decoration:none;text-align:center;padding:4px}
+.fee{padding-block:11px;border-bottom:1px solid var(--rule)}.fee:last-child{border:0}.fee .bar i{background:var(--c1)}.fee .bar{background:none}.fee small{display:block;color:var(--soft);font-size:13px;margin-top:4px}
+.src a{display:block;padding:6px 0;font-size:15px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px}.chips:last-child{margin-bottom:0}.chip{padding:9px 15px;border-radius:99px;border:1px solid var(--rule);background:none;font-size:14px;font-weight:600}.chip.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.set{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-block:6px;font-size:15px}.set input{width:96px;height:44px;text-align:right;padding:0 12px;border:1px solid var(--rule);border-radius:12px;background:var(--glass2)}
+.adv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.adv label{font-size:13px;color:var(--soft)}.adv input{width:100%;height:44px;padding:0 12px;border:1px solid var(--rule);border-radius:12px;background:var(--glass2)}
+.hint{font-size:14px;color:var(--soft);margin-top:8px}.hint.w{color:var(--warn)}.hint.b{color:var(--bad)}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 24px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px)),480px);display:flex;gap:2px;padding:5px;border-radius:24px;z-index:20}
+nav button{flex:1;min-width:0;min-height:56px;border:0;background:none;color:var(--soft);font-size:11.5px;font-weight:650;padding:6px 0 4px;border-radius:19px}
+nav svg{display:block;width:22px;height:22px;margin:0 auto 3px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{background:var(--ink);color:var(--paper)}
+#yrs{position:fixed;width:150px;z-index:25;border-radius:20px;overflow:hidden;transform-origin:bottom center;transform:translateY(24px) scale(.72,.2);opacity:0;pointer-events:none;transition:transform .3s cubic-bezier(.2,1.15,.3,1),opacity .16s}
+#yrs.on{transform:none;opacity:1;pointer-events:auto}
+#yrs p{margin:0;padding:12px 14px 8px;font-size:13px;font-weight:600;color:var(--soft);text-align:center}
+#yr_list{max-height:240px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:0 6px 6px;position:relative}
+#yr_list button{display:block;width:100%;height:48px;border:0;border-radius:13px;background:none;font:650 20px/1 var(--hand)}
+#yr_list button.on{background:var(--ink);color:var(--paper)}
+#scrim{position:fixed;inset:0;background:rgba(5,10,20,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:30}#scrim.on{opacity:1;pointer-events:auto}
+#drawer{position:fixed;top:0;bottom:0;left:0;width:min(80%,300px);transform:translateX(-105%);transition:transform .32s cubic-bezier(.2,.9,.3,1);z-index:31;background:var(--paper);border-right:1px solid var(--rule);padding-top:calc(24px + env(safe-area-inset-top,0px));padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:14px;display:flex;flex-direction:column;gap:4px}
+#drawer.on{transform:none}
+#drawer>button{text-align:left;border:0;background:none;font-weight:600;padding:13px 12px;border-radius:14px}#drawer>button.on{background:var(--ink);color:var(--paper)}
+#drawer h2{font:700 24px var(--hand);letter-spacing:-.02em;margin:0 12px 10px}#drawer small{margin-top:auto;padding:0 12px;color:var(--soft)}
+#modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,10,20,.55);opacity:0;pointer-events:none;transition:opacity .2s}#modal.on{opacity:1;pointer-events:auto}
+.mbox{width:min(100%,400px);background:var(--paper);border:1px solid var(--rule);border-radius:22px;padding:22px}.mbox b{font:650 21px var(--hand)}.mbox p{color:var(--soft);font-size:15px;margin:8px 0 16px}.mact{display:flex;gap:10px}.mact .btn{flex:1}
+#toasts{position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));width:min(calc(100% - 32px),420px);z-index:60;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:12px 16px;border-radius:14px;background:var(--ink);color:var(--paper);font-size:15px;font-weight:600;animation:tin .25s ease,tout .3s 3s forwards}
+@keyframes tin{from{transform:translateY(-16px);opacity:0}}@keyframes tout{to{opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Phone: one column with a floating tab bar. Tablet (700+): two-column panels. Laptop (1024+): side rail. Wide (1280+): three-column budget. */
+.big.verdict{font-size:38px}
+.sheet>.head{margin-bottom:10px}
+.mnavw{min-width:0}
+nav .more{display:none}
+.note,.find p{max-width:68ch}
+@media (hover:hover){.btn:hover,.links a:hover{opacity:.88}nav button:not(.on):hover,#drawer>button:not(.on):hover,.mnav button:hover,#yr_list button:not(.on):hover{background:var(--rule);color:var(--ink)}.lnk:hover{text-decoration:underline}}
+@media (min-width:700px){
+  main{max-width:900px}
+  section{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+  section>*{grid-column:1/-1;min-width:0}
+  .sheet{padding:22px}
+  .big{font-size:clamp(60px,6.4vw,92px)}.big.verdict{font-size:clamp(40px,4.4vw,58px)}
+  .mnavw{width:100%;max-width:440px;justify-self:center}
+  .cols{height:156px}
+  #h>:nth-child(2){grid-column:span 7}#h>:nth-child(3){grid-column:span 5;align-content:center}#h>.btn{justify-self:start;min-width:260px}
+  #b>:nth-child(2),#b>:nth-child(3),#b>:nth-child(4),#b>:nth-child(5){grid-column:span 6}
+  #b details>summary{cursor:default}#b details>summary::after{display:none}
+  #s_per{order:-1}#s>:nth-child(1){grid-column:span 5}#s>:nth-child(3){grid-column:span 7}#s>:nth-child(4){grid-column:span 7}#s>:nth-child(5){grid-column:span 5}
+  #r>:nth-child(2),#r>:nth-child(3){align-self:start}#r>:nth-child(4),#r>:nth-child(5){grid-column:span 6;align-self:start}
+  #m>:nth-child(2),#m>:nth-child(3){grid-column:span 6}#m>:nth-child(4),#m>:nth-child(5){grid-column:span 6}
+  #m .links{max-width:440px}
+  #e>:nth-child(2),#x>:nth-child(1){grid-column:span 5}#e>:nth-child(3),#x>:nth-child(2){grid-column:span 7}
+  #c>:nth-child(1),#c>:nth-child(2){grid-column:span 6}
+}
+@media (min-width:860px){#r>:nth-child(2),#r>:nth-child(3){grid-column:span 6}}
+@media (min-width:1024px){
+  body{padding-left:calc(248px + env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px));padding-block:16px 24px}
+  main{max-width:1180px;gap:14px}
+  .menu{display:none}.top{padding:12px 20px}h1{font-size:30px}
+  nav{left:max(16px,env(safe-area-inset-left,0px));top:16px;bottom:16px;transform:none;width:216px;flex-direction:column;gap:4px;padding:12px 10px}
+  nav::before{content:"Kronkoll";font:750 24px/1 var(--hand);letter-spacing:-.03em;padding:8px 12px 18px}
+  nav button{flex:none;display:flex;align-items:center;gap:12px;min-height:46px;padding:0 14px;font-size:15px;border-radius:14px;text-align:left}
+  nav svg{margin:0;flex:none}
+  nav .more{display:flex}nav .more.first{margin-top:auto}
+  #yrs{transform-origin:left center;transform:translateX(-18px) scale(.2,.72)}
+  #b .form{grid-template-columns:minmax(0,2fr) minmax(0,2fr) minmax(0,1fr) minmax(0,1fr)}
+}
+@media (min-width:1280px){
+  #r>:nth-child(2){grid-column:span 7}#r>:nth-child(3){grid-column:span 5}
+  #m>:nth-child(2){grid-column:span 5}#m>:nth-child(3){grid-column:span 7}#m>:nth-child(4){grid-column:span 7}#m>:nth-child(5){grid-column:span 5}
+}
+
+/* Budget lines as soft tiles, with a calm red remove button. */
+.lnw{background:var(--glass2);border:1px solid var(--rule);border-radius:14px;padding:1px 7px 1px 14px;margin-top:7px;transition:border-color .2s,box-shadow .2s}
+.lnw:focus-within{border-color:var(--pen);box-shadow:0 0 0 3px color-mix(in srgb,var(--pen) 16%,transparent)}
+.ln{grid-template-columns:minmax(0,1fr) auto 32px;gap:8px;border-bottom:0}
+.ln input:focus{box-shadow:none}
+.amw{display:flex;align-items:baseline;gap:5px}.ln .am{width:5.4em;font-size:17px}.amw span{font-size:14px;color:var(--soft)}
+.x{width:32px;height:32px;border-radius:50%;background:color-mix(in srgb,var(--bad) 12%,transparent);color:var(--bad);display:grid;place-items:center;padding:0}
+.x svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;fill:none}
+.spst{border-bottom:0;border-top:1px solid var(--rule);min-height:46px;padding-right:2px}
+#l_inc,#l_items,#l_vars,#l_split{margin-top:2px}
+.sub2{display:block;font-size:13px;color:var(--soft);font-weight:500}
+@media (hover:hover){.x:hover{background:color-mix(in srgb,var(--bad) 22%,transparent)}}
+/* The year summary on Overview. */
+.yhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ynav{display:flex;gap:4px}.ynav button{width:40px;height:40px;border:0;border-radius:12px;background:var(--rule);font-size:20px;padding:0}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.tile{background:var(--glass2);border:1px solid var(--rule);border-radius:14px;padding:12px;min-width:0}.tile b{display:block;font:700 23px/1.15 var(--hand);letter-spacing:-.02em;margin-top:3px;overflow-wrap:anywhere}
+.ybars{display:flex;align-items:flex-end;gap:4px;height:150px;margin-top:18px}
+.ymo{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;gap:5px;border:0;background:none;padding:0;font-size:12px;color:var(--soft)}
+.ymo.cur{color:var(--ink);font-weight:750}
+.ymo .st{display:flex;flex-direction:column-reverse;gap:2px}.ymo i{display:block;min-height:2px}.ymo .st i:last-child{border-radius:4px 4px 0 0}.ymo .none{height:2px;background:var(--rule)}
+.ytable{margin-top:14px}
+.ytable th,.ytable td{font-size:13px;padding:8px 0 8px 12px}.ytable .tot{font-weight:700}
+.ytable th:first-child,.ytable td:first-child{position:sticky;left:0;background:var(--paper);padding-right:10px;min-width:104px;white-space:nowrap;z-index:1}
+.ytable tr.sum td{font-weight:650}
+.ytable th.cur{color:var(--ink)}
+@media (min-width:700px){.tiles{grid-template-columns:repeat(4,minmax(0,1fr))}.ybars{height:190px}.tile b{font-size:28px}}
+</style>
+<script src="app-shell.js"></script>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div id="toasts"></div><div id="scrim"></div>
+<div id="modal"><div class="mbox"><b id="m_t"></b><p id="m_p"></p><div class="mact"><button class="btn out" id="m_no"></button><button class="btn" id="m_yes"></button></div></div></div>
+<aside id="drawer">
+<h2>Kronkoll</h2>
+<button data-go="e" data-i="ttlE"></button><button data-go="x" data-i="ttlX"></button><button data-go="c" data-i="ttlC"></button>
+<small data-i="disc"></small>
+</aside>
+<div id="yrs"><p data-i="pickYear"></p><div id="yr_list"></div></div>
+
+<main>
+<div class="top"><button class="menu" id="menu" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h11M4 17h16"/></svg></button><h1 id="ttl"></h1></div>
+
+<section id="h">
+<div class="sheet hide" id="h_ex"><span class="lbl" data-i="exNote"></span><br><button class="lnk" data-go="b" data-i="exGo"></button></div>
+<div class="sheet">
+<div class="lbl" id="h_lbl"></div><div class="big" id="h_big"></div><div class="lbl" id="h_day"></div>
+<div class="stack" id="h_stack"></div><div class="keys" id="h_keys"></div>
+</div>
+<div class="sheet" id="h_lines"></div>
+<div class="sheet" id="h_year"><div class="yhead"><p class="head" id="y_t" style="margin:0"></p><div class="ynav"><button data-hy="-1" aria-label="‹">‹</button><button data-hy="1" aria-label="›">›</button></div></div><div class="tiles" id="y_tiles"></div><div class="ybars" id="y_bars"></div><div class="keys" id="y_keys"></div><div class="scroll ytable" id="y_sc"><table id="y_tbl"></table></div></div>
+<div class="sheet"><div class="lbl" data-i="topNow"></div><div id="h_top"></div><button class="lnk" data-go="r" data-i="seeAll"></button></div>
+<button class="btn out" data-go="e" data-i="addBuy"></button>
+</section>
+
+<section id="b" class="hide">
+<div class="mnavw" id="b_per"></div>
+<div class="sheet">
+<details name="bud" id="d_inc"><summary><span class="head" data-i="incHead"></span><span class="sumv" id="sum_inc"></span></summary><div id="l_inc"></div><button class="lnk" data-add="inc" data-i="newLine"></button></details>
+</div>
+<div class="sheet">
+<details name="bud" id="d_out"><summary><span class="head" data-i="outHead"></span><span class="sumv" id="sum_out"></span></summary><div id="l_items"></div><button class="lnk" data-add="items" data-i="newLine"></button></details>
+</div>
+<div class="sheet">
+<details name="bud" id="d_var"><summary><span class="head" data-i="varHead"></span><span class="sumv" id="sum_var"></span></summary><div id="l_vars"></div><button class="lnk" data-add="vars" data-i="newLine"></button></details>
+</div>
+<div class="sheet">
+<details name="bud" id="d_rest"><summary><span><span class="head" data-i="restHead"></span><span class="sub2" data-i="restSub"></span></span><span class="sumv" id="sum_rest"></span></summary><p class="note" id="r_intro"></p><div id="l_split"></div><button class="lnk" data-add="split" data-i="newGoal"></button><br><button class="lnk hide" id="r_rec" data-i="useRec"></button><div id="r_warn"></div><p class="note" id="r_note"></p></details>
+<div class="total" style="border-top:1px solid var(--rule);margin-top:6px"><span data-i="lifeRow"></span><b id="b_life"></b></div>
+</div>
+<div class="sheet"><p class="head" data-i="addSaveHead"></p>
+<div class="form"><input id="s_amt" type="number" inputmode="decimal" data-p="amountPh"><select id="s_pot"></select><button class="btn" id="s_add" data-i="bSaved"></button><button class="btn out" id="s_out" data-i="bWd"></button></div>
+<div class="set" style="margin-top:10px"><label for="f_saved" data-i="fSaved"></label><input id="f_saved" type="number" inputmode="decimal" data-s="saved"></div>
+</div>
+</section>
+
+<section id="s" class="hide">
+<div class="sheet"><div class="lbl" data-i="totSaved"></div><div class="big" id="s_big"></div><div class="bar"><i id="s_bar" style="width:0"></i></div><div class="lbl" id="s_goal" style="margin-top:6px"></div></div>
+<div class="mnavw" id="s_per"></div>
+<div class="sheet"><div class="lbl" id="s_month"></div><div class="cols" id="s_cols"></div></div>
+<div class="sheet"><p class="head" data-i="potHead"></p><div id="s_pots"></div></div>
+<div class="sheet"><details><summary><span class="head" data-i="entries"></span><span class="sumv" id="s_cnt"></span></summary><div id="s_list"></div></details></div>
+</section>
+
+<section id="r" class="hide">
+<div class="sheet"><div class="lbl" id="r_lbl"></div><div class="big verdict" id="r_big"></div><div class="lbl" id="r_sub"></div></div>
+<div class="sheet"><p class="head" data-i="changeHead"></p><div id="r_find"></div></div>
+<div class="sheet"><p class="head" data-i="cmpHead"></p><div class="scroll"><table id="r_tbl"></table></div><p class="note" data-i="cmpNote"></p></div>
+<div class="sheet"><details><summary><span class="head" data-i="ecoHead"></span></summary><div id="r_eco"></div></details></div>
+<div class="sheet"><details><summary><span class="head" data-i="howHead"></span></summary><div id="r_how"></div></details></div>
+</section>
+
+<section id="m" class="hide">
+<div class="sheet"><span class="stamp" id="m_age"></span><p class="note" data-i="notLive"></p><p class="note"><span data-i="liveAt"></span> <a href="https://www.avanza.se/" target="_blank" rel="noopener">Avanza</a> · <a href="https://www.google.com/finance/" target="_blank" rel="noopener">Google Finance</a></p></div>
+<div class="sheet"><p class="head" data-i="mktHead"></p><div id="m_idx"></div></div>
+<div class="sheet"><p class="head" data-i="whereHead"></p><div id="m_where"></div></div>
+<div class="sheet"><p class="head" data-i="fundHead"></p><div id="m_fund"></div><p class="note" data-i="fundNote"></p></div>
+<div class="sheet"><p class="head" data-i="rateHead"></p><div id="m_rate"></div><p class="note" data-i="rateNote"></p></div>
+<div class="sheet"><p class="note" style="margin:0" data-i="riskNote"></p></div>
+</section>
+
+<section id="e" class="hide">
+<div class="mnavw" id="e_per"></div>
+<div class="sheet"><div class="lbl" id="e_lbl"></div><div class="big" id="e_big"></div><div class="lbl" id="e_msg"></div></div>
+<div class="sheet"><div class="form" style="margin-top:0"><input id="e_amt" type="number" inputmode="decimal" data-p="amountPh"><input id="e_note" type="text" data-p="whatFor" maxlength="60"><input id="e_date" type="date" class="span2"><button class="btn span2" id="e_add" data-i="add"></button></div><p class="note" data-i="spendNote"></p></div>
+<div class="sheet"><div class="lbl" data-i="entries"></div><div id="e_list"></div></div>
+</section>
+
+<section id="x" class="hide">
+<div class="sheet"><div class="lbl" data-i="netMo"></div><div class="big" id="x_big"></div><div class="keys" id="x_leg"></div><p class="note wn" data-i="testNote"></p></div>
+<div class="sheet" id="x_in"></div>
+</section>
+
+<section id="c" class="hide">
+<div class="sheet"><div class="lbl" data-i="theme"></div><div class="chips" id="c_th"></div><div class="lbl" data-i="notif"></div><div class="chips" id="c_tg"></div><div class="lbl" data-i="lang"></div><div class="chips" id="c_lg"></div><div class="lbl" data-i="motion"></div><div class="chips" id="c_mo"></div></div>
+<div class="sheet"><div id="set_in"></div><div id="h_c"></div></div>
+<div class="sheet"><div class="lbl" data-i="yourData"></div><p class="note" id="c_st"></p><button class="btn out" id="reset" style="width:100%;margin-top:10px"></button></div>
+</section>
+</main>
+<nav><button data-go="h"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6 6"/></svg><em data-i="nH" style="font-style:normal"></em></button><button data-go="b" id="nav_b"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14M5 12h14M5 18.5h8"/></svg><em data-i="nB" style="font-style:normal"></em></button><button data-go="s"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16.5c0-5 3.6-9 8-9s8 4 8 9"/><path d="M4 16.5h16M12 7.5V4.5"/></svg><em data-i="nS" style="font-style:normal"></em></button><button data-go="r"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.4"/></svg><em data-i="nR" style="font-style:normal"></em></button><button data-go="m"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l5.5-6 4 3.5L20 7"/><path d="M15 7h5v5"/></svg><em data-i="nM" style="font-style:normal"></em></button><button class="more first" data-go="e"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h12v17l-3-2-3 2-3-2-3 2z"/><path d="M9.5 8.5h5M9.5 12.5h5"/></svg><em data-i="ttlE" style="font-style:normal"></em></button><button class="more" data-go="x"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><circle cx="7.5" cy="7.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg><em data-i="ttlX" style="font-style:normal"></em></button><button class="more" data-go="c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M18 7h2M4 17h2M11 17h9"/><circle cx="15.5" cy="7" r="2.5"/><circle cx="8.5" cy="17" r="2.5"/></svg><em data-i="ttlC" style="font-style:normal"></em></button></nav>
+
+<script>
+const $=id=>document.getElementById(id);
+const S={lang:"sv",saved:0,buf:3,lifePct:15,adults:2,theme:"auto",toasts:true,motion:true,gx:35000,rate:30,ga:20000,jk:10000,ts:600000,tr:20,fe:.1};
+let NOW=new Date();
+const MNS=[["Januari","Februari","Mars","April","Maj","Juni","Juli","Augusti","September","Oktober","November","December"],["January","February","March","April","May","June","July","August","September","October","November","December"]];
+const li=()=>S.lang==="sv"?0:1,mn=i=>MNS[li()][i],ms=i=>mn(i).slice(0,3),loc=()=>S.lang==="sv"?"sv-SE":"en-GB";
+/* Researched 9 Nov 2026. Sources are listed in the Results tab. */
+const R={date:"2026-11-09",food:3960,media:680,saveGood:.0235,saveBig:.013,fee:.1,taxFree:300000};
+/* Refreshed every weekday from the shared "market/latest" document; these values are the fallback. */
+let MK={updated:"2026-11-09T12:10:00+01:00",
+indices:[{name:"OMXS30",value:"3 292,63",change:"+0,76 %",note_sv:"9 nov, under dagen · +14,19 % i år",note_en:"9 Nov, intraday · +14.19% this year"},{name:"S&P 500",value:"7 376,86",change:"+0,31 %",note_sv:"Stängning 6 nov",note_en:"Close 6 Nov"},{name:"Nasdaq Composite",value:"24 579,43",change:"+1,09 %",note_sv:"Stängning 6 nov",note_en:"Close 6 Nov"},{name:"Guld (USD/uns)",name_en:"Gold (USD/oz)",value:"ca 4 066",change:"",note_sv:"9 nov, förmiddag",note_en:"9 Nov, morning"},{name:"USD/SEK",value:"9,8755",change:"",note_sv:"Riksbanken, 6 nov",note_en:"Riksbank, 6 Nov"}],
+rates:[{bank:"Plus1",rate:"2,60 %"},{bank:"Collector",rate:"2,35 %"},{bank:"Santander",rate:"2,35 %"},{bank:"Brixo",rate:"2,32 %"},{bank:"Nordnet",rate:"1,35 %"},{bank:"Avanza",rate:"1,30 %"},{bank:"SBAB",rate:"1,25 %"}],
+eco:{policy:"2,00 %",policy_note:["Höjd den 4 november. Riksbanken väntar sig fler höjningar under nästa år om läget håller. Lån blir dyrare.","Raised on 4 November. The Riksbank expects more hikes next year if the outlook holds. Loans get more expensive."],inflation:"1,1 %",inflation_note:["Under målet på 2 %. Slutlig siffra kommer 12 november.","Below the 2% target. Final figure due 12 November."],savings:"1,25–2,6 %"}};
+const FUNDS=[["Avanza Global",.10,["Bara hos Avanza. Ca 1 100 bolag, 73 % USA.","Avanza only. About 1,100 companies, 73% US."]],
+["SEB Global Indexnära",.19,["Knappt 1 000 bolag, 74 % USA.","Just under 1,000 companies, 74% US."]],
+["Länsförsäkringar Global Index",.21,["1 142 bolag, 73 % USA.","1,142 companies, 73% US."]],
+["Swedbank Robur Access Global",.24,["811 bolag, 73 % USA.","811 companies, 73% US."]],
+["Storebrand Global All Countries",.32,["1 431 bolag, 63 % USA, även tillväxtmarknader.","1,431 companies, 63% US, emerging markets included."]],
+["Handelsbanken Global Index Criteria",.44,["1 815 bolag, 63 % USA.","1,815 companies, 63% US."]]];
+const SRC=[["https://www.riksbank.se/sv/press-och-publicerat/nyheter-och-pressmeddelanden/pressmeddelanden/2026/styrrantan-hojs-till-2-procent/","Riksbanken: styrräntan höjs till 2 %"],["https://www.svt.se/nyheter/ekonomi/riksbanken-hojer-rantan-661uov","SVT: Riksbanken höjer räntan"],["https://www.scb.se/hitta-statistik/statistik-efter-amne/priser-och-ekonomiska-tendenser/priser/konsumentprisindex-kpi/pong/statistiknyhet/snabb-kpi-oktober-2026","SCB: snabb-KPI oktober 2026"],["https://www.vfab.se/wp-content/uploads/2025/06/Koll-pa-pengarna.pdf","Konsumentverket: Koll på pengarna 2025"],["https://www.dagensps.se/privatekonomi/har-du-rad-med-2027-sa-testar-du-din-ekonomi-redan-nu/","Dagens PS: buffert och ränte-test"],["https://www.dagensps.se/privatekonomi/parekonomin-som-vinner-sa-sparar-ni-ihop-framgangsrikt/","Dagens PS: så sparar par ihop"],["https://www.dagensps.se/privatekonomi/virala-sparknepet-sa-ska-du-dela-upp-lonen/","Dagens PS: 70-20-10"],["https://www.sparkonton.se/basta-sparrantan","Sparkonton.se: sparräntor 7 nov"],["https://finansvalp.se/spara/basta-sparrantan","Finansvalp: sparräntor 3 nov"],["https://isk-guiden.se/basta-globalfonder/","ISK-guiden: globalfonder 31 okt"],["https://isk-guiden.se/guider/isk-skatt-2027/","ISK-guiden: ISK-skatt 2027"],["https://www.marketscreener.com/news/s-p-500-index-pulled-back-after-the-stockholm-stock-exchange-closed-on-friday-ce785fd3d98cff26","MarketScreener: index 6–9 nov"],["https://dollar.nu/","Dollar.nu: USD/SEK"],["https://mitrade.com/insights/commodity-analysis/gold/gold-democrats-sweep-midterms-cpi","Mitrade: guld 9 nov"]];
+/* every UI string: [Swedish, English]; functions take values */
+const T={
+nH:["Översikt","Overview"],nB:["Budget","Budget"],nS:["Sparande","Savings"],nR:["Resultat","Results"],nM:["Marknad","Market"],
+ttlH:["Översikt","Overview"],ttlB:["Budget","Budget"],ttlS:["Sparande","Savings"],ttlR:["Resultat","Results"],ttlM:["Marknad","Market"],ttlE:["Köp & oväntat","Purchases"],ttlX:["Skatt","Tax"],ttlC:["Inställningar","Settings"],
+disc:["Uppskattningar. Ingen finansiell rådgivning.","Estimates only. Not financial advice."],pickYear:["Välj år","Pick a year"],
+leftIn:[m=>`Kvar att leva på i ${m}`,m=>`Left to live on in ${m}`],perDay:[(d,n)=>`Ca ${d} per dag i ${n} dagar`,(d,n)=>`About ${d} per day for ${n} days`],overBy:[n=>`Över med ${n}`,n=>`Over by ${n}`],
+needs:["Räkningar","Bills"],fixedL:["Fasta","Fixed"],varL:["Rörliga","Variable"],saving:["Sparande","Saving"],life:["Eget liv","Living"],
+in:["Inkomster","Income"],out:["Fasta utgifter","Fixed expenses"],varOut:["Rörliga utgifter","Variable expenses"],rem:["Återstående","Remaining"],totOut:["Summa utgifter","Total expenses"],sRate:["Sparkvot","Savings rate"],totSave:["Total sparad summa","Total saved"],yearT:[y=>`Hela ${y}`,y=>`All of ${y}`],total:["Totalt","Total"],savedIn:[m=>`Sparat i ${m}`,m=>`Saved in ${m}`],ofP:[(s,p)=>`${s} av ${p}`,(s,p)=>`${s} of ${p}`],
+topNow:["Viktigast just nu","Most important right now"],seeAll:["Se hela resultatet →","See all results →"],exNote:["Det här är exempelsiffror. Skriv över dem med era egna.","These are example figures. Replace them with your own."],exGo:["Öppna budgeten →","Open the budget →"],addBuy:["＋ Lägg till ett köp","＋ Add a purchase"],
+incHead:["Inkomster","Income"],outHead:["Fasta utgifter","Fixed expenses"],restHead:["Sparande","Saving"],restSub:["Fördela resten","Split the rest"],varHead:["Rörliga utgifter","Variable expenses"],newLine:["＋ Ny rad","＋ New line"],newGoal:["＋ Nytt sparmål","＋ New savings goal"],linePh:["Skriv här","Write here"],del:["Ta bort","Remove"],
+restIntro:[v=>`Efter utgifterna har ni ${v} kvar. Bestäm vad som ska sparas, resten är ert att leva på.`,v=>`After expenses you have ${v} left. Decide what to save, the rest is yours to live on.`],lifeRow:["Kvar att leva på","Left to live on"],
+overAlloc:[v=>`Ni har fördelat ${v} mer än ni har kvar. Sänk en rad.`,v=>`You have split ${v} more than you have left. Lower one line.`],useRec:["Återställ till förslaget","Reset to the suggestion"],
+aBuf:["Buffert","Buffer"],aGoal:["Studier & mål","Studies & goals"],aLong:["Långsiktigt","Long-term"],potOther:["Övrigt","Other"],
+depNow:[v=>"＋ Sätt in "+v,v=>"＋ Deposit "+v],potProg:[(s,p)=>`Insatt ${s} av ${p}`,(s,p)=>`Deposited ${s} of ${p}`],potDone:["Insatt ✓","Deposited ✓"],
+bufNote:[(t,m)=>`Buffertmålet ${t} nås om ca ${m} månader.`,(t,m)=>`You reach the ${t} buffer target in about ${m} months.`],
+addSaveHead:["Lägg till sparande","Add savings"],amountPh:["Belopp (kr)","Amount (kr)"],bSaved:["＋ Sparat","＋ Saved"],bWd:["− Tog ut","− Withdrew"],fSaved:["Redan sparat innan","Saved before this"],
+totSaved:["Totalt sparat","Total saved"],ofBuf:[(p,t)=>`${p} av buffertmålet ${t}`,(p,t)=>`${p} of the ${t} buffer target`],sMonth:[(m,s,p)=>`${m}: ${s} av ${p} planerat`,(m,s,p)=>`${m}: ${s} of ${p} planned`],potHead:["Per sparmål","By goal"],entries:["Poster","Entries"],none:["Inga poster den här månaden. Lägg till sparande längst ner i Budget.","No entries this month. Add savings at the bottom of Budget."],toMonth:["Till den här månaden","Back to this month"],
+changeHead:["Det här skulle jag ändra","What I would change"],cmpHead:["Er budget mot min","Your budget vs mine"],you:["Ni","You"],me:["Jag","Me"],diff:["Skillnad","Change"],cmpFood:["Mat","Food"],cmpSubs:["Prenumerationer","Subscriptions"],cmpOther:["Övriga räkningar","Other bills"],cmpSave:["Sparande","Saving"],cmpBuf:["till buffert","to buffer"],cmpFund:["till fonder på ISK","to funds in ISK"],cmpLife:["Kvar att leva på","Left to live on"],cmpNote:["Kronor per månad. Boende och lån låter jag stå kvar, de går sällan att ändra snabbt.","Kronor per month. I leave housing and loans as they are, since they are rarely quick to change."],
+ecoHead:["Ekonomin just nu","The economy right now"],howHead:["Så har jag räknat","How I calculated"],
+vLbl:[m=>`Min bedömning för ${m}`,m=>`My assessment for ${m}`],vMore:[v=>`Ni kan spara ${v} mer i månaden`,v=>`You could save ${v} more a month`],vMoreS:[v=>`Det blir ${v} på ett år, utan att ni får mindre att leva på än ni tål.`,v=>`That is ${v} a year, while keeping a liveable amount to spend.`],vFree:[v=>`Ni kan frigöra ${v} i månaden`,v=>`You could free up ${v} a month`],vFreeS:[v=>`Det blir ${v} på ett år, från mat och prenumerationer.`,v=>`That is ${v} a year, from food and subscriptions.`],vOk:["Er budget håller","Your budget holds up"],vOkS:["Inga stora ändringar behövs just nu.","No big changes needed right now."],vBad:["Utgifterna är för höga","Expenses are too high"],vBadS:[v=>`Det saknas ${v} i månaden för att räkningarna och lite eget liv ska gå ihop.`,v=>`You are ${v} short each month to cover bills and some personal spending.`],vInc:["Skriv in era inkomster","Add your income"],vIncS:["Resultatet bygger på er budget.","The results are based on your budget."],
+fBufT:["Bygg bufferten först","Build the buffer first"],fBuf:[(h,t,n)=>`Ni har ${h}. Målet är ${t}, alltså ${n} månaders räkningar. Riktlinjen är 2–3 månader, före fonder och aktier. Finansinspektionen råder er att ha pengarna lättillgängligt med insättningsgaranti.`,(h,t,n)=>`You have ${h}. The target is ${t}, which is ${n} months of bills. The guideline is 2–3 months, before funds and shares. Finansinspektionen advises keeping it easy to reach with a deposit guarantee.`],
+fFoodT:[v=>`Mat: pröva ${v} i månaden`,v=>`Food: try ${v} a month`],fFood:[(a,r,n)=>`Ni har ${a}. Konsumentverket räknar med ca ${r} för ${n} vuxna när all mat lagas hemma. Planera veckans mat och handla efter listan.`,(a,r,n)=>`You have ${a}. Konsumentverket estimates about ${r} for ${n} adults when all meals are cooked at home. Plan the week's meals and shop from a list.`],
+fSubsT:["Rensa prenumerationer","Trim subscriptions"],fSubs:[(a,r)=>`Ni betalar ${a}. Konsumentverket räknar med ca ${r} för två personer. Säg upp det ni inte använt senaste månaden.`,(a,r)=>`You pay ${a}. Konsumentverket estimates about ${r} for two people. Cancel whatever you did not use last month.`],
+fCredT:["Betala bort krediter först","Pay off credit first"],fCred:[v=>`Kredit och delbetalningar kostar oftast mer än ett sparkonto ger, så de går före fondsparande. Styrräntan är nu ${v}.`,v=>`Credit and instalments usually cost more than a savings account pays, so they come before funds. The policy rate is now ${v}.`],
+fLoanT:["Testa ert bolån mot högre ränta","Stress-test your mortgage"],fLoan:["Varje höjning med 0,25 procentenheter kostar ca 208 kr i månaden per miljon i lån, före ränteavdrag. Lägg undan motsvarande belopp några månader och se om budgeten håller.","Each 0.25-point hike costs about 208 kr a month per million borrowed, before tax relief. Set that amount aside for a few months and see if the budget holds."],
+fRateT:[v=>`Byt sparkonto: ca ${v} mer per år`,v=>`Switch savings account: about ${v} more a year`],fRate:["Stora aktörer ger runt 1,3 %, flera mindre banker runt 2,35 % med fria uttag. Beloppet är före 30 % skatt. Kontrollera insättningsgarantin innan ni flyttar.","Big names pay around 1.3%, several smaller banks around 2.35% with free withdrawals. The amount is before 30% tax. Check the deposit guarantee before moving."],
+fSaveT:["Spara först, inte det som blir över","Save first, not what is left over"],fSave:[v=>`För över ${v} till sparkontot på lönedagen. En fast summa till ett gemensamt konto gör att sparandet inte hamnar sist.`,v=>`Move ${v} to savings on payday. A fixed sum into a joint account keeps saving from coming last.`],
+fIskT:["Bufferten är klar: börja långsiktigt","Buffer done: start long-term"],fIsk:["Pengar ni inte behöver på minst 5 år kan gå till en bred indexfond på ISK. Se fliken Marknad. Varje person har 300 000 kr skattefritt 2026.","Money you will not need for at least 5 years can go into a broad index fund in an ISK. See the Market tab. Each person has 300,000 kr tax-free in 2026."],
+fTalkT:["Ta en budgetstund i månaden","Hold one budget talk a month"],fTalk:["Sätt er tillsammans när ni båda är på bra humör och skriv ner ett gemensamt mål. Gemensamma beslut minskar bråken om pengar.","Sit down together when you are both in a good mood and write down one shared goal. Deciding together reduces arguments about money."],
+eRate:["Styrräntan","Policy rate"],eInf:["Inflation, KPIF oktober (preliminär)","Inflation, CPIF October (flash)"],eSav:["Sparränta med fria uttag","Savings rate, free withdrawals"],eSavN:["Mindre banker betalar nästan dubbelt mot de stora namnen.","Smaller banks pay almost double the big names."],eIsk:["ISK-skatt 2026","ISK tax 2026"],eIskN:["Gäller över 300 000 kr per person. 2027 pekar på ca 1,24 %, och den slutliga nivån bestäms i slutet av november.","Applies above 300,000 kr per person. 2027 points to about 1.24%, and the final level is set in late November."],
+how1:["Mat jämförs med Konsumentverkets 3 960 kr per vuxen (18–30 år, allt lagat hemma, 2025), plus 10 %. Tabellerna för 2026 gick inte att läsa, och Konsumentverket sänkte dem främst på grund av en ny metod.","Food is compared with Konsumentverket's 3,960 kr per adult (age 18–30, all meals at home, 2025), plus 10%. The 2026 tables could not be read, and Konsumentverket lowered them mainly because of a new method."],how2:["Sparmålet 20 % av inkomsten är en vanlig tumregel, inte en officiell siffra. Jag låter alltid minst er valda andel stå kvar till eget liv.","The 20% saving target is a common rule of thumb, not an official figure. I always leave at least your chosen share for personal life."],how3:["Raderna känns igen på namnet: skriv till exempel Mat, Netflix, Bolån eller Klarna.","Lines are recognised by name: write for example Food, Netflix, Mortgage or Klarna."],src:["Källor","Sources"],
+ageAt:[d=>"Uppdaterad "+d,d=>"Updated "+d],ageOld:[n=>` · ${n} dagar gammalt`,n=>` · ${n} days old`],notLive:["Siffrorna uppdateras automatiskt varje vardagsmorgon, så ni behöver inte leta upp dem själva. Börsen rör sig under dagen, så det är inte kurser i realtid.","The figures update automatically every weekday morning, so you do not have to look them up. Markets move during the day, so these are not real-time prices."],liveAt:["Vill ni se exakt läge just nu:","For the exact price right now:"],mktHead:["Börsen","Markets"],
+whereHead:["Vart ska pengarna?","Where should the money go?"],w1:["Inom 5 år","Within 5 years"],w1t:["Sparkonto med fria uttag. Buffert, resa, flytt. Aktier kan falla precis när ni behöver pengarna.","Savings account with free withdrawals. Buffer, trips, moving. Shares can fall right when you need the money."],w2:["Längre än 5 år","Longer than 5 years"],w2t:["Bred global indexfond på ISK, med en fast summa varje månad. Billig och spridd på över 1 000 bolag.","Broad global index fund in an ISK, a fixed sum every month. Cheap and spread over 1,000+ companies."],w3:["Undvik först","Avoid at first"],w3t:["Enstaka aktier och krypto innan bufferten är klar, och att låna till investeringar.","Single shares and crypto before the buffer is done, and borrowing to invest."],
+fundHead:["Globala indexfonder, avgift per år","Global index funds, yearly fee"],feeOn:[v=>`${v} per år på 100 000 kr`,v=>`${v} a year on 100,000 kr`],fundNote:["Sorterat på lägst avgift, enligt ISK-guiden 31 okt. Lägst avgift är ingen garanti för bäst avkastning. Fonderna skiljer sig också i hållbarhetsregler och index.","Sorted by lowest fee, per ISK-guiden 31 Oct. The lowest fee does not guarantee the best return. The funds also differ in index and sustainability rules."],
+rateHead:["Sparkonton med fria uttag","Savings accounts, free withdrawals"],rateNote:["Från jämförelsesajter 3–7 nov. Räntor ändras ofta. Kontrollera villkor och vilket lands insättningsgaranti som gäller.","From comparison sites 3–7 Nov. Rates change often. Check the terms and which country's deposit guarantee applies."],
+riskNote:["Jag är ingen finansiell rådgivare, och det här är allmän information. Fonder och aktier kan falla, och ni kan få tillbaka mindre än ni satte in. Det enda som skyddar pengar ni snart behöver är att inte ha dem på börsen.","I am not a financial adviser and this is general information. Funds and shares can fall, and you can get back less than you put in. The only protection for money you need soon is keeping it out of the stock market."],
+leftNow:["Kvar att leva på den här månaden","Left to live on this month"],leftMon:[(m,y)=>`Kvar i ${m} ${y}`,(m,y)=>`Left in ${m} ${y}`],dayMsg:[(d,n,p)=>`Ca ${d} per dag i ${n} dagar${p?", efter "+p+" som är planerat":""}.`,(d,n,p)=>`About ${d} per day for ${n} days${p?", after "+p+" planned":""}.`],spentOf:[(u,l)=>`Använt ${u} av ${l}.`,(u,l)=>`Used ${u} of ${l}.`],overMsg:[(a,b,s)=>`Spara ${a} i stället för ${b} den månaden.${s?" Det fattas ändå "+s+". Skjut hellre något till nästa månad.":""}`,(a,b,s)=>`Save ${a} instead of ${b} that month.${s?" Still "+s+" short. Move something to next month.":""}`],
+whatFor:["Vad gäller det?","What for?"],add:["Lägg till","Add"],spendNote:["Dagens datum för något ni köpt, ett senare datum för något som kommer.","Today's date for something bought, a later date for something coming up."],planned:["planerad","planned"],noneP:["Inget den här månaden.","Nothing this month."],
+netMo:["Nettolön per månad","Net pay per month"],testNote:["Uppskattning med testvärden, inte verifierade svenska satser. Använd Skatteverkets räknare för riktiga siffror.","Estimate using test values, not verified Swedish rates. Use Skatteverket's calculators for real numbers."],fGross:["Bruttolön / månad","Gross salary / month"],fRatef:["Kommun + region %","Municipal + region %"],adv:["Avancerat (testvärden)","Advanced (test values)"],advG:["Grundavdrag / år","Basic deduction / yr"],advJ:["Jobbskatteavdrag / år","Job credit / yr"],advT:["Skiktgräns","State threshold"],advR:["Statlig skatt %","State rate %"],advF:["Avgifter %","Fees %"],taxMo:["Skatt / månad","Tax / month"],eff:["Effektiv","Effective"],
+theme:["Tema","Theme"],auto:["Auto","Auto"],light:["Ljust","Light"],dark:["Mörkt","Dark"],notif:["Notiser i appen","In-app notifications"],on:["På","On"],off:["Av","Off"],lang:["Språk","Language"],motion:["Rörlig bakgrund","Moving background"],
+fAdults:["Vuxna i hushållet","Adults in the household"],bufF:["Buffert, månader av räkningar","Buffer, months of bills"],lifeF:["Minst kvar till eget liv, %","Minimum for personal life, %"],hBufSet:["Under 2 månader är kort, riktlinjen är 2–3.","Under 2 months is short; the guideline is 2–3."],hLifeSet:["Under 10 % till eget liv gör planer svåra att hålla.","Under 10% for personal life makes plans hard to keep."],
+yourData:["Er data","Your data"],dStore:["Budgeten är gemensam. Alla som har tillgång till sidan ser och ändrar samma siffror.","The budget is shared. Everyone with access to this page sees and edits the same figures."],dOff:["Inte ansluten: inget sparas när sidan stängs.","Not connected: nothing is saved when the page closes."],reset:["Radera all data","Delete all data"],resetAgain:["Tryck igen för att radera allt","Tap again to delete everything"],
+tNeedAmt:["Skriv ett belopp först","Type an amount first"],tSaved:[(a,t)=>`Sparade ${a} · totalt ${t}`,(a,t)=>`Saved ${a} · total ${t}`],tWd:[(a,t)=>`Tog ut ${a} · totalt ${t}`,(a,t)=>`Withdrew ${a} · total ${t}`],tBuf:["Bufferten är klar 🎉","Buffer complete 🎉"],tStart:["En månads buffert är nådd 🎉","One month of buffer reached 🎉"],tOver:[(o,m)=>`Över budget med ${o} i ${m}`,(o,m)=>`Over budget by ${o} in ${m}`],tAddExp:[(a,l,m)=>`${a} tillagd · ${l} kvar i ${m}`,(a,l,m)=>`${a} added · ${l} left in ${m}`],tFail:["Kunde inte spara. Kontrollera anslutningen och försök igen.","Could not save. Check your connection and try again."],tRem:["Post borttagen","Entry removed"],tRec:["Fördelningen återställd","Split reset"],tDel:["All data raderades","All data was deleted"],tNotif:["Notiser på","Notifications on"],tDelFail:["Kunde inte radera allt. Försök igen.","Could not delete everything. Try again."],
+pYes:["Gör det ändå","Do it anyway"],pNo:["Avbryt","Cancel"],pWd1T:["Ni tar av bufferten","You are dipping into the buffer"],pWd1:[(a,n)=>`Efter uttaget har ni ${a} kvar, mindre än en månads räkningar (${n}).`,(a,n)=>`After this you have ${a} left, less than a month of bills (${n}).`],pWd2T:["Ni går under buffertmålet","You are going below the buffer target"],pWd2:[t=>`Efter uttaget är ni under målet på ${t}.`,t=>`After this you are below your ${t} target.`],pOverT:["Det går över budget","This goes over budget"],pOver:[(o,m)=>`Det här tar er ${o} över pengarna att leva på i ${m}. Flytta hellre köpet till nästa månad.`,(o,m)=>`This puts you ${o} over your living money in ${m}. Consider moving it to next month.`]
+};
+const t=(k,...a)=>{const v=T[k][li()];return typeof v==="function"?v(...a):v};
+
+let deps=[],exps=[],PM={},allIds=[],col=null,tab="h",P={y:NOW.getFullYear(),m:NOW.getMonth()},seenData=false;
+const kr=v=>(v<0?"−":"")+Math.round(Math.abs(v)).toLocaleString("sv-SE")+" kr";
+const pc=v=>Math.round(v*100)+" %";
+const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const sum=x=>x.reduce((s,i)=>s+i.a,0);
+const VARS=/(^|\s)(mat|livsmedel|food|groceries|transport|skånetrafiken|nöjen|kläder|hotell|katterna|hälsa|skola)(\s|$)/i,CREDIT=/klarna|delbetal|kredit|avbetal|credit|instal|leasing|billån|(^|\s)(lån|lan|loan)(\s|$)/i,MORT=/bolån|bolan|mortgage/i,FOOD=/(^|\s)(mat|livsmedel|food|groceries|ica|coop|willys|hemköp)(\s|$)/i,SUBS=/netflix|spotify|hbo|\bmax\b|viaplay|disney|streaming|prenumer|subscription|youtube|storytel|apple tv/i;
+
+function toast(msg,kind){if(!S.toasts)return;const e=document.createElement("div");e.className="toast";e.textContent=msg;$("toasts").appendChild(e);setTimeout(()=>e.remove(),3400)}
+function ask(title,text){return new Promise(res=>{$("m_t").textContent=title;$("m_p").textContent=text;$("m_yes").textContent=t("pYes");$("m_no").textContent=t("pNo");$("modal").classList.add("on");const done=v=>{$("modal").classList.remove("on");$("m_yes").onclick=$("m_no").onclick=null;res(v)};$("m_yes").onclick=()=>done(true);$("m_no").onclick=()=>done(false)})}
+
+/* each month keeps its own lines; an empty month inherits the latest earlier one */
+const defaults=()=>S.lang==="sv"?{inc:[["Lön 1",24000],["Lön 2",24000]],items:[["Hyra",9500],["El & internet",1100],["Telefon",500],["Försäkring",400],["Netflix & Spotify",400]],vars:[["Mat",8500],["Transport",1600],["Nöjen",1500]]}:{inc:[["Salary 1",24000],["Salary 2",24000]],items:[["Rent",9500],["Power & internet",1100],["Phone",500],["Insurance",400],["Netflix & Spotify",400]],vars:[["Food",8500],["Transport",1600],["Fun",1500]]};
+const pair=a=>a.map(([n,x])=>({n,a:x}));
+const mk=(y,m)=>y+"_"+String(m+1).padStart(2,"0");
+const pmSel=()=>({y:P.y,m:P.m});
+const clone=s=>({inc:s.inc.map(i=>({...i})),items:s.items.map(i=>({...i})),vars:s.vars.map(i=>({...i})),...(Array.isArray(s.split)?{split:s.split.map(l=>({...l}))}:{})});
+function monthData(y,m){const k=mk(y,m);if(PM[k])return PM[k];const ks=Object.keys(PM).filter(x=>x<k).sort();if(ks.length)return clone(PM[ks[ks.length-1]]);const d=defaults();return{inc:pair(d.inc),items:pair(d.items),vars:pair(d.vars)}}
+const cur=()=>monthData(P.y,P.m),nowMd=()=>monthData(NOW.getFullYear(),NOW.getMonth());
+const hasData=()=>Object.keys(PM).length>0||deps.length>0;
+const TM={},DIRTY=new Set();
+function editMonth(fn){const{y,m}=pmSel(),k=mk(y,m);if(!PM[k])PM[k]=monthData(y,m);fn(PM[k]);if(!col)return;DIRTY.add(k);clearTimeout(TM[k]);TM[k]=setTimeout(()=>{DIRTY.delete(k);const w=PM[k];if(w)col.doc("pm_"+k).set({kind:"pm",inc:w.inc,items:w.items,vars:w.vars,...(Array.isArray(w.split)?{split:w.split}:{})}).catch(()=>toast(t("tFail")))},600)}
+const POTS={buf:"aBuf",goal:"aGoal",long:"aLong"};
+const rowName=l=>l.n||(POTS[l.k]?t(POTS[l.k]):"");
+const potName=l=>rowName(l)||t("potOther");
+function splitEdit(fn){editMonth(md=>{if(!Array.isArray(md.split))md.split=planCalc(md).lines.map(l=>({k:l.k,n:l.n,a:Math.round(l.a)}));fn(md.split)})}
+function potIn(k,y,m){const a=new Date(y,m,1).getTime(),b=new Date(y,m+1,1).getTime();return deps.filter(d=>(d.pot||"")===k&&d.at>=a&&d.at<b).reduce((s,d)=>s+d.amount,0)}
+function depTs(){const{y,m}=pmSel();return y===NOW.getFullYear()&&m===NOW.getMonth()?Date.now():new Date(y,m,1,12).getTime()}
+const total=()=>S.saved+deps.reduce((s,d)=>s+d.amount,0);
+function range(){return[new Date(P.y,P.m,1).getTime(),new Date(P.y,P.m+1,1).getTime()]}
+const isNow=()=>P.y===NOW.getFullYear()&&P.m===NOW.getMonth();
+function setDates(){const d=isNow()?NOW:new Date(P.y,P.m,1);$("e_date").value=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+const dayTs=v=>{if(!v)return Date.now();const x=new Date(v+"T12:00:00").getTime();return new Date(x).toDateString()===new Date().toDateString()?Date.now():x};
+const fmtD=x=>new Date(x).toLocaleDateString(loc());
+const mnavHtml=()=>`<div class="mnav"><button data-mv="-1" aria-label="‹">‹</button><b>${mn(P.m)} ${P.y}</b><button data-mv="1" aria-label="›">›</button></div>${isNow()?"":`<button class="lnk now" data-now>${t("toMonth")}</button>`}`;
+
+/* The month's own split wins; otherwise the savings share falls as bills rise and a minimum share always stays for living. */
+function planCalc(md){
+  const inc=sum(md.inc),fixed=sum(md.items),vars=sum(md.vars),needs=fixed+vars,bal=total(),share=inc>0?needs/inc:1;
+  const rate=share<=.5?.2:share<=.6?.15:share<=.7?.1:share<=.8?.05:0,lifeMin=inc*S.lifePct/100,recSave=Math.max(0,Math.min(inc*rate,inc-needs-lifeMin));
+  const a=bal<needs?{buf:1,goal:0,long:0}:bal<S.buf*needs?{buf:.8,goal:.2,long:0}:{buf:0,goal:.4,long:.6};
+  const custom=Array.isArray(md.split);
+  const lines=custom?md.split:[["buf",recSave*a.buf],["goal",recSave*a.goal],["long",recSave*a.long]].filter(r=>r[1]>0).map(([k,v])=>({k,n:"",a:v}));
+  const save=sum(lines),life=inc-needs-save,target=S.buf*needs,bufM=sum(lines.filter(l=>l.k==="buf")),left=Math.max(0,target-bal);
+  return{inc,fixed,vars,needs,bal,share,save,life,lifeMin,target,months:bufM>0?Math.ceil(left/bufM):0,lines,custom};
+}
+/* What I would do with the same month: trim only food and subscriptions, aim for 20% saved, buffer before funds. */
+function advise(md){
+  const p=planCalc(md),all=[...md.items,...md.vars],food=sum(all.filter(i=>FOOD.test(i.n))),subs=sum(all.filter(i=>SUBS.test(i.n)&&!FOOD.test(i.n)));
+  const foodRef=S.adults*R.food,foodTo=food>foodRef*1.1?Math.round(foodRef*1.1/100)*100:food,subsTo=subs>R.media?R.media:subs,other=p.needs-food-subs,needsTo=other+foodTo+subsTo;
+  let saveTo=Math.max(0,Math.min(p.inc*.2,p.inc-needsTo-p.lifeMin));saveTo=Math.floor(saveTo/100)*100;saveTo=Math.max(saveTo,p.save);
+  const lifeTo=p.inc-needsTo-saveTo,gap=Math.max(0,S.buf*needsTo-p.bal),bufTo=Math.min(saveTo,Math.ceil(gap)),fundTo=saveTo-bufTo,bufNow=sum(p.lines.filter(l=>l.k==="buf"));
+  const F=[],credit=all.some(i=>CREDIT.test(i.n)&&!MORT.test(i.n)),mort=all.some(i=>MORT.test(i.n));
+  const extra=Math.round(p.bal*(R.saveGood-R.saveBig));
+  if(p.inc>0&&p.bal<p.target)F.push([t("fBufT"),t("fBuf",kr(p.bal),kr(p.target),S.buf)]);
+  if(credit)F.push([t("fCredT"),t("fCred",MK.eco.policy)]);
+  if(foodTo<food)F.push([t("fFoodT",kr(foodTo)),t("fFood",kr(food),kr(foodRef),S.adults)]);
+  if(subsTo<subs)F.push([t("fSubsT"),t("fSubs",kr(subs),kr(R.media))]);
+  if(mort)F.push([t("fLoanT"),t("fLoan")]);
+  if(extra>=100)F.push([t("fRateT",kr(extra)),t("fRate")]);
+  if(p.inc>0&&saveTo>0&&p.bal>=p.target)F.push([t("fIskT"),t("fIsk")]);
+  if(saveTo>0)F.push([t("fSaveT"),t("fSave",kr(saveTo))]);
+  F.push([t("fTalkT"),t("fTalk")]);
+  return{p,food,foodTo,subs,subsTo,other,needsTo,saveTo,lifeTo,bufTo,fundTo,bufNow,F};
+}
+function spendOf(y,m){const p=planCalc(monthData(y,m)),a=new Date(y,m,1).getTime(),b=new Date(y,m+1,1).getTime(),list=exps.filter(e=>e.on>=a&&e.on<b).sort((x,z)=>x.on-z.on),used=list.reduce((s,e)=>s+e.amount,0);return{p,list,used,left:p.life-used}}
+
+function renderHome(){
+  const y=NOW.getFullYear(),m=NOW.getMonth(),s=spendOf(y,m),p=s.p,mName=mn(m).toLowerCase(),dim=new Date(y,m+1,0).getDate(),dl=Math.max(1,dim-NOW.getDate()+1),a=advise(monthData(y,m));
+  $("h_lbl").textContent=t("leftIn",mName);$("h_big").textContent=kr(s.left);$("h_big").className="big"+(s.left<0?" er":"");
+  $("h_day").textContent=s.left>=0?t("perDay",kr(s.left/dl),dl):t("overBy",kr(-s.left));
+  const parts=[[p.fixed,"--c1","fixedL"],[p.vars,"--c4","varL"],[Math.max(0,p.life),"--c3","life"],[p.save,"--c2","saving"]];
+  $("h_stack").innerHTML=parts.filter(x=>x[0]>0).map(x=>`<i style="flex:${x[0]} 0 0;background:var(${x[1]})" title="${t(x[2])}: ${kr(x[0])}"></i>`).join("");
+  $("h_keys").innerHTML=parts.map(x=>`<span><span class="dot" style="background:var(${x[1]})"></span>${t(x[2])} <b>${kr(x[0])}</b></span>`).join("");
+  const got=deps.filter(d=>{const x=new Date(d.at);return x.getFullYear()===y&&x.getMonth()===m}).reduce((v,d)=>v+d.amount,0);
+  $("h_lines").innerHTML=[[t("in"),kr(p.inc)],[t("out"),kr(p.fixed)],[t("varOut"),kr(p.vars)],[t("savedIn",mName),t("ofP",kr(got),kr(p.save))],[t("rem"),kr(p.life)]].map(r=>`<div class="row"><span>${r[0]}</span><b>${r[1]}</b></div>`).join("");
+  const f=a.F[0];$("h_top").innerHTML=`<p class="head" style="margin-top:4px">${esc(f[0])}</p><p class="note">${esc(f[1])}</p>`;
+  $("h_ex").classList.toggle("hide",hasData());
+  renderYear();
+}
+let HY=NOW.getFullYear();
+function yearData(y){const nowK=mk(NOW.getFullYear(),NOW.getMonth());return MNS[0].map((_,m)=>{const k=mk(y,m);let md=PM[k];if(!md&&k<=nowK&&(Object.keys(PM).some(x=>x<k)||(!hasData()&&k===nowK)))md=monthData(y,m);return md?planCalc(md):null})}
+function renderYear(){
+  const D=yearData(HY),nf=v=>Math.round(v).toLocaleString("sv-SE").replace("-","−"),tot=k=>D.reduce((s,p)=>s+(p?p[k]:0),0),I=tot("inc"),O=tot("needs"),Sv=tot("save"),L=tot("life"),isY=HY===NOW.getFullYear();
+  $("y_t").textContent=t("yearT",HY);
+  $("y_tiles").innerHTML=[[t("rem"),kr(L),L<0],[t("totOut"),kr(O)],[t("sRate"),I>0?pc(Sv/I):"–"],[t("totSave"),kr(Sv)]].map(r=>`<div class="tile"><span class="lbl">${r[0]}</span><b class="${r[2]?"er":""}">${r[1]}</b></div>`).join("");
+  const mx=Math.max(1,...D.map(p=>p?Math.max(p.inc,p.needs+p.save):0)),H=WIDE.matches?160:122,cs=[["fixed","--c1","fixedL"],["vars","--c4","varL"],["life","--c3","life"],["save","--c2","saving"]];
+  $("y_bars").innerHTML=D.map((p,m)=>`<button class="ymo ${isY&&m===NOW.getMonth()?"cur":""}" data-jump="${m}" aria-label="${mn(m)}" title="${p?mn(m)+": "+cs.map(c=>t(c[2])+" "+kr(Math.max(0,p[c[0]]))).join(", "):mn(m)}">${p?`<span class="st">${cs.filter(c=>p[c[0]]>0).map(c=>`<i style="height:${Math.max(2,Math.round(p[c[0]]/mx*H))}px;background:var(${c[1]})"></i>`).join("")}</span>`:'<span class="none"></span>'}${ms(m)[0]}</button>`).join("");
+  $("y_keys").innerHTML=cs.map(c=>`<span><span class="dot" style="background:var(${c[1]})"></span>${t(c[2])}</span>`).join("");
+  const row=(l,k,cl)=>`<tr class="${cl||""}"><td>${l}</td>${D.map(p=>`<td>${p?nf(p[k]):"–"}</td>`).join("")}<td class="tot">${nf(tot(k))}</td></tr>`;
+  $("y_tbl").innerHTML=`<thead><tr><th>kr</th>${MNS[0].map((_,m)=>`<th class="${isY&&m===NOW.getMonth()?"cur":""}">${ms(m)}</th>`).join("")}<th>${t("total")}</th></tr></thead><tbody>`+row(t("in"),"inc")+row(t("out"),"fixed")+row(t("varOut"),"vars")+row(t("restHead"),"save")+row(t("totOut"),"needs","sum")+row(t("rem"),"life","sum")+`<tr><td>${t("sRate")}</td>${D.map(p=>`<td>${p&&p.inc>0?pc(p.save/p.inc):"–"}</td>`).join("")}<td class="tot">${I>0?pc(Sv/I):"–"}</td></tr></tbody>`;
+}
+function yearScroll(){const sc=$("y_sc"),th=sc.querySelector("th.cur"),first=sc.querySelector("th");if(!sc.clientWidth)return;sc.scrollLeft=th?Math.max(0,th.offsetLeft-first.offsetWidth-120):0}
+const fmtA=v=>Math.round(v)?Math.round(v).toLocaleString("sv-SE"):"",parseA=v=>+String(v).replace(/\s/g,"").replace(",",".")||0;
+function rowHtml(rw,name,amt,i,extra){return `<div class="lnw"><div class="ln"><input class="nm" type="text" id="${rw}_n${i}" data-rw="${rw}" data-f="n" data-ix="${i}" value="${esc(name)}" maxlength="40" placeholder="${t("linePh")}" aria-label="${t("linePh")}"><span class="amw"><input class="am" type="text" inputmode="decimal" id="${rw}_a${i}" data-rw="${rw}" data-f="a" data-ix="${i}" value="${fmtA(amt)}" placeholder="0" aria-label="kr"><span>kr</span></span><button class="x" data-delrw="${rw}" data-ix="${i}" aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>${extra||""}</div>`}
+let splitSig=null;
+function buildSheet(){const md=cur(),p=planCalc(md);
+  $("l_inc").innerHTML=md.inc.map((r,i)=>rowHtml("inc",r.n,r.a,i)).join("");
+  $("l_items").innerHTML=md.items.map((r,i)=>rowHtml("items",r.n,r.a,i)).join("");
+  $("l_vars").innerHTML=md.vars.map((r,i)=>rowHtml("vars",r.n,r.a,i)).join("");
+  splitSig=p.lines.map(l=>l.k).join();
+  $("l_split").innerHTML=p.lines.map((l,i)=>rowHtml("split",rowName(l),l.a,i,`<div class="spst" data-spst="${i}"></div>`)).join("")}
+function renderBudget(){
+  const md=cur(),p=planCalc(md),{y,m}=pmSel(),ae=document.activeElement,inS=ae&&ae.closest&&ae.closest("#l_split");
+  $("b_per").innerHTML=mnavHtml();$("sum_inc").textContent=kr(p.inc);$("sum_out").textContent=kr(p.fixed);$("sum_var").textContent=kr(p.vars);$("sum_rest").textContent=kr(p.save);$("r_intro").textContent=t("restIntro",kr(p.inc-p.needs));
+  $("b_life").textContent=kr(p.life);$("b_life").className=p.life<0?"er":"";
+  if(p.lines.map(l=>l.k).join()!==splitSig&&!inS)buildSheet();
+  p.lines.forEach((l,i)=>{const a=$("split_a"+i),n=$("split_n"+i),st=document.querySelector(`[data-spst="${i}"]`);
+    if(a&&a!==ae)a.value=fmtA(l.a);if(n&&n!==ae)n.value=rowName(l);if(!st)return;
+    const got=potIn(l.k,y,m),left=Math.round(l.a-got);
+    st.innerHTML=`<span>${t("potProg",kr(got),kr(l.a))}</span>`+(l.a<=0?"":left>0?`<button class="mini" data-dep="${i}">${t("depNow",kr(left))}</button>`:`<span class="ok">${t("potDone")}</span>`)});
+  $("r_warn").innerHTML=p.life<0?`<div class="hint b">${t("overAlloc",kr(-p.life))}</div>`:"";
+  $("r_rec").classList.toggle("hide",!p.custom);
+  $("r_note").textContent=p.months>0&&p.save>0?t("bufNote",kr(p.target),p.months):"";
+  const sel=$("s_pot");if(ae!==sel){const prev=sel.value;sel.innerHTML=p.lines.map(l=>`<option value="${esc(l.k)}">${esc(potName(l))}</option>`).join("")+`<option value="">${t("potOther")}</option>`;if([...sel.options].some(o=>o.value===prev))sel.value=prev}
+  sel.setAttribute("aria-label",t("potHead"));
+  if($("f_saved")!==ae)$("f_saved").value=S.saved||"";
+}
+function renderSaving(){
+  const pNow=planCalc(nowMd()),pSel=planCalc(cur()),bal=total(),goal=pNow.target,[a,b]=range(),list=deps.filter(d=>d.at>=a&&d.at<b).sort((x,y)=>y.at-x.at),mSum=list.reduce((s,d)=>s+d.amount,0);
+  $("s_per").innerHTML=mnavHtml();$("s_big").textContent=kr(bal);
+  $("s_bar").style.width=Math.max(0,Math.min(100,goal?bal/goal*100:0))+"%";$("s_goal").textContent=goal?t("ofBuf",pc(Math.max(0,bal)/goal),kr(goal)):"";
+  $("s_month").textContent=t("sMonth",mn(P.m),kr(mSum),kr(pSel.save));
+  const perM=MNS[0].map((_,i)=>deps.filter(d=>{const x=new Date(d.at);return x.getFullYear()===P.y&&x.getMonth()===i}).reduce((s,d)=>s+d.amount,0)),mx=Math.max(1,...perM);
+  $("s_cols").innerHTML=perM.map((v,i)=>`<div><i style="height:${Math.max(0,Math.round(v/mx*(WIDE.matches?132:66)))}px${i===P.m?";background:var(--c2)":""}" title="${ms(i)}: ${kr(v)}"></i>${ms(i)[0]}</div>`).join("");
+  const names={},add=(k,n)=>{names[k]=n||names[k]||""};[...deps].sort((x,y)=>x.at-y.at).forEach(d=>add(d.pot||"",d.potN||(POTS[d.pot]?t(POTS[d.pot]):"")));pSel.lines.forEach(l=>add(l.k,potName(l)));
+  let html=Object.keys(names).map(k=>{const mine=deps.filter(d=>(d.pot||"")===k),line=pSel.lines.find(l=>l.k===k),pl=line?line.a:0,per=mine.filter(d=>d.at>=a&&d.at<b).reduce((s,d)=>s+d.amount,0),tot=mine.reduce((s,d)=>s+d.amount,0);return `<div class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px"><span>${esc(k?names[k]:t("potOther"))}</span><b>${kr(tot)}</b></div><div class="lbl">${pl>0?t("sMonth",mn(P.m),kr(per),kr(pl)):mn(P.m)+": "+kr(per)}</div>${pl>0?`<div class="bar"><i style="width:${Math.max(0,Math.min(100,per/pl*100))}%"></i></div>`:""}</div>`}).join("");
+  if(S.saved)html+=`<div class="row"><span>${t("fSaved")}</span><b>${kr(S.saved)}</b></div>`;
+  $("s_pots").innerHTML=html||`<p class="note">${t("none")}</p>`;
+  $("s_cnt").textContent=list.length||"";
+  $("s_list").innerHTML=list.slice(0,60).map(d=>`<div class="dep"><span>${d.amount<0?"−":"＋"} ${kr(Math.abs(d.amount))} <span class="lbl">${fmtD(d.at)} ${esc([d.potN,d.note].filter(Boolean).join(" · "))}</span></span><button class="x" data-del="${d.id}" aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>`).join("")||`<p class="note">${t("none")}</p>`;
+}
+function renderResults(){
+  const m=NOW.getMonth(),a=advise(nowMd()),p=a.p,more=a.saveTo-p.save,short=Math.max(0,p.needs+p.lifeMin-p.inc);
+  $("r_lbl").textContent=t("vLbl",mn(m).toLowerCase());
+  const[v,s]=p.inc<=0?[t("vInc"),t("vIncS")]:short>0?[t("vBad"),t("vBadS",kr(short))]:more>=100?[t("vMore",kr(more)),t("vMoreS",kr(more*12))]:p.needs-a.needsTo>=100?[t("vFree",kr(p.needs-a.needsTo)),t("vFreeS",kr((p.needs-a.needsTo)*12))]:[t("vOk"),t("vOkS")];
+  $("r_big").textContent=v;$("r_sub").textContent=s;
+  $("r_find").innerHTML=a.F.slice(0,4).map((f,i)=>`<div class="find"><u>${i+1}</u><b>${esc(f[0])}</b><p>${esc(f[1])}</p></div>`).join("");
+  const d=(x,y)=>{const n=Math.round(y-x);return n?`${n>0?"+":"−"}${Math.abs(n).toLocaleString("sv-SE")}`:"–"};
+  const row=(l,x,y,c)=>`<tr${c?' class="sub"':""}><td>${l}</td><td>${Math.round(x).toLocaleString("sv-SE")}</td><td>${Math.round(y).toLocaleString("sv-SE")}</td><td>${d(x,y)}</td></tr>`;
+  $("r_tbl").innerHTML=`<thead><tr><th></th><th>${t("you")}</th><th>${t("me")}</th><th>${t("diff")}</th></tr></thead><tbody>`+(a.food?row(t("cmpFood"),a.food,a.foodTo):"")+(a.subs?row(t("cmpSubs"),a.subs,a.subsTo):"")+row(t("cmpOther"),a.other,a.other)+row(t("cmpSave"),p.save,a.saveTo)+row(t("cmpBuf"),a.bufNow,a.bufTo,1)+row(t("cmpFund"),p.save-a.bufNow,a.fundTo,1)+row(t("cmpLife"),p.life,a.lifeTo)+`</tbody>`;
+  $("r_eco").innerHTML=[[t("eRate"),esc(MK.eco.policy),esc(MK.eco.policy_note[li()])],[t("eInf"),esc(MK.eco.inflation),esc(MK.eco.inflation_note[li()])],[t("eSav"),esc(MK.eco.savings),t("eSavN")],[t("eIsk"),"1,065 %",t("eIskN")]].map(r=>`<div class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px"><span>${r[0]}</span><b>${r[1]}</b></div><div class="lbl">${r[2]}</div></div>`).join("");
+  $("r_how").innerHTML=["how1","how2","how3"].map(k=>`<p class="note">${t(k)}</p>`).join("")+`<div class="lbl" style="margin-top:12px">${t("src")}</div><div class="src">${SRC.map(s=>`<a href="${s[0]}" target="_blank" rel="noopener">${s[1]}</a>`).join("")}</div>`;
+}
+function renderMarket(){
+  const q=li(),up=new Date(MK.updated),days=Math.floor((Date.now()-up.getTime())/864e5);
+  $("m_age").textContent=t("ageAt",up.toLocaleDateString(loc(),{day:"numeric",month:"short"})+" "+up.toLocaleTimeString(loc(),{hour:"2-digit",minute:"2-digit"}))+(days>=4?t("ageOld",days):"");$("m_age").className="stamp "+(days>=4?"wn":"");
+  $("m_idx").innerHTML=MK.indices.map(r=>{const ch=String(r.change||""),down=/^[-−]/.test(ch);return `<div class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px"><span>${esc((q&&r.name_en)||r.name)}</span><b>${esc(r.value)}${ch?` <span class="${down?"er":"ok"}" style="font-size:15px">${down?"▼":"▲"} ${esc(ch)}</span>`:""}</b></div><div class="lbl">${esc((q?r.note_en:r.note_sv)||"")}</div></div>`}).join("");
+  $("m_where").innerHTML=[["w1","w1t"],["w2","w2t"],["w3","w3t"]].map(([a,b])=>`<div class="row" style="display:block"><b>${t(a)}</b><div class="lbl">${t(b)}</div></div>`).join("");
+  const mx=Math.max(...FUNDS.map(f=>f[1]));
+  $("m_fund").innerHTML=FUNDS.map(f=>`<div class="fee"><div style="display:flex;justify-content:space-between;gap:10px"><span>${f[0]}</span><b style="white-space:nowrap">${f[1].toFixed(2).replace(".",S.lang==="sv"?",":".")} %</b></div><div class="bar" style="margin-top:4px"><i style="width:${f[1]/mx*100}%"></i></div><small>${t("feeOn",kr(f[1]*1000))}. ${f[2][q]}</small></div>`).join("");
+  $("m_rate").innerHTML=MK.rates.map(r=>`<div class="row"><span>${esc(r.bank)}</span><b>${esc(r.rate)}</b></div>`).join("");
+}
+function renderSpend(){
+  $("e_per").innerHTML=mnavHtml();
+  const s=spendOf(P.y,P.m),p=s.p,dim=new Date(P.y,P.m+1,0).getDate(),dl=Math.max(1,dim-NOW.getDate()+1),planned=s.list.filter(e=>e.on>Date.now()).reduce((x,e)=>x+e.amount,0);
+  $("e_lbl").textContent=isNow()?t("leftNow"):t("leftMon",mn(P.m),P.y);$("e_big").textContent=kr(s.left);$("e_big").className="big"+(s.left<0?" er":"");
+  if(s.left>=0)$("e_msg").textContent=isNow()?t("dayMsg",kr(s.left/dl),dl,planned>0?kr(planned):""):t("spentOf",kr(s.used),kr(p.life));
+  else{const need=-s.left,cover=Math.min(need,p.save*.5),short=need-cover;$("e_msg").textContent=t("overMsg",kr(p.save-cover),kr(p.save),short>0?kr(short):"")}
+  $("e_list").innerHTML=s.list.map(e=>`<div class="dep"><span>${kr(e.amount)} <span class="lbl">${fmtD(e.on)}${e.on>Date.now()?" · "+t("planned"):""} ${esc(e.note||"")}</span></span><button class="x" data-del="${e.id}" aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>`).join("")||`<p class="note">${t("noneP")}</p>`;
+}
+function renderTax(){const g=S.gx*12,ga=Math.min(g,S.ga),ti=g-ga,it=ti*S.rate/100+Math.max(0,ti-S.ts)*S.tr/100,cr=Math.min(it,S.jk),tot=it-cr+ti*S.fe/100,net=g-tot;$("x_big").textContent=kr(net/12);$("x_leg").innerHTML=`<span>${t("taxMo")} <b>${kr(tot/12)}</b></span><span>${t("eff")} <b>${g?pc(tot/g):"–"}</b></span>`}
+function renderSettings(){
+  $("c_th").innerHTML=["auto","light","dark"].map(v=>`<button class="chip ${S.theme===v?"on":""}" data-th="${v}">${t(v)}</button>`).join("");
+  $("c_tg").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.toasts?"1":"0")===v?"on":""}" data-tg="${v}">${t(k)}</button>`).join("");
+  $("c_lg").innerHTML=[["sv","Svenska"],["en","English"]].map(([v,l])=>`<button class="chip ${S.lang===v?"on":""}" data-lang="${v}">${l}</button>`).join("");
+  $("c_mo").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.motion?"1":"0")===v?"on":""}" data-mo="${v}">${t(k)}</button>`).join("");
+  $("c_st").textContent=col?t("dStore"):t("dOff");
+  $("h_c").innerHTML=(S.buf<2?`<div class="hint w">${t("hBufSet")}</div>`:"")+(S.lifePct<10?`<div class="hint w">${t("hLifeSet")}</div>`:"");
+}
+function applyTheme(){S.theme==="auto"?document.documentElement.removeAttribute("data-theme"):document.documentElement.setAttribute("data-theme",S.theme)}
+const setF=(k,l)=>`<div class="set"><label for="f_${k}">${t(l)}</label><input id="f_${k}" type="number" inputmode="decimal" data-s="${k}" value="${S[k]}"></div>`;
+function build(){
+  $("set_in").innerHTML=setF("adults","fAdults")+setF("buf","bufF")+setF("lifePct","lifeF");
+  $("x_in").innerHTML=setF("gx","fGross")+setF("rate","fRatef")+`<details style="margin-top:8px"><summary class="lbl">${t("adv")}</summary><div class="adv">${[["ga","advG"],["jk","advJ"],["ts","advT"],["tr","advR"],["fe","advF"]].map(([k,l])=>`<div><label for="f_${k}">${t(l)}</label><input id="f_${k}" type="number" data-s="${k}" value="${S[k]}" step="any"></div>`).join("")}</details>`;
+  buildSheet();
+}
+function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render()}
+function render(){$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderSpend();renderTax();renderResults();renderMarket();renderSettings();FX.sync(planCalc(nowMd()))}
+let t0;function persist(){if(!col)return;clearTimeout(t0);t0=setTimeout(()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,theme:S.theme,toasts:S.toasts,motion:S.motion}).catch(()=>{}),600)}
+const yrOpen=()=>$("yrs").classList.contains("on");
+function closeYears(){$("yrs").classList.remove("on")}
+function openYears(){const y0=NOW.getFullYear(),ys=new Set([P.y]);for(let y=y0-5;y<=y0+10;y++)ys.add(y);[...deps.map(d=>d.at),...exps.map(e=>e.on)].forEach(x=>x&&ys.add(new Date(x).getFullYear()));Object.keys(PM).forEach(k=>ys.add(+k.slice(0,4)));
+  $("yr_list").innerHTML=[...ys].sort((a,b)=>b-a).map(y=>`<button class="${y===P.y?"on":""}" data-yr="${y}">${y}</button>`).join("");
+  const nb=$("nav_b").getBoundingClientRect(),w=$("yrs").offsetWidth;
+  if(RAIL.matches){const h=$("yrs").offsetHeight;$("yrs").style.left=(nb.right+18)+"px";$("yrs").style.bottom=Math.max(12,Math.min(innerHeight-h-12,innerHeight-nb.top-nb.height/2-h/2))+"px"}
+  else{$("yrs").style.left=Math.max(12,Math.min(innerWidth-w-12,nb.left+nb.width/2-w/2))+"px";$("yrs").style.bottom=(innerHeight-document.querySelector("nav").getBoundingClientRect().top+8)+"px"}
+  const on=$("yr_list").querySelector(".on");if(on)$("yr_list").scrollTop=on.offsetTop-$("yr_list").offsetTop-96;
+  $("yrs").classList.add("on")}
+function refreshMonth(){setDates();buildSheet();render()}
+function go(x){tab=x;closeYears();FX.tab(x);setTimeout(yearScroll,0);["h","b","s","r","m","e","x","c"].forEach(s=>$(s).classList.toggle("hide",s!==x));document.querySelectorAll("nav button,#drawer>button").forEach(b=>b.classList.toggle("on",b.dataset.go===x));$("drawer").classList.remove("on");$("scrim").classList.remove("on");$("ttl").textContent=t("ttl"+x.toUpperCase());window.scrollTo(0,0)}
+$("menu").onclick=()=>{$("drawer").classList.add("on");$("scrim").classList.add("on")};$("scrim").onclick=()=>{$("drawer").classList.remove("on");$("scrim").classList.remove("on")};
+
+document.addEventListener("input",e=>{const x=e.target;
+  if(x.dataset.s){const k=x.dataset.s;S[k]=+x.value||0;if(["saved","buf","lifePct","adults"].includes(k))persist();render()}
+  else if(x.dataset.rw){const rw=x.dataset.rw,f=x.dataset.f,i=+x.dataset.ix,v=f==="a"?Math.max(0,parseA(x.value)):x.value;if(rw==="split")splitEdit(s=>{if(s[i])s[i][f]=v});else editMonth(md=>{if(md[rw][i])md[rw][i][f]=v});render()}});
+document.addEventListener("focusout",e=>{const x=e.target;if(x.dataset&&x.dataset.rw&&x.dataset.f==="a")x.value=fmtA(parseA(x.value))});
+let depBusy=false;
+async function addDep(sign,row){if(depBusy)return;
+  const a=Math.abs(row?row.amount:+$("s_amt").value);if(!a){toast(t("tNeedAmt"));return}
+  const k=row?row.k:$("s_pot").value,line=planCalc(cur()).lines.find(l=>l.k===k);depBusy=true;
+  try{const before=total(),d={amount:sign*a,note:"",at:depTs(),pot:k||"",potN:line?potName(line):""},after=before+d.amount,n=planCalc(nowMd()).needs;
+    if(sign<0&&n>0){if(after<n){if(!await ask(t("pWd1T"),t("pWd1",kr(after),kr(n))))return}else if(after<S.buf*n&&before>=S.buf*n){if(!await ask(t("pWd2T"),t("pWd2",kr(S.buf*n))))return}}
+    if(!row)$("s_amt").value="";
+    if(col){try{await col.doc("dep_"+Date.now()).set(d)}catch(e){toast(t("tFail"));return}}else{deps.unshift({id:"l"+Date.now(),...d});render()}
+    if(sign>0){FX.pulse(1);toast(t("tSaved",kr(a),kr(after)));if(n>0&&before<S.buf*n&&after>=S.buf*n)setTimeout(()=>toast(t("tBuf")),700);else if(n>0&&before<n&&after>=n)setTimeout(()=>toast(t("tStart")),700)}else toast(t("tWd",kr(a),kr(after)))
+  }finally{depBusy=false}}
+async function addExp(){const a=Math.abs(+$("e_amt").value);if(!a){toast(t("tNeedAmt"));return}
+  const on=dayTs($("e_date").value),d={kind:"exp",amount:a,note:$("e_note").value.trim(),on},dt=new Date(on),s=spendOf(dt.getFullYear(),dt.getMonth()),left=s.left-a;
+  if(left<0&&!await ask(t("pOverT"),t("pOver",kr(-left),mn(dt.getMonth()).toLowerCase())))return;
+  $("e_amt").value="";$("e_note").value="";
+  if(col){try{await col.doc("exp_"+Date.now()).set(d)}catch(e){toast(t("tFail"));return}}else{exps.unshift({id:"l"+Date.now(),...d});render()}
+  toast(left<0?t("tOver",kr(-left),mn(dt.getMonth()).toLowerCase()):t("tAddExp",kr(a),kr(left),mn(dt.getMonth()).toLowerCase()))}
+$("s_add").onclick=()=>addDep(1);$("s_out").onclick=()=>addDep(-1);$("e_add").onclick=addExp;
+$("r_rec").onclick=()=>{editMonth(md=>{delete md.split});buildSheet();render();toast(t("tRec"))};
+let rt;$("reset").onclick=async()=>{const b=$("reset");
+  if(b.dataset.arm!=="1"){b.dataset.arm="1";b.textContent=t("resetAgain");clearTimeout(rt);rt=setTimeout(()=>{b.dataset.arm="0";b.textContent=t("reset")},4000);return}
+  b.dataset.arm="0";b.textContent=t("reset");
+  if(col){try{await Promise.all(allIds.map(id=>col.doc(id).delete()))}catch(e){toast(t("tDelFail"));return}}
+  deps=[];exps=[];PM={};S.saved=0;build();render();persist();toast(t("tDel"))};
+document.addEventListener("click",e=>{
+  const g=e.target.closest("[data-go]");
+  if(g){const was=yrOpen();go(g.dataset.go);if(g.id==="nav_b"&&!was)openYears();return}
+  const yr=e.target.closest("[data-yr]");
+  if(yr){P.y=+yr.dataset.yr;if(P.y===NOW.getFullYear())P.m=NOW.getMonth();closeYears();refreshMonth();return}
+  if(yrOpen()&&!e.target.closest("#yrs"))closeYears();
+  const hy=e.target.closest("[data-hy]");if(hy){HY+=+hy.dataset.hy;renderYear();yearScroll();return}
+  const jm=e.target.closest("[data-jump]");if(jm){P={y:HY,m:+jm.dataset.jump};refreshMonth();go("b");return}
+  const mv=e.target.closest("[data-mv]");if(mv){const d=new Date(P.y,P.m+ +mv.dataset.mv,1);P={y:d.getFullYear(),m:d.getMonth()};refreshMonth();return}
+  if(e.target.closest("[data-now]")){P={y:NOW.getFullYear(),m:NOW.getMonth()};refreshMonth();return}
+  const ad=e.target.closest("[data-add]");
+  if(ad){const rw=ad.dataset.add;if(rw==="split")splitEdit(s=>s.push({k:"c"+Date.now(),n:"",a:0}));else editMonth(md=>md[rw].push({n:"",a:0}));buildSheet();render();const c=rw==="split"?planCalc(cur()).lines.length:cur()[rw].length,f=$(rw+"_n"+(c-1));if(f)f.focus();return}
+  const dr=e.target.closest("[data-delrw]");
+  if(dr){const rw=dr.dataset.delrw,i=+dr.dataset.ix;if(rw==="split")splitEdit(s=>{s.splice(i,1)});else editMonth(md=>{md[rw].splice(i,1)});buildSheet();render();return}
+  const dp=e.target.closest("[data-dep]");
+  if(dp){const l=planCalc(cur()).lines[+dp.dataset.dep];if(l){const left=Math.round(l.a-potIn(l.k,P.y,P.m));if(left>0)addDep(1,{amount:left,k:l.k})}return}
+  const del=e.target.closest("[data-del]");
+  if(del){const id=del.dataset.del;if(col)col.doc(id).delete().catch(()=>{});else{deps=deps.filter(d=>d.id!==id);exps=exps.filter(d=>d.id!==id);render()}toast(t("tRem"));return}
+  const lg=e.target.closest("[data-lang]");if(lg){S.lang=lg.dataset.lang;persist();applyLang();return}
+  const th=e.target.closest("[data-th]");if(th){S.theme=th.dataset.th;applyTheme();persist();render();return}
+  const mo=e.target.closest("[data-mo]");if(mo){S.motion=mo.dataset.mo==="1";persist();FX.setMotion();render();return}
+  const tg=e.target.closest("[data-tg]");if(tg){S.toasts=tg.dataset.tg==="1";persist();render();if(S.toasts)toast(t("tNotif"));return}});
+
+/* Living background: three bodies of liquid, sized by this month's real bills, saving and living money.
+   Contour lines flow out of them, taps ripple through them, saving makes the green body swell. */
+const FX=(()=>{
+  const noop={sync(){},tab(){},pulse(){},setMotion(){}},c=$("fx");
+  const gl=c.getContext("webgl2",{antialias:false,alpha:false,powerPreference:"low-power"});if(!gl){c.hidden=true;return noop}
+  const VS=`#version 300 es
+in vec2 a;void main(){gl_Position=vec4(a,0.,1.);}`;
+  const FS=`#version 300 es
+precision highp float;uniform vec2 R;uniform float T,Dk,Sc;uniform vec3 M,W,C1,C2,C3,BG,Rip[3];uniform vec2 P[3];out vec4 o;
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<3;i++){v+=a*n(p);p=p*2.03+vec2(17.,9.);a*=.5;}return v;}
+float body(vec2 p,vec2 c,float w){vec2 d=p-c;float s=.26+.62*sqrt(max(w,0.));return exp(-dot(d,d)/(s*s))*(.55+w);}
+void main(){vec2 uv=(gl_FragCoord.xy-.5*R)/min(R.x,R.y);uv.y+=Sc;{vec2 d=uv-vec2(M.x,M.y+Sc);uv-=d*exp(-dot(d,d)*7.)*.26*M.z;}
+  for(int i=0;i<3;i++){float a=Rip[i].z;if(a>=0.&&a<1.){vec2 d=uv-vec2(Rip[i].x,Rip[i].y+Sc);float r=length(d),q=r-a*1.5;uv+=d/(r+.001)*sin(q*24.)*exp(-q*q*22.)*(1.-a)*.05;}}
+  vec2 q=vec2(fbm(uv*1.35+vec2(0.,T*.045)),fbm(uv*1.35+vec2(5.2,1.3)-vec2(T*.038,0.)));
+  vec2 p=uv+(q-.5)*1.05;
+  float t=T*.11;
+  float f1=body(p,P[0]+.1*vec2(cos(t*1.3),sin(t)),W.x),f2=body(p,P[1]+.12*vec2(sin(t*.9+2.),cos(t*1.2)),W.y),f3=body(p,P[2]+.11*vec2(cos(t*.7+4.),sin(t*1.1+1.)),W.z);
+  float H=f1+f2+f3;vec3 col=(C1*f1+C2*f2+C3*f3)/(H+.0001);
+  float m=smoothstep(.02,.95,H);vec3 base=mix(BG,col,m*mix(.62,.72,Dk));
+  float v=H*8.-T*.16;float l=abs(fract(v)-.5)/max(fwidth(v),.0001);float line=(1.-smoothstep(.6,1.9,l))*smoothstep(.03,.3,H);
+  vec3 ink=mix(col*.62,min(col*1.7+.12,vec3(1.)),Dk);base=mix(base,ink,line*mix(.42,.55,Dk));
+  base+=(h(gl_FragCoord.xy+fract(T))-.5)/160.;o=vec4(base,1.);}`;
+  const LAY={h:[[-.28,.5],[.36,-.08],[-.22,-.72]],b:[[.36,.62],[-.36,.04],[.32,-.66]],s:[[-.42,-.5],[.02,.34],[.46,-.64]],r:[[.02,.76],[-.42,-.2],[.42,-.36]],m:[[.46,.22],[-.46,.68],[-.1,-.62]]};
+  let pr,U={},raf=0,last=0,w=[.45,.2,.35],wT=w.slice(),pulse=[0,0,0],pos=LAY.h.map(a=>a.slice()),posT=LAY.h,rip=[[0,0,-9],[0,0,-9],[0,0,-9]],ri=0,t0=performance.now();
+  const hex=s=>{s=s.trim().replace("#","");return[0,2,4].map(i=>parseInt(s.slice(i,i+2),16)/255)};
+  const still=()=>!S.motion||matchMedia("(prefers-reduced-motion:reduce)").matches;
+  let mouse=[0,0],mz=0,mzT=0;
+  function init(){const sh=(k,src)=>{const o=gl.createShader(k);gl.shaderSource(o,src);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(o));return o};
+    pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(pr);gl.useProgram(pr);
+    gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);const a=gl.getAttribLocation(pr,"a");gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,2,gl.FLOAT,false,0,0);
+    ["R","T","Dk","Sc","M","W","C1","C2","C3","BG","Rip","P"].forEach(n=>U[n]=gl.getUniformLocation(pr,n));colors();size()}
+  function colors(){const cs=getComputedStyle(document.documentElement);gl.useProgram(pr);["1","2","3"].forEach(i=>gl.uniform3fv(U["C"+i],hex(cs.getPropertyValue("--f"+i))));gl.uniform3fv(U.BG,hex(cs.getPropertyValue("--fbg")));gl.uniform1f(U.Dk,cs.getPropertyValue("--dk").trim()==="1"?1:0);kick()}
+  function size(){const k=Math.min(devicePixelRatio||1,1.5,Math.sqrt(1.6e6/(innerWidth*innerHeight))),W=Math.round(innerWidth*k),H=Math.round(innerHeight*k);if(c.width!==W||c.height!==H){c.width=W;c.height=H;gl.viewport(0,0,W,H)}gl.uniform2f(U.R,W,H);kick()}
+  function draw(now){const T=still()?42:(now-t0)/1000,asp=innerWidth/innerHeight,sx=asp>1?asp:1,sy=asp>1?.47:Math.min(1,.5/asp/1.07),st=still()?1:.05;
+    w=w.map((v,i)=>v+(wT[i]-v)*st);pulse=pulse.map(v=>v*.97);pos.forEach((p,i)=>{p[0]+=(posT[i][0]-p[0])*(still()?1:.03);p[1]+=(posT[i][1]-p[1])*(still()?1:.03)});
+    mz+=(mzT-mz)*.08;gl.uniform3f(U.M,mouse[0],mouse[1],still()?0:mz);gl.uniform1f(U.T,T);gl.uniform1f(U.Sc,window.scrollY*.00035);gl.uniform3f(U.W,w[0]+pulse[0]*.5,w[1]+pulse[1]*.5,w[2]+pulse[2]*.5);
+    gl.uniform2fv(U.P,new Float32Array(pos.flatMap(p=>[p[0]*sx,p[1]*sy])));
+    gl.uniform3fv(U.Rip,new Float32Array(rip.flatMap(r=>[r[0],r[1],still()?-9:(T-r[2])/2.4])));gl.drawArrays(gl.TRIANGLES,0,3)}
+  function loop(now){raf=requestAnimationFrame(loop);if(now-last<33)return;last=now;draw(now)}
+  function kick(){if(still()){cancelAnimationFrame(raf);raf=0;requestAnimationFrame(draw)}else if(!raf)raf=requestAnimationFrame(loop)}
+  try{init()}catch(e){c.hidden=true;return noop}
+  addEventListener("resize",size,{passive:true});
+  new MutationObserver(colors).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+  matchMedia("(prefers-color-scheme:dark)").addEventListener("change",colors);
+  c.addEventListener("webglcontextlost",e=>{e.preventDefault();cancelAnimationFrame(raf);raf=0});
+  c.addEventListener("webglcontextrestored",()=>{try{init()}catch(e){c.hidden=true}});
+  document.addEventListener("pointerdown",e=>{const m=Math.min(innerWidth,innerHeight);rip[ri]=[(e.clientX-innerWidth/2)/m,-(e.clientY-innerHeight/2)/m,(performance.now()-t0)/1000];ri=(ri+1)%3},{passive:true});
+  document.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;const m=Math.min(innerWidth,innerHeight);mouse=[(e.clientX-innerWidth/2)/m,-(e.clientY-innerHeight/2)/m];mzT=1},{passive:true});
+  document.documentElement.addEventListener("mouseleave",()=>{mzT=0});
+  return{sync(p){const s=p.needs+p.save+Math.max(0,p.life);if(s>0)wT=[p.needs/s,p.save/s,Math.max(0,p.life)/s];kick()},tab(x){posT=LAY[x]||LAY.h;kick()},pulse(i){pulse[i]=1;kick()},setMotion(){kick()}};
+})();
+const WIDE=matchMedia("(min-width:700px)"),RAIL=matchMedia("(min-width:1024px)");
+/* Wider screens show all budget sections at once; phones keep one open at a time. */
+function layout(){const D=["d_inc","d_out","d_var","d_rest"].map(x=>$(x));if(WIDE.matches)D.forEach(d=>{d.removeAttribute("name");d.open=true});else{D.forEach(d=>{d.open=false;d.setAttribute("name","bud")});if(!hasData())D[0].open=true}}
+[WIDE,RAIL].forEach(m=>m.addEventListener("change",()=>{closeYears();layout();render()}));
+$("b").addEventListener("click",e=>{if(WIDE.matches&&e.target.closest("summary"))e.preventDefault()});
+applyTheme();setDates();applyLang();go("h");layout();
+document.addEventListener("visibilitychange",()=>{if(document.hidden)return;const d=new Date(),same=d.getMonth()===NOW.getMonth()&&d.getFullYear()===NOW.getFullYear();NOW=d;if(same){render();return}P={y:d.getFullYear(),m:d.getMonth()};refreshMonth()});
+/* One shared household budget, so both people see the same figures. The page works without storage. */
+(async()=>{try{
+  const db=await claude.use("db");if(!db)return;
+  db.doc("market/latest").onSnapshot(s=>{const v=s.exists&&s.data();if(v&&Array.isArray(v.indices)&&v.indices.length&&Array.isArray(v.rates)&&v.eco&&Array.isArray(v.eco.policy_note)&&Array.isArray(v.eco.inflation_note)){MK=v;renderMarket();renderResults()}},()=>{});
+  col=db.collection("household");let checked=false;
+  const importOld=async()=>{const u=await claude.use("user"),id=u&&await u.id();if(!id)return;const o=await db.collection("data/users/"+id).get();for(const d of o.docs)await col.doc(d.id).set({...d.data()})};
+  col.onSnapshot(snap=>{
+    if(!checked&&!snap.metadata.fromCache){checked=true;if(snap.empty)importOld().catch(()=>{})}
+    const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});deps=[];exps=[];PM={};allIds=snap.docs.map(d=>d.id);const old=S.lang;
+    snap.docs.forEach(d=>{const v=d.data()||{};
+      if(d.id==="plan"){["saved","buf","lifePct","adults"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
+      else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
+      else if(v.kind==="exp"&&typeof v.amount==="number")exps.push({id:d.id,amount:v.amount,note:v.note||"",on:v.on||0});
+      else if(typeof v.amount==="number")deps.push({id:d.id,amount:v.amount,note:v.note||"",at:v.at||0,pot:v.pot||"",potN:v.potN||""})});
+    Object.assign(PM,keep);
+    if(!seenData&&hasData()){seenData=true;if(!WIDE.matches)$("d_inc").open=false}
+    applyTheme();
+    if(S.lang!==old){applyLang();go(tab);return}
+    const ae=document.activeElement;if(!ae||!ae.closest("#b"))buildSheet();render()},()=>{col=null;render()});
+}catch(e){}})();
+</script>
+
+<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")</script>
+</body>
+</html>
