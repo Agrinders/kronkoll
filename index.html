@@ -258,6 +258,16 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 .opt.pk{display:flex;align-items:center;justify-content:space-between;gap:10px}.opt.pk i{flex:none;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--rule);color:transparent}.opt.pk i svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
 .opt.pk.on{border-color:var(--pen);background:color-mix(in srgb,var(--pen) 12%,transparent)}.opt.pk.on i{background:var(--pen);border-color:var(--pen);color:var(--paper)}
 #ps .lnk{display:block;width:100%;text-align:center;margin-bottom:6px}
+
+/* Buttons press in, spring back, and show a soft ripple from the finger. */
+button{transition:transform .22s cubic-bezier(.3,1.9,.5,1),background .2s,color .2s,opacity .2s,box-shadow .2s}
+button:active{transform:scale(.93);transition-duration:.06s}
+nav button:active{transform:scale(.9)}.freq:active,.lnk:not([data-add]):active{transform:scale(.97)}
+summary{transition:transform .2s cubic-bezier(.3,1.9,.5,1);-webkit-user-select:none;user-select:none}summary:active{transform:scale(.98)}
+.btn,.chip,nav button,.opt,.mini,.x,.mnav button,.gnav button,.ynav button,.seg button,.pick,.lnk[data-add],#g_add,#yr_list button,#drawer>button{position:relative;overflow:hidden}
+.rp{position:absolute;border-radius:50%;background:currentColor;opacity:.24;transform:scale(0);pointer-events:none;animation:rp .5s cubic-bezier(.2,.7,.3,1) forwards}
+@keyframes rp{to{transform:scale(1);opacity:0}}
+nav button.on svg{animation:pop .34s cubic-bezier(.3,1.9,.5,1)}@keyframes pop{from{transform:scale(.72) translateY(3px)}}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -348,7 +358,7 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 </section>
 
 <section id="c" class="hide">
-<div class="sheet"><div class="lbl" data-i="theme"></div><div class="chips" id="c_th"></div><div class="lbl" data-i="notif"></div><div class="chips" id="c_tg"></div><div class="lbl" data-i="sound"></div><div class="chips" id="c_sn"></div><div class="lbl" data-i="lang"></div><div class="chips" id="c_lg"></div><div class="lbl" data-i="motion"></div><div class="chips" id="c_mo"></div></div>
+<div class="sheet"><div class="lbl" data-i="theme"></div><div class="chips" id="c_th"></div><div class="lbl" data-i="notif"></div><div class="chips" id="c_tg"></div><div class="lbl" data-i="sound"></div><div class="chips" id="c_sn"></div><div class="lbl" data-i="clickL"></div><div class="chips" id="c_ck"></div><div class="lbl" data-i="lang"></div><div class="chips" id="c_lg"></div><div class="lbl" data-i="motion"></div><div class="chips" id="c_mo"></div></div>
 <div class="sheet"><div id="set_in"></div><div id="h_c"></div></div>
 <div class="sheet"><div class="lbl" data-i="yourData"></div><p class="note" id="c_st"></p><button class="btn out" id="reset" style="width:100%;margin-top:10px"></button></div>
 </section>
@@ -357,7 +367,7 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 
 <script>
 const $=id=>document.getElementById(id);
-const S={lang:"sv",saved:0,buf:3,lifePct:15,adults:2,theme:"auto",toasts:true,sound:true,motion:true,gx:35000,rate:30,ga:20000,jk:10000,ts:600000,tr:20,fe:.1};
+const S={lang:"sv",saved:0,buf:3,lifePct:15,adults:2,theme:"auto",toasts:true,sound:true,click:true,motion:true,gx:35000,rate:30,ga:20000,jk:10000,ts:600000,tr:20,fe:.1};
 let NOW=new Date();
 const MNS=[["Januari","Februari","Mars","April","Maj","Juni","Juli","Augusti","September","Oktober","November","December"],["January","February","March","April","May","June","July","August","September","October","November","December"]];
 const li=()=>S.lang==="sv"?0:1,mn=i=>MNS[li()][i],ms=i=>mn(i).slice(0,3),loc=()=>S.lang==="sv"?"sv-SE":"en-GB";
@@ -414,7 +424,7 @@ riskNote:["Jag är ingen finansiell rådgivare, och det här är allmän informa
 leftNow:["Kvarvarande den här månaden","Remaining this month"],leftMon:[(m,y)=>`Kvar i ${m} ${y}`,(m,y)=>`Left in ${m} ${y}`],dayMsg:[(d,n,p)=>`Ca ${d} per dag i ${n} dagar${p?", efter "+p+" som är planerat":""}.`,(d,n,p)=>`About ${d} per day for ${n} days${p?", after "+p+" planned":""}.`],spentOf:[(u,l)=>`Använt ${u} av ${l}.`,(u,l)=>`Used ${u} of ${l}.`],overMsg:[(a,b,s)=>`Spara ${a} i stället för ${b} den månaden.${s?" Det fattas ändå "+s+". Skjut hellre något till nästa månad.":""}`,(a,b,s)=>`Save ${a} instead of ${b} that month.${s?" Still "+s+" short. Move something to next month.":""}`],
 whatFor:["Vad gäller det?","What for?"],add:["Lägg till","Add"],spendNote:["Dagens datum för något ni köpt, ett senare datum för något som kommer.","Today's date for something bought, a later date for something coming up."],planned:["planerad","planned"],noneP:["Inget den här månaden.","Nothing this month."],
 netMo:["Nettolön per månad","Net pay per month"],testNote:["Uppskattning med testvärden, inte verifierade svenska satser. Använd Skatteverkets räknare för riktiga siffror.","Estimate using test values, not verified Swedish rates. Use Skatteverket's calculators for real numbers."],fGross:["Bruttolön / månad","Gross salary / month"],fRatef:["Kommun + region %","Municipal + region %"],adv:["Avancerat (testvärden)","Advanced (test values)"],advG:["Grundavdrag / år","Basic deduction / yr"],advJ:["Jobbskatteavdrag / år","Job credit / yr"],advT:["Skiktgräns","State threshold"],advR:["Statlig skatt %","State rate %"],advF:["Avgifter %","Fees %"],taxMo:["Skatt / månad","Tax / month"],eff:["Effektiv","Effective"],
-theme:["Tema","Theme"],auto:["Auto","Auto"],light:["Ljust","Light"],dark:["Mörkt","Dark"],notif:["Notiser i appen","In-app notifications"],on:["På","On"],off:["Av","Off"],lang:["Språk","Language"],pickGoal:["Spara till","Save to"],ptSaved:[v=>"Sparat "+v,v=>"Saved "+v],newGoalLink:["＋ Skapa nytt mål","＋ Create a new goal"],sound:["Ljud för notiser","Notification sounds"],
+theme:["Tema","Theme"],auto:["Auto","Auto"],light:["Ljust","Light"],dark:["Mörkt","Dark"],notif:["Notiser i appen","In-app notifications"],on:["På","On"],off:["Av","Off"],lang:["Språk","Language"],clickL:["Knappljud och vibration","Button sounds and vibration"],pickGoal:["Spara till","Save to"],ptSaved:[v=>"Sparat "+v,v=>"Saved "+v],newGoalLink:["＋ Skapa nytt mål","＋ Create a new goal"],sound:["Ljud för notiser","Notification sounds"],
 fO:["Bara en gång","One time"],fM:["Varje månad","Every month"],fQ:["Varje kvartal","Every quarter"],fY:["Varje år","Every year"],chO:["Engång","One time"],chEv:["↻ ","↻ "],pickDate:["Datum","Date"],pickFirst:["Första betalning","First payment"],pickOpt:["Datum (valfritt)","Date (optional)"],cancel:["Avbryt","Cancel"],saveW:["Spara","Save"],
 hO:[m=>`Finns bara i ${m}.`,m=>`Only in ${m}.`],hM:["Kopieras automatiskt till alla kommande månader.","Copies automatically to all coming months."],hQ:["Läggs in var tredje månad, räknat från datumet.","Added every third month, counting from the date."],hY:["Läggs in en gång per år på datumet.","Added once a year on the date."],needDate:["Välj ett datum först","Pick a date first"],
 tStop:[m=>`Borttagen från och med ${m}`,m=>`Removed from ${m} onward`],tMoved:[m=>`Finns nu i ${m}`,m=>`Now in ${m}`],nextHead:["Kommande betalningar","Coming payments"],
@@ -441,6 +451,11 @@ const TICON={save:'<path d="M12 19V5M6 11l6-6 6 6"/>',ok:'<path d="m5 12.5 4.5 4
 const TUNE={save:[[659,0],[988,.09]],ok:[[784,0],[1047,.08]],win:[[523,0],[659,.1],[784,.2],[1047,.3]],out:[[587,0],[440,.1]],warn:[[494,0],[494,.13]],bad:[[330,0],[247,.13]],del:[[392,0],[294,.09]],info:[[880,0]]};
 let AC=null;
 function chime(kind){if(!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();const t0=AC.currentTime+.01;(TUNE[kind]||TUNE.info).forEach(([f,d])=>{const o=AC.createOscillator(),g=AC.createGain();o.type="triangle";o.frequency.value=f;g.gain.setValueAtTime(.0001,t0+d);g.gain.exponentialRampToValueAtTime(.13,t0+d+.012);g.gain.exponentialRampToValueAtTime(.0001,t0+d+.26);o.connect(g).connect(AC.destination);o.start(t0+d);o.stop(t0+d+.28)})}catch(e){}}
+const TAPSEL=".btn,.chip,nav button,.opt,.mini,.x,.mnav button,.gnav button,.ynav button,.seg button,.pick,.lnk[data-add],#g_add,#yr_list button,#drawer>button,summary,.lnk,.freq";
+/* A very short, quiet tick and a light buzz when a button is pressed. */
+function tick(el){if(!S.click)return;try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();const f=el.closest("nav")?520:el.matches(".x,.bad")?430:el.matches(".btn:not(.out),.mini")?880:680,t0=AC.currentTime+.003,o=AC.createOscillator(),g=AC.createGain();o.type="triangle";o.frequency.setValueAtTime(f*1.5,t0);o.frequency.exponentialRampToValueAtTime(f,t0+.03);g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.075,t0+.004);g.gain.exponentialRampToValueAtTime(.0001,t0+.055);o.connect(g).connect(AC.destination);o.start(t0);o.stop(t0+.07)}catch(e){}}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest(TAPSEL);if(b)tick(b)},true);
+document.addEventListener("pointerdown",e=>{const b=e.target.closest&&e.target.closest(".btn,.chip,nav button,.opt,.mini,.x,.mnav button,.gnav button,.ynav button,.seg button,.pick,.lnk[data-add],#g_add,#yr_list button,#drawer>button");if(!b)return;const r=b.getBoundingClientRect(),s=Math.max(r.width,r.height)*2.2,x=document.createElement("span");x.className="rp";x.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;b.appendChild(x);setTimeout(()=>x.remove(),520)},{passive:true});
 let lastKey="";
 function toast(msg,kind){if(!S.toasts)return;kind=kind||KIND[lastKey]||"info";const box=$("toasts");while(box.children.length>=3)box.firstChild.remove();const[a,...b]=String(msg).split(" · "),e=document.createElement("div");e.className="toast "+kind;e.setAttribute("role","status");e.innerHTML=`<i><svg viewBox="0 0 24 24" aria-hidden="true">${TICON[kind]||TICON.info}</svg></i><span><b>${esc(a)}</b>${b.length?`<small>${esc(b.join(" · "))}</small>`:""}</span>`;e.onclick=()=>e.remove();box.appendChild(e);chime(kind);setTimeout(()=>e.remove(),3500)}
 function ask(title,text){return new Promise(res=>{$("m_t").textContent=title;$("m_p").textContent=text;$("m_yes").textContent=t("pYes");$("m_no").textContent=t("pNo");$("modal").classList.add("on");const done=v=>{$("modal").classList.remove("on");$("m_yes").onclick=$("m_no").onclick=null;res(v)};$("m_yes").onclick=()=>done(true);$("m_no").onclick=()=>done(false)})}
@@ -620,6 +635,7 @@ function renderSettings(){
   $("c_th").innerHTML=["auto","light","dark"].map(v=>`<button class="chip ${S.theme===v?"on":""}" data-th="${v}">${t(v)}</button>`).join("");
   $("c_tg").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.toasts?"1":"0")===v?"on":""}" data-tg="${v}">${t(k)}</button>`).join("");
   $("c_lg").innerHTML=[["sv","Svenska"],["en","English"]].map(([v,l])=>`<button class="chip ${S.lang===v?"on":""}" data-lang="${v}">${l}</button>`).join("");
+  $("c_ck").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.click?"1":"0")===v?"on":""}" data-ck="${v}">${t(k)}</button>`).join("");
   $("c_sn").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.sound?"1":"0")===v?"on":""}" data-sn="${v}">${t(k)}</button>`).join("");
   $("c_mo").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.motion?"1":"0")===v?"on":""}" data-mo="${v}">${t(k)}</button>`).join("");
   $("c_st").textContent=col?t("dStore"):t("dOff");
@@ -634,7 +650,7 @@ function build(){
 }
 function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render()}
 function render(){$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderSpend();renderTax();renderResults();renderMarket();renderSettings();FX.sync(planCalc(nowMd()))}
-function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,recV:S.recV||0}).catch(()=>{}),150)}
+function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,click:S.click,recV:S.recV||0}).catch(()=>{}),150)}
 const yrOpen=()=>$("yrs").classList.contains("on");
 function closeYears(){$("yrs").classList.remove("on")}
 function openYears(){const y0=NOW.getFullYear(),ys=new Set([P.y]);for(let y=y0-5;y<=y0+10;y++)ys.add(y);[...deps.map(d=>d.at),...exps.map(e=>e.on)].forEach(x=>x&&ys.add(new Date(x).getFullYear()));Object.keys(PM).forEach(k=>ys.add(+k.slice(0,4)));
@@ -732,6 +748,7 @@ document.addEventListener("click",e=>{
   if(del){const id=del.dataset.del;if(col)col.doc(id).delete().catch(()=>{});else{deps=deps.filter(d=>d.id!==id);exps=exps.filter(d=>d.id!==id);render()}toast(t("tRem"));return}
   const lg=e.target.closest("[data-lang]");if(lg){S.lang=lg.dataset.lang;persist();applyLang();return}
   const th=e.target.closest("[data-th]");if(th){S.theme=th.dataset.th;applyTheme();persist();render();return}
+  const ck=e.target.closest("[data-ck]");if(ck){S.click=ck.dataset.ck==="1";persist();render();return}
   const sn=e.target.closest("[data-sn]");if(sn){S.sound=sn.dataset.sn==="1";persist();render();if(S.sound)chime("save");return}
   const mo=e.target.closest("[data-mo]");if(mo){S.motion=mo.dataset.mo==="1";persist();FX.setMotion();render();return}
   const tg=e.target.closest("[data-tg]");if(tg){S.toasts=tg.dataset.tg==="1";persist();render();if(S.toasts)toast(t("tNotif"));return}});
@@ -806,7 +823,7 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     if(!checked&&!snap.metadata.fromCache){checked=true;if(snap.empty)importOld().catch(()=>{})}
     const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});const keepR=RULES.filter(r=>DIRTYR.has(r.id)),real=snap.docs.some(d=>/^(pm|rec|dep|exp)_|^started$/.test(d.id)),ex=exampleMode&&!real;if(!ex){exampleMode=false;PM={};RULES=[]}deps=[];exps=[];allIds=snap.docs.map(d=>d.id);const old=S.lang;let sawGoals=false;
     snap.docs.forEach(d=>{const v=d.data()||{};
-      if(d.id==="plan"){["saved","buf","lifePct","adults"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.sound==="boolean")S.sound=v.sound;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
+      if(d.id==="plan"){["saved","buf","lifePct","adults"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.sound==="boolean")S.sound=v.sound;if(typeof v.click==="boolean")S.click=v.click;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
       else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
       else if(v.kind==="goals"){sawGoals=true;if(!goalsDirty&&Array.isArray(v.list))G=v.list.map(g=>({k:String(g.k),n:String(g.n||""),s:+g.s||0,t:+g.t||0}))}
       else if(v.kind==="rec"&&Array.isArray(v.amts)&&v.amts.length&&!ex)RULES.push({id:String(v.id),t:v.t,n:String(v.n||""),freq:v.freq,date:String(v.date),ds:!!v.ds,amts:v.amts.map(x=>({f:String(x.f),a:+x.a||0})),end:v.end||null,over:v.over&&typeof v.over==="object"?{...v.over}:{},skip:Array.isArray(v.skip)?[...v.skip]:[]});
