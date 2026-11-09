@@ -217,6 +217,7 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 #rs .mbox,#rd .mbox{max-height:calc(100dvh - 24px);overflow-y:auto}
 .opt{display:block;width:100%;text-align:left;border:1px solid var(--rule);border-radius:14px;background:none;padding:11px 14px;margin-bottom:8px;font-weight:650;font-size:15.5px}.opt small{display:block;font-weight:500;font-size:13.5px;color:var(--soft);margin-top:2px}.opt.bad{color:var(--bad)}
 .ln.g{grid-template-columns:minmax(0,1fr) 32px}
+.gs{display:flex;justify-content:space-between;align-items:center;gap:8px;border-top:1px solid var(--rule);min-height:44px;padding-right:9px;font-size:14px;color:var(--soft)}.gs .am{border:0;background:none;height:40px;padding:0;text-align:right;font:650 16px var(--ui);width:5.4em;color:var(--ink)}.gs .am:focus{outline:0}.gs .am::placeholder{color:var(--soft)}
 .ln .nmt{font-size:16.5px;font-weight:500;padding-block:12px;overflow-wrap:anywhere}
 .ln.s{grid-template-columns:minmax(0,1fr) auto}
 .freq.skip{color:var(--warn)}
@@ -266,7 +267,6 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 </div>
 <div class="sheet"><p class="head" data-i="addSaveHead"></p>
 <div class="form"><input id="s_amt" type="number" inputmode="decimal" data-p="amountPh"><select id="s_pot"></select><button class="btn" id="s_add" data-i="bSaved"></button><button class="btn out" id="s_out" data-i="bWd"></button></div>
-<div class="set" style="margin-top:10px"><label for="f_saved" data-i="fSaved"></label><input id="f_saved" type="number" inputmode="decimal" data-s="saved"></div>
 </div>
 </section>
 
@@ -351,7 +351,7 @@ overAlloc:[v=>`Ni har fördelat ${v} mer än ni har kvar. Sänk en rad.`,v=>`You
 aBuf:["Buffert","Buffer"],aGoal:["Studier & mål","Studies & goals"],aLong:["Långsiktigt","Long-term"],potOther:["Övrigt","Other"],
 depNow:[v=>"＋ Sätt in "+v,v=>"＋ Deposit "+v],potProg:[(s,p)=>`Insatt ${s} av ${p}`,(s,p)=>`Deposited ${s} of ${p}`],potDone:["Insatt ✓","Deposited ✓"],
 bufNote:[(t,m)=>`Buffertmålet ${t} nås om ca ${m} månader.`,(t,m)=>`You reach the ${t} buffer target in about ${m} months.`],
-addSaveHead:["Lägg till sparande","Add savings"],amountPh:["Belopp (kr)","Amount (kr)"],bSaved:["＋ Sparat","＋ Saved"],bWd:["− Tog ut","− Withdrew"],fSaved:["Redan sparat innan","Saved before this"],
+addSaveHead:["Lägg till sparande","Add savings"],amountPh:["Belopp (kr)","Amount (kr)"],bSaved:["＋ Sparat","＋ Saved"],bWd:["− Tog ut","− Withdrew"],fSaved:["Redan sparat","Already saved"],
 totSaved:["Totalt sparat","Total saved"],ofBuf:[(p,t)=>`${p} av buffertmålet ${t}`,(p,t)=>`${p} of the ${t} buffer target`],sMonth:[(m,s,p)=>`${m}: ${s} av ${p} planerat`,(m,s,p)=>`${m}: ${s} of ${p} planned`],potHead:["Sparat per mål","Saved per goal"],entries:["Poster","Entries"],none:["Inga poster den här månaden. Lägg till sparande längst ner i Budget.","No entries this month. Add savings at the bottom of Budget."],toMonth:["Till den här månaden","Back to this month"],
 changeHead:["Det här skulle jag ändra","What I would change"],cmpHead:["Er budget mot min","Your budget vs mine"],you:["Ni","You"],me:["Jag","Me"],diff:["Skillnad","Change"],cmpFood:["Mat","Food"],cmpSubs:["Prenumerationer","Subscriptions"],cmpOther:["Övriga räkningar","Other bills"],cmpSave:["Sparande","Saving"],cmpBuf:["till buffert","to buffer"],cmpFund:["till mål och fonder","to goals and funds"],cmpLife:["Kvar att leva på","Left to live on"],cmpNote:["Kronor per månad. Boende och lån låter jag stå kvar, de går sällan att ändra snabbt.","Kronor per month. I leave housing and loans as they are, since they are rarely quick to change."],
 ecoHead:["Ekonomin just nu","The economy right now"],howHead:["Så har jag räknat","How I calculated"],
@@ -444,7 +444,7 @@ const rowName=l=>l.n||(POTS[l.k]?t(POTS[l.k]):"");
 const potName=l=>rowName(l)||t("potOther");
 function potIn(k,y,m){const a=new Date(y,m,1).getTime(),b=new Date(y,m+1,1).getTime();return deps.filter(d=>(d.pot||"")===k&&d.at>=a&&d.at<b).reduce((s,d)=>s+d.amount,0)}
 function depTs(){const{y,m}=pmSel();return y===NOW.getFullYear()&&m===NOW.getMonth()?Date.now():new Date(y,m,1,12).getTime()}
-const total=()=>S.saved+deps.reduce((s,d)=>s+d.amount,0);
+const total=()=>S.saved+G.reduce((s,g)=>s+(g.s||0),0)+deps.reduce((s,d)=>s+d.amount,0);
 function range(){return[new Date(P.y,P.m,1).getTime(),new Date(P.y,P.m+1,1).getTime()]}
 const isNow=()=>P.y===NOW.getFullYear()&&P.m===NOW.getMonth();
 function setDates(){const d=isNow()?NOW:new Date(P.y,P.m,1);$("e_date").value=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
@@ -514,14 +514,13 @@ const fmtA=v=>Math.round(v)?Math.round(v).toLocaleString("sv-SE"):"",parseA=v=>+
 function rowHtml(rw,name,amt,i,extra,key){const k=key||`data-ix="${i}"`,ph=t("linePh");return `<div class="lnw"><div class="ln"><input class="nm" type="text" id="${rw}_n${i}" data-rw="${rw}" data-f="n" ${k} value="${esc(name)}" maxlength="40" placeholder="${ph}" aria-label="${ph}"><span class="amw"><input class="am" type="text" inputmode="decimal" id="${rw}_a${i}" data-rw="${rw}" data-f="a" ${k} value="${fmtA(amt)}" placeholder="0" aria-label="kr"><span>kr</span></span><button class="x" data-delrw="${rw}" ${k} aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>${extra||""}</div>`}
 function buildSheet(){const md=cur();
   RW.forEach(rw=>{$("l_"+rw).innerHTML=md[rw].map((r,i)=>{const key=r.rid?`data-rid="${r.rid}"`:`data-ix="${r.ix}"`;return rowHtml(rw,r.n,r.a,i,`<button class="freq ${r.skip?"skip":r.rid?"on":""}" ${r.skip?`data-rdel="${r.rid}"`:`data-rs="${rw}"`} ${key}>${esc(chip(r))}</button>`,key)}).join("");md[rw].forEach((r,i)=>{if(r.skip)$(rw+"_a"+i).readOnly=true})})}
-function buildGoals(){$("s_goals").innerHTML=G.map(g=>`<div class="lnw"><div class="ln g"><input class="nm" type="text" id="goal_${g.k}" data-goal="${g.k}" value="${esc(rowName(g))}" maxlength="40" placeholder="${t("goalPh")}" aria-label="${t("goalPh")}"><button class="x" data-gdel="${g.k}" aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div></div>`).join("")}
+function buildGoals(){$("s_goals").innerHTML=G.map(g=>`<div class="lnw"><div class="ln g"><input class="nm" type="text" id="goal_${g.k}" data-goal="${g.k}" value="${esc(rowName(g))}" maxlength="40" placeholder="${t("goalPh")}" aria-label="${t("goalPh")}"><button class="x" data-gdel="${g.k}" aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div><div class="gs"><label for="gs_${g.k}">${t("fSaved")}</label><span class="amw"><input class="am" type="text" inputmode="decimal" id="gs_${g.k}" data-gs="${g.k}" value="${fmtA(g.s||0)}" placeholder="0"><span>kr</span></span></div></div>`).join("")}
 function renderBudget(){
   const p=planCalc(cur()),ae=document.activeElement;
   $("b_per").innerHTML=mnavHtml();$("sum_inc").textContent=kr(p.inc);$("sum_out").textContent=kr(p.fixed);$("sum_var").textContent=kr(p.vars);
   $("b_life").textContent=kr(p.life);$("b_life").className=p.life<0?"er":"";
   const sel=$("s_pot");if(ae!==sel){const prev=sel.value;sel.innerHTML=p.lines.map(l=>`<option value="${esc(l.k)}">${esc(potName(l))}</option>`).join("")+`<option value="">${t("potOther")}</option>`;if([...sel.options].some(o=>o.value===prev))sel.value=prev}
   sel.setAttribute("aria-label",t("potHead"));
-  if($("f_saved")!==ae)$("f_saved").value=S.saved||"";
 }
 function renderSaving(){
   const pNow=planCalc(nowMd()),pSel=planCalc(cur()),bal=total(),goal=pNow.target,[a,b]=range(),list=deps.filter(d=>d.at>=a&&d.at<b).sort((x,y)=>y.at-x.at),mSum=list.reduce((s,d)=>s+d.amount,0);
@@ -531,7 +530,7 @@ function renderSaving(){
   const perM=MNS[0].map((_,i)=>deps.filter(d=>{const x=new Date(d.at);return x.getFullYear()===P.y&&x.getMonth()===i}).reduce((s,d)=>s+d.amount,0)),mx=Math.max(1,...perM);
   $("s_cols").innerHTML=perM.map((v,i)=>`<div><i style="height:${Math.max(0,Math.round(v/mx*(WIDE.matches?132:66)))}px${i===P.m?";background:var(--c2)":""}" title="${ms(i)}: ${kr(v)}"></i>${ms(i)[0]}</div>`).join("");
   const names={},add=(k,n)=>{names[k]=n||names[k]||""};[...deps].sort((x,y)=>x.at-y.at).forEach(d=>add(d.pot||"",d.potN||(POTS[d.pot]?t(POTS[d.pot]):"")));pSel.lines.forEach(l=>add(l.k,potName(l)));
-  let html=Object.keys(names).map(k=>{const mine=deps.filter(d=>(d.pot||"")===k),pl=0,per=mine.filter(d=>d.at>=a&&d.at<b).reduce((s,d)=>s+d.amount,0),tot=mine.reduce((s,d)=>s+d.amount,0);return `<div class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px"><span>${esc(k?names[k]:t("potOther"))}</span><b>${kr(tot)}</b></div><div class="lbl">${pl>0?t("sMonth",mn(P.m),kr(per),kr(pl)):mn(P.m)+": "+kr(per)}</div>${pl>0?`<div class="bar"><i style="width:${Math.max(0,Math.min(100,per/pl*100))}%"></i></div>`:""}</div>`}).join("");
+  let html=Object.keys(names).map(k=>{const mine=deps.filter(d=>(d.pot||"")===k),pl=0,per=mine.filter(d=>d.at>=a&&d.at<b).reduce((s,d)=>s+d.amount,0),tot=mine.reduce((s,d)=>s+d.amount,0)+((G.find(g=>g.k===k)||{}).s||0);return `<div class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px"><span>${esc(k?names[k]:t("potOther"))}</span><b>${kr(tot)}</b></div><div class="lbl">${pl>0?t("sMonth",mn(P.m),kr(per),kr(pl)):mn(P.m)+": "+kr(per)}</div>${pl>0?`<div class="bar"><i style="width:${Math.max(0,Math.min(100,per/pl*100))}%"></i></div>`:""}</div>`}).join("");
   if(S.saved)html+=`<div class="row"><span>${t("fSaved")}</span><b>${kr(S.saved)}</b></div>`;
   $("s_pots").innerHTML=html||`<p class="note">${t("none")}</p>`;
   $("s_cnt").textContent=list.length||"";
@@ -599,12 +598,13 @@ function go(x){tab=x;closeYears();FX.tab(x);setTimeout(yearScroll,0);["h","b","s
 $("menu").onclick=()=>{$("drawer").classList.add("on");$("scrim").classList.add("on")};$("scrim").onclick=()=>{$("drawer").classList.remove("on");$("scrim").classList.remove("on")};
 
 document.addEventListener("input",e=>{const x=e.target;
+  if(x.dataset.gs){const g=G.find(z=>z.k===x.dataset.gs);if(g){g.s=Math.max(0,parseA(x.value));saveGoals();render()}return}
   if(x.dataset.goal){const g=G.find(z=>z.k===x.dataset.goal);if(g){g.n=x.value;saveGoals();buildSheet();render()}return}
   if(x.dataset.s){const k=x.dataset.s;S[k]=+x.value||0;if(["saved","buf","lifePct","adults"].includes(k))persist();render()}
   else if(x.dataset.rw){const rw=x.dataset.rw,f=x.dataset.f,v=f==="a"?Math.max(0,parseA(x.value)):x.value;
     if(x.dataset.rid){const r=ruleById(x.dataset.rid),k=mk(P.y,P.m);if(r){if(f==="n")r.n=v;else setForward(r,k,v);saveRule(r)}}
     else{const i=+x.dataset.ix;editMonth(md=>{if(md[rw][i])md[rw][i][f]=v})}render()}});
-document.addEventListener("focusout",e=>{const x=e.target;if(x.dataset&&x.dataset.rw&&x.dataset.f==="a")x.value=fmtA(parseA(x.value))});
+document.addEventListener("focusout",e=>{const x=e.target;if(x.dataset&&(x.dataset.gs||(x.dataset.rw&&x.dataset.f==="a")))x.value=fmtA(parseA(x.value))});
 let RS=null,RD=null;
 function openRD(id){const r=ruleById(id);if(!r)return;RD=id;const k=mk(P.y,P.m),M=mn(P.m).toLowerCase(),sk=(r.skip||[]).includes(k),o=[];
   if(sk)o.push(["unskip",t("rdUn",M),""]);else{o.push(["end",t("rdEnd",M),t("rdEndS",M)]);o.push(["skip",t("rdSkip",M),t("rdSkipS")])}
@@ -750,13 +750,15 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     snap.docs.forEach(d=>{const v=d.data()||{};
       if(d.id==="plan"){["saved","buf","lifePct","adults"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
       else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
-      else if(v.kind==="goals"){sawGoals=true;if(!goalsDirty&&Array.isArray(v.list))G=v.list.map(g=>({k:String(g.k),n:String(g.n||"")}))}
+      else if(v.kind==="goals"){sawGoals=true;if(!goalsDirty&&Array.isArray(v.list))G=v.list.map(g=>({k:String(g.k),n:String(g.n||""),s:+g.s||0}))}
       else if(v.kind==="rec"&&Array.isArray(v.amts)&&v.amts.length&&!ex)RULES.push({id:String(v.id),t:v.t,n:String(v.n||""),freq:v.freq,date:String(v.date),ds:!!v.ds,amts:v.amts.map(x=>({f:String(x.f),a:+x.a||0})),end:v.end||null,over:v.over&&typeof v.over==="object"?{...v.over}:{},skip:Array.isArray(v.skip)?[...v.skip]:[]});
       else if(v.kind==="exp"&&typeof v.amount==="number")exps.push({id:d.id,amount:v.amount,note:v.note||"",on:v.on||0});
       else if(typeof v.amount==="number")deps.push({id:d.id,amount:v.amount,note:v.note||"",at:v.at||0,pot:v.pot||"",potN:v.potN||""})});
     Object.assign(PM,keep);
     /* Older budgets kept goals inside each month: gather their custom goals into the shared list once. */
     if(!exampleMode&&!sawGoals&&!goalsDirty){Object.keys(PM).sort().forEach(k=>(PM[k].split||[]).forEach(l=>{const g=G.find(z=>z.k===l.k);if(g){if(l.n)g.n=l.n}else G.push({k:l.k,n:l.n})}));saveGoals()}
+    /* The old single "already saved" amount moves onto the first goal, once. */
+    if(!exampleMode&&S.saved>0&&G.length){G[0].s=(G[0].s||0)+S.saved;S.saved=0;persist();saveGoals();flushSaves()}
     keepR.forEach(r=>{const i=RULES.findIndex(x=>x.id===r.id);if(i>=0)RULES[i]=r;else RULES.push(r)});
     /* Budgets saved before repeating lines existed: the latest month's lines become monthly, as they used to carry over. */
     if(!exampleMode&&!S.recV){S.recV=1;persist();const ks=Object.keys(PM).sort(),K=ks[ks.length-1];if(!RULES.length&&K){const date=K.replace("_","-")+"-01";RW.forEach(tp=>{PM[K][tp].forEach(x=>{if(x.n||x.a)newRule(tp,x.n,x.a,"m",date,false)});PM[K][tp]=[]});col.doc("pm_"+K).set(pmDoc(K)).catch(()=>{})}}
