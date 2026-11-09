@@ -188,9 +188,9 @@ nav .more{display:none}
 #rs .note{margin:8px 0 14px}
 .up{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:8px;align-items:baseline;padding-block:9px;border-bottom:1px solid var(--rule)}.up:last-child{border:0;padding-bottom:0}.up small{display:block;color:var(--soft);font-size:13px}.up b{font-weight:650;white-space:nowrap}.up .dt{color:var(--soft);font-size:14px}
 /* Compact year table for phones: one line per month, nothing to scroll. */
-table.mini th,table.mini td{position:static!important;background:none!important;min-width:0!important;padding:8px 0 8px 6px!important;font-size:13.5px}
-table.mini th:first-child,table.mini td:first-child{padding-left:0!important}
-table.mini tr.cur td{font-weight:750}table.mini tr.tot td{font-weight:750;border-top:2px solid var(--rule)}
+table.ymini th,table.ymini td{position:static!important;background:none!important;min-width:0!important;padding:8px 0 8px 6px!important;font-size:13.5px}
+table.ymini th:first-child,table.ymini td:first-child{padding-left:0!important}
+table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;border-top:2px solid var(--rule)}
 @media (max-width:699px){
   main,section{gap:10px}
   body{padding-block:10px calc(92px + env(safe-area-inset-bottom,0px))}
@@ -486,7 +486,7 @@ function renderYear(){
   $("y_bars").innerHTML=D.map((p,m)=>`<button class="ymo ${isY&&m===NOW.getMonth()?"cur":""}" data-jump="${m}" aria-label="${mn(m)}" title="${p?mn(m)+": "+cs.map(c=>t(c[2])+" "+kr(Math.max(0,p[c[0]]))).join(", "):mn(m)}">${p?`<span class="st">${cs.filter(c=>p[c[0]]>0).map(c=>`<i style="height:${Math.max(2,Math.round(p[c[0]]/mx*H))}px;background:var(${c[1]})"></i>`).join("")}</span>`:'<span class="none"></span>'}${ms(m)[0]}</button>`).join("");
   $("y_keys").innerHTML=cs.map(c=>`<span><span class="dot" style="background:var(${c[1]})"></span>${t(c[2])}</span>`).join("");
   const row=(l,k,cl)=>`<tr class="${cl||""}"><td>${l}</td>${D.map(p=>`<td>${p?nf(p[k]):"–"}</td>`).join("")}<td class="tot">${nf(tot(k))}</td></tr>`;
-  $("y_tbl").className=WIDE.matches?"":"mini";
+  $("y_tbl").className=WIDE.matches?"":"ymini";
   if(!WIDE.matches)$("y_tbl").innerHTML=`<thead><tr><th>${t("moName")}</th><th>${t("moIn")}</th><th>${t("moOut")}</th><th>${t("moSave")}</th><th>${t("moLeft")}</th></tr></thead><tbody>`+D.map((p,m)=>p?`<tr class="${isY&&m===NOW.getMonth()?"cur":""}"><td>${ms(m)}</td><td>${nf(p.inc)}</td><td>${nf(p.needs)}</td><td>${nf(p.save)}</td><td class="${p.life<0?"er":""}">${nf(p.life)}</td></tr>`:"").join("")+`<tr class="tot"><td>${t("total")}</td><td>${nf(I)}</td><td>${nf(O)}</td><td>${nf(Sv)}</td><td>${nf(L)}</td></tr></tbody>`;
   else $("y_tbl").innerHTML=`<thead><tr><th>kr</th>${MNS[0].map((_,m)=>`<th class="${isY&&m===NOW.getMonth()?"cur":""}">${ms(m)}</th>`).join("")}<th>${t("total")}</th></tr></thead><tbody>`+row(t("in"),"inc")+row(t("out"),"fixed")+row(t("varOut"),"vars")+row(t("saving"),"save")+row(t("totOut"),"needs","sum")+row(t("rem"),"life","sum")+`<tr><td>${t("sRate")}</td>${D.map(p=>`<td>${p&&p.inc>0?pc(p.save/p.inc):"–"}</td>`).join("")}<td class="tot">${I>0?pc(Sv/I):"–"}</td></tr></tbody>`;
 }
