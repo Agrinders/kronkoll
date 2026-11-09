@@ -228,6 +228,16 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 .ln.s{grid-template-columns:minmax(0,1fr) auto}
 .freq.skip{color:var(--warn)}
 #rs_amt{margin-top:12px}#rs_amt .seg{margin:8px 0 0}
+
+/* Notifications: the same glass panels as the rest of the app, with a tinted icon. */
+#toasts{gap:8px}
+.toast{display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:11px;padding:10px 14px 10px 10px;border-radius:18px;border:1px solid var(--rule);background:var(--glass);color:var(--ink);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);box-shadow:var(--shadow);pointer-events:auto;cursor:pointer;animation:tin .34s cubic-bezier(.2,1.25,.35,1),tout .3s 3.1s forwards}
+.toast i{--c:var(--pen);display:grid;place-items:center;width:38px;height:38px;border-radius:13px;color:var(--c);background:color-mix(in srgb,var(--c) 17%,transparent)}
+.toast svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.toast.save i,.toast.ok i{--c:var(--good)}.toast.win i{--c:var(--c3)}.toast.warn i,.toast.out i{--c:var(--warn)}.toast.bad i,.toast.del i{--c:var(--bad)}
+.toast b{display:block;font:650 15.5px/1.25 var(--ui)}.toast small{display:block;font-size:13.5px;line-height:1.3;color:var(--soft);margin-top:1px}
+.toast.win{animation:tin .34s cubic-bezier(.2,1.25,.35,1),glow 1s .1s,tout .3s 3.1s forwards}
+@keyframes tin{from{transform:translateY(-22px) scale(.95);opacity:0}}@keyframes glow{40%{box-shadow:0 0 0 3px color-mix(in srgb,var(--c3) 45%,transparent),var(--shadow)}}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -317,7 +327,7 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 </section>
 
 <section id="c" class="hide">
-<div class="sheet"><div class="lbl" data-i="theme"></div><div class="chips" id="c_th"></div><div class="lbl" data-i="notif"></div><div class="chips" id="c_tg"></div><div class="lbl" data-i="lang"></div><div class="chips" id="c_lg"></div><div class="lbl" data-i="motion"></div><div class="chips" id="c_mo"></div></div>
+<div class="sheet"><div class="lbl" data-i="theme"></div><div class="chips" id="c_th"></div><div class="lbl" data-i="notif"></div><div class="chips" id="c_tg"></div><div class="lbl" data-i="sound"></div><div class="chips" id="c_sn"></div><div class="lbl" data-i="lang"></div><div class="chips" id="c_lg"></div><div class="lbl" data-i="motion"></div><div class="chips" id="c_mo"></div></div>
 <div class="sheet"><div id="set_in"></div><div id="h_c"></div></div>
 <div class="sheet"><div class="lbl" data-i="yourData"></div><p class="note" id="c_st"></p><button class="btn out" id="reset" style="width:100%;margin-top:10px"></button></div>
 </section>
@@ -326,7 +336,7 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 
 <script>
 const $=id=>document.getElementById(id);
-const S={lang:"sv",saved:0,buf:3,lifePct:15,adults:2,theme:"auto",toasts:true,motion:true,gx:35000,rate:30,ga:20000,jk:10000,ts:600000,tr:20,fe:.1};
+const S={lang:"sv",saved:0,buf:3,lifePct:15,adults:2,theme:"auto",toasts:true,sound:true,motion:true,gx:35000,rate:30,ga:20000,jk:10000,ts:600000,tr:20,fe:.1};
 let NOW=new Date();
 const MNS=[["Januari","Februari","Mars","April","Maj","Juni","Juli","Augusti","September","Oktober","November","December"],["January","February","March","April","May","June","July","August","September","October","November","December"]];
 const li=()=>S.lang==="sv"?0:1,mn=i=>MNS[li()][i],ms=i=>mn(i).slice(0,3),loc=()=>S.lang==="sv"?"sv-SE":"en-GB";
@@ -383,7 +393,7 @@ riskNote:["Jag är ingen finansiell rådgivare, och det här är allmän informa
 leftNow:["Kvar att leva på den här månaden","Left to live on this month"],leftMon:[(m,y)=>`Kvar i ${m} ${y}`,(m,y)=>`Left in ${m} ${y}`],dayMsg:[(d,n,p)=>`Ca ${d} per dag i ${n} dagar${p?", efter "+p+" som är planerat":""}.`,(d,n,p)=>`About ${d} per day for ${n} days${p?", after "+p+" planned":""}.`],spentOf:[(u,l)=>`Använt ${u} av ${l}.`,(u,l)=>`Used ${u} of ${l}.`],overMsg:[(a,b,s)=>`Spara ${a} i stället för ${b} den månaden.${s?" Det fattas ändå "+s+". Skjut hellre något till nästa månad.":""}`,(a,b,s)=>`Save ${a} instead of ${b} that month.${s?" Still "+s+" short. Move something to next month.":""}`],
 whatFor:["Vad gäller det?","What for?"],add:["Lägg till","Add"],spendNote:["Dagens datum för något ni köpt, ett senare datum för något som kommer.","Today's date for something bought, a later date for something coming up."],planned:["planerad","planned"],noneP:["Inget den här månaden.","Nothing this month."],
 netMo:["Nettolön per månad","Net pay per month"],testNote:["Uppskattning med testvärden, inte verifierade svenska satser. Använd Skatteverkets räknare för riktiga siffror.","Estimate using test values, not verified Swedish rates. Use Skatteverket's calculators for real numbers."],fGross:["Bruttolön / månad","Gross salary / month"],fRatef:["Kommun + region %","Municipal + region %"],adv:["Avancerat (testvärden)","Advanced (test values)"],advG:["Grundavdrag / år","Basic deduction / yr"],advJ:["Jobbskatteavdrag / år","Job credit / yr"],advT:["Skiktgräns","State threshold"],advR:["Statlig skatt %","State rate %"],advF:["Avgifter %","Fees %"],taxMo:["Skatt / månad","Tax / month"],eff:["Effektiv","Effective"],
-theme:["Tema","Theme"],auto:["Auto","Auto"],light:["Ljust","Light"],dark:["Mörkt","Dark"],notif:["Notiser i appen","In-app notifications"],on:["På","On"],off:["Av","Off"],lang:["Språk","Language"],
+theme:["Tema","Theme"],auto:["Auto","Auto"],light:["Ljust","Light"],dark:["Mörkt","Dark"],notif:["Notiser i appen","In-app notifications"],on:["På","On"],off:["Av","Off"],lang:["Språk","Language"],sound:["Ljud för notiser","Notification sounds"],
 fO:["Bara en gång","One time"],fM:["Varje månad","Every month"],fQ:["Varje kvartal","Every quarter"],fY:["Varje år","Every year"],chO:["Engång","One time"],chEv:["↻ ","↻ "],pickDate:["Datum","Date"],pickFirst:["Första betalning","First payment"],pickOpt:["Datum (valfritt)","Date (optional)"],cancel:["Avbryt","Cancel"],saveW:["Spara","Save"],
 hO:[m=>`Finns bara i ${m}.`,m=>`Only in ${m}.`],hM:["Kopieras automatiskt till alla kommande månader.","Copies automatically to all coming months."],hQ:["Läggs in var tredje månad, räknat från datumet.","Added every third month, counting from the date."],hY:["Läggs in en gång per år på datumet.","Added once a year on the date."],needDate:["Välj ett datum först","Pick a date first"],
 tStop:[m=>`Borttagen från och med ${m}`,m=>`Removed from ${m} onward`],tMoved:[m=>`Finns nu i ${m}`,m=>`Now in ${m}`],nextHead:["Kommande betalningar","Coming payments"],
@@ -392,10 +402,10 @@ rdT:["Vad vill du göra?","What do you want to do?"],rdEnd:[m=>`Avsluta efter ${
 chSkip:[m=>`Hoppas över i ${m} · tryck för att ändra`,m=>`Skipped in ${m} · tap to change`],chLast:[m=>` · sista ${m}`,m=>` · last ${m}`],tEnd:[m=>`Avslutas efter ${m}`,m=>`Ends after ${m}`],tSkip:[m=>`Hoppar över ${m}`,m=>`Skipping ${m}`],tKill:["Borttagen","Deleted"],tBack:["Återställd","Restored"],short:["Kvartal","Quarter"],yearly:["År","Year"],once:["Engång","One time"],moIn:["In","In"],moOut:["Ut","Out"],moSave:["Spar","Saved"],moLeft:["Kvar","Left"],moName:["Mån","Mon"],motion:["Rörlig bakgrund","Moving background"],
 fAdults:["Vuxna i hushållet","Adults in the household"],bufF:["Buffert, månader av räkningar","Buffer, months of bills"],lifeF:["Minst kvar till eget liv, %","Minimum for personal life, %"],hBufSet:["Under 2 månader är kort, riktlinjen är 2–3.","Under 2 months is short; the guideline is 2–3."],hLifeSet:["Under 10 % till eget liv gör planer svåra att hålla.","Under 10% for personal life makes plans hard to keep."],
 yourData:["Er data","Your data"],dStore:["Budgeten är gemensam. Alla som har tillgång till sidan ser och ändrar samma siffror.","The budget is shared. Everyone with access to this page sees and edits the same figures."],dOff:["Inte ansluten: inget sparas när sidan stängs.","Not connected: nothing is saved when the page closes."],reset:["Radera all data","Delete all data"],resetAgain:["Tryck igen för att radera allt","Tap again to delete everything"],
-tNeedAmt:["Skriv ett belopp först","Type an amount first"],tSaved:[(a,t)=>`Sparade ${a} · totalt ${t}`,(a,t)=>`Saved ${a} · total ${t}`],tWd:[(a,t)=>`Tog ut ${a} · totalt ${t}`,(a,t)=>`Withdrew ${a} · total ${t}`],tBuf:["Bufferten är klar 🎉","Buffer complete 🎉"],tStart:["En månads buffert är nådd 🎉","One month of buffer reached 🎉"],tOver:[(o,m)=>`Över budget med ${o} i ${m}`,(o,m)=>`Over budget by ${o} in ${m}`],tAddExp:[(a,l,m)=>`${a} tillagd · ${l} kvar i ${m}`,(a,l,m)=>`${a} added · ${l} left in ${m}`],tFail:["Kunde inte spara. Kontrollera anslutningen och försök igen.","Could not save. Check your connection and try again."],tRem:["Post borttagen","Entry removed"],tRec:["Fördelningen återställd","Split reset"],tDel:["All data raderades","All data was deleted"],tNotif:["Notiser på","Notifications on"],tDelFail:["Kunde inte radera allt. Försök igen.","Could not delete everything. Try again."],
+tNeedAmt:["Skriv ett belopp först","Type an amount first"],tSaved:[(a,t)=>`Sparade ${a} · totalt ${t}`,(a,t)=>`Saved ${a} · total ${t}`],tWd:[(a,t)=>`Tog ut ${a} · totalt ${t}`,(a,t)=>`Withdrew ${a} · total ${t}`],tBuf:["Bufferten är klar","Buffer complete"],tStart:["En månads buffert är nådd","One month of buffer reached"],tOver:[(o,m)=>`Över budget med ${o} i ${m}`,(o,m)=>`Over budget by ${o} in ${m}`],tAddExp:[(a,l,m)=>`${a} tillagd · ${l} kvar i ${m}`,(a,l,m)=>`${a} added · ${l} left in ${m}`],tFail:["Kunde inte spara. Kontrollera anslutningen och försök igen.","Could not save. Check your connection and try again."],tRem:["Post borttagen","Entry removed"],tRec:["Fördelningen återställd","Split reset"],tDel:["All data raderades","All data was deleted"],tNotif:["Notiser på","Notifications on"],tDelFail:["Kunde inte radera allt. Försök igen.","Could not delete everything. Try again."],
 pYes:["Gör det ändå","Do it anyway"],pNo:["Avbryt","Cancel"],pWd1T:["Ni tar av bufferten","You are dipping into the buffer"],pWd1:[(a,n)=>`Efter uttaget har ni ${a} kvar, mindre än en månads räkningar (${n}).`,(a,n)=>`After this you have ${a} left, less than a month of bills (${n}).`],pWd2T:["Ni går under buffertmålet","You are going below the buffer target"],pWd2:[t=>`Efter uttaget är ni under målet på ${t}.`,t=>`After this you are below your ${t} target.`],pOverT:["Det går över budget","This goes over budget"],pOver:[(o,m)=>`Det här tar er ${o} över pengarna att leva på i ${m}. Flytta hellre köpet till nästa månad.`,(o,m)=>`This puts you ${o} over your living money in ${m}. Consider moving it to next month.`]
 };
-const t=(k,...a)=>{const v=T[k][li()];return typeof v==="function"?v(...a):v};
+const t=(k,...a)=>{lastKey=k;const v=T[k][li()];return typeof v==="function"?v(...a):v};
 
 let deps=[],exps=[],PM={},allIds=[],col=null,tab="h",P={y:NOW.getFullYear(),m:NOW.getMonth()},seenData=false;
 const kr=v=>(v<0?"−":"")+Math.round(Math.abs(v)).toLocaleString("sv-SE")+" kr";
@@ -404,7 +414,14 @@ const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",
 const sum=x=>x.reduce((s,i)=>s+i.a,0);
 const VARS=/(^|\s)(mat|livsmedel|food|groceries|transport|skånetrafiken|nöjen|kläder|hotell|katterna|hälsa|skola)(\s|$)/i,CREDIT=/klarna|delbetal|kredit|avbetal|credit|instal|leasing|billån|(^|\s)(lån|lan|loan)(\s|$)/i,MORT=/bolån|bolan|mortgage/i,FOOD=/(^|\s)(mat|livsmedel|food|groceries|ica|coop|willys|hemköp)(\s|$)/i,SUBS=/netflix|spotify|hbo|\bmax\b|viaplay|disney|streaming|prenumer|subscription|youtube|storytel|apple tv/i;
 
-function toast(msg,kind){if(!S.toasts)return;const e=document.createElement("div");e.className="toast";e.textContent=msg;$("toasts").appendChild(e);setTimeout(()=>e.remove(),3400)}
+/* Each message key has a kind, which picks its icon, color and sound. */
+const KIND={tSaved:"save",tBuf:"win",tStart:"win",tWd:"out",tNeedAmt:"warn",needDate:"warn",tFail:"bad",tDelFail:"bad",tRem:"del",tKill:"del",tStop:"del",tDel:"del",tOver:"bad",tAddExp:"ok",tEnd:"out",tSkip:"out"};
+const TICON={save:'<path d="M12 19V5M6 11l6-6 6 6"/>',ok:'<path d="m5 12.5 4.5 4.5L19 7"/>',win:'<path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/>',out:'<path d="M12 5v14M6 13l6 6 6-6"/>',warn:'<path d="M12 4 2.8 20h18.4z"/><path d="M12 10v4.5M12 17.5h.01"/>',bad:'<circle cx="12" cy="12" r="8.5"/><path d="M12 8v5M12 16h.01"/>',del:'<path d="M5 7h14M10 7V4.5h4V7M7 7l1 13h8l1-13M10.5 11v5M13.5 11v5"/>',info:'<circle cx="12" cy="12" r="8.5"/><path d="M12 11.5V16M12 8h.01"/>'};
+const TUNE={save:[[659,0],[988,.09]],ok:[[784,0],[1047,.08]],win:[[523,0],[659,.1],[784,.2],[1047,.3]],out:[[587,0],[440,.1]],warn:[[494,0],[494,.13]],bad:[[330,0],[247,.13]],del:[[392,0],[294,.09]],info:[[880,0]]};
+let AC=null;
+function chime(kind){if(!S.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();const t0=AC.currentTime+.01;(TUNE[kind]||TUNE.info).forEach(([f,d])=>{const o=AC.createOscillator(),g=AC.createGain();o.type="triangle";o.frequency.value=f;g.gain.setValueAtTime(.0001,t0+d);g.gain.exponentialRampToValueAtTime(.13,t0+d+.012);g.gain.exponentialRampToValueAtTime(.0001,t0+d+.26);o.connect(g).connect(AC.destination);o.start(t0+d);o.stop(t0+d+.28)})}catch(e){}}
+let lastKey="";
+function toast(msg,kind){if(!S.toasts)return;kind=kind||KIND[lastKey]||"info";const box=$("toasts");while(box.children.length>=3)box.firstChild.remove();const[a,...b]=String(msg).split(" · "),e=document.createElement("div");e.className="toast "+kind;e.setAttribute("role","status");e.innerHTML=`<i><svg viewBox="0 0 24 24" aria-hidden="true">${TICON[kind]||TICON.info}</svg></i><span><b>${esc(a)}</b>${b.length?`<small>${esc(b.join(" · "))}</small>`:""}</span>`;e.onclick=()=>e.remove();box.appendChild(e);chime(kind);setTimeout(()=>e.remove(),3500)}
 function ask(title,text){return new Promise(res=>{$("m_t").textContent=title;$("m_p").textContent=text;$("m_yes").textContent=t("pYes");$("m_no").textContent=t("pNo");$("modal").classList.add("on");const done=v=>{$("modal").classList.remove("on");$("m_yes").onclick=$("m_no").onclick=null;res(v)};$("m_yes").onclick=()=>done(true);$("m_no").onclick=()=>done(false)})}
 
 /* each month keeps its own lines; an empty month inherits the latest earlier one */
@@ -578,6 +595,7 @@ function renderSettings(){
   $("c_th").innerHTML=["auto","light","dark"].map(v=>`<button class="chip ${S.theme===v?"on":""}" data-th="${v}">${t(v)}</button>`).join("");
   $("c_tg").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.toasts?"1":"0")===v?"on":""}" data-tg="${v}">${t(k)}</button>`).join("");
   $("c_lg").innerHTML=[["sv","Svenska"],["en","English"]].map(([v,l])=>`<button class="chip ${S.lang===v?"on":""}" data-lang="${v}">${l}</button>`).join("");
+  $("c_sn").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.sound?"1":"0")===v?"on":""}" data-sn="${v}">${t(k)}</button>`).join("");
   $("c_mo").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.motion?"1":"0")===v?"on":""}" data-mo="${v}">${t(k)}</button>`).join("");
   $("c_st").textContent=col?t("dStore"):t("dOff");
   $("h_c").innerHTML=(S.buf<2?`<div class="hint w">${t("hBufSet")}</div>`:"")+(S.lifePct<10?`<div class="hint w">${t("hLifeSet")}</div>`:"");
@@ -591,7 +609,7 @@ function build(){
 }
 function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render()}
 function render(){$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderSpend();renderTax();renderResults();renderMarket();renderSettings();FX.sync(planCalc(nowMd()))}
-function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,theme:S.theme,toasts:S.toasts,motion:S.motion,recV:S.recV||0}).catch(()=>{}),150)}
+function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,recV:S.recV||0}).catch(()=>{}),150)}
 const yrOpen=()=>$("yrs").classList.contains("on");
 function closeYears(){$("yrs").classList.remove("on")}
 function openYears(){const y0=NOW.getFullYear(),ys=new Set([P.y]);for(let y=y0-5;y<=y0+10;y++)ys.add(y);[...deps.map(d=>d.at),...exps.map(e=>e.on)].forEach(x=>x&&ys.add(new Date(x).getFullYear()));Object.keys(PM).forEach(k=>ys.add(+k.slice(0,4)));
@@ -683,6 +701,7 @@ document.addEventListener("click",e=>{
   if(del){const id=del.dataset.del;if(col)col.doc(id).delete().catch(()=>{});else{deps=deps.filter(d=>d.id!==id);exps=exps.filter(d=>d.id!==id);render()}toast(t("tRem"));return}
   const lg=e.target.closest("[data-lang]");if(lg){S.lang=lg.dataset.lang;persist();applyLang();return}
   const th=e.target.closest("[data-th]");if(th){S.theme=th.dataset.th;applyTheme();persist();render();return}
+  const sn=e.target.closest("[data-sn]");if(sn){S.sound=sn.dataset.sn==="1";persist();render();if(S.sound)chime("save");return}
   const mo=e.target.closest("[data-mo]");if(mo){S.motion=mo.dataset.mo==="1";persist();FX.setMotion();render();return}
   const tg=e.target.closest("[data-tg]");if(tg){S.toasts=tg.dataset.tg==="1";persist();render();if(S.toasts)toast(t("tNotif"));return}});
 
@@ -756,7 +775,7 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     if(!checked&&!snap.metadata.fromCache){checked=true;if(snap.empty)importOld().catch(()=>{})}
     const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});const keepR=RULES.filter(r=>DIRTYR.has(r.id)),real=snap.docs.some(d=>/^(pm|rec|dep|exp)_|^started$/.test(d.id)),ex=exampleMode&&!real;if(!ex){exampleMode=false;PM={};RULES=[]}deps=[];exps=[];allIds=snap.docs.map(d=>d.id);const old=S.lang;let sawGoals=false;
     snap.docs.forEach(d=>{const v=d.data()||{};
-      if(d.id==="plan"){["saved","buf","lifePct","adults"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
+      if(d.id==="plan"){["saved","buf","lifePct","adults"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.sound==="boolean")S.sound=v.sound;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
       else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
       else if(v.kind==="goals"){sawGoals=true;if(!goalsDirty&&Array.isArray(v.list))G=v.list.map(g=>({k:String(g.k),n:String(g.n||""),s:+g.s||0}))}
       else if(v.kind==="rec"&&Array.isArray(v.amts)&&v.amts.length&&!ex)RULES.push({id:String(v.id),t:v.t,n:String(v.n||""),freq:v.freq,date:String(v.date),ds:!!v.ds,amts:v.amts.map(x=>({f:String(x.f),a:+x.a||0})),end:v.end||null,over:v.over&&typeof v.over==="object"?{...v.over}:{},skip:Array.isArray(v.skip)?[...v.skip]:[]});
