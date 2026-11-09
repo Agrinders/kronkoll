@@ -234,6 +234,10 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 @keyframes tin{from{transform:translateY(-22px) scale(.95);opacity:0}}@keyframes glow{40%{box-shadow:0 0 0 3px color-mix(in srgb,var(--c3) 45%,transparent),var(--shadow)}}
 
 #b_per .mnav b{cursor:pointer}#b_per .mnav b::after{content:"";display:inline-block;width:7px;height:7px;margin-left:9px;vertical-align:4px;border-right:2px solid var(--soft);border-bottom:2px solid var(--soft);transform:rotate(45deg)}
+
+.lnk[data-add],#g_add{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:46px;margin-top:8px;padding:6px 12px;border:1.5px dashed color-mix(in srgb,var(--pen) 42%,transparent);border-radius:14px;background:color-mix(in srgb,var(--pen) 8%,transparent);color:var(--pen);font-size:15px;font-weight:650;text-align:center}
+.lnk[data-add]::before,#g_add::before{content:"";flex:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(var(--paper),var(--paper)) center/10px 2px no-repeat,linear-gradient(var(--paper),var(--paper)) center/2px 10px no-repeat,var(--pen)}
+@media (hover:hover){.lnk[data-add]:hover,#g_add:hover{text-decoration:none;background:color-mix(in srgb,var(--pen) 15%,transparent);border-style:solid}}
 </style>
 
 <canvas id="fx" aria-hidden="true"></canvas>
@@ -357,7 +361,7 @@ leftIn:[m=>`Kvar att leva på i ${m}`,m=>`Left to live on in ${m}`],perDay:[(d,n
 needs:["Räkningar","Bills"],fixedL:["Fasta","Fixed"],varL:["Rörliga","Variable"],saving:["Sparande","Saving"],life:["Eget liv","Living"],
 in:["Inkomster","Income"],out:["Fasta utgifter","Fixed expenses"],varOut:["Rörliga utgifter","Variable expenses"],rem:["Återstående","Remaining"],totOut:["Summa utgifter","Total expenses"],sRate:["Sparkvot","Savings rate"],totSave:["Total sparad summa","Total saved"],yearT:[y=>`Hela ${y}`,y=>`All of ${y}`],total:["Totalt","Total"],savedIn:[m=>`Sparat i ${m}`,m=>`Saved in ${m}`],ofP:[(s,p)=>`${s} av ${p}`,(s,p)=>`${s} of ${p}`],
 topNow:["Viktigast just nu","Most important right now"],seeAll:["Se hela resultatet →","See all results →"],exNote:["Det här är exempelsiffror. Skriv över dem med era egna.","These are example figures. Replace them with your own."],exGo:["Öppna budgeten →","Open the budget →"],addBuy:["＋ Lägg till ett köp","＋ Add a purchase"],
-incHead:["Inkomster","Income"],outHead:["Fasta utgifter","Fixed expenses"],restHead:["Sparande","Saving"],goalsHead:["Sparande mål","Savings goals"],goalsNote:["Skapa och namnge dina mål här. Pengarna lägger du in under Budget.","Create and name your goals here. You add the money under Budget."],noGoals:["Du har inga sparande mål ännu.","You have no savings goals yet."],toGoals:["Skapa ett under Sparande →","Create one under Savings →"],restSub:["Fördela resten","Split the rest"],varHead:["Rörliga utgifter","Variable expenses"],newLine:["＋ Ny rad","＋ New line"],newGoal:["＋ Nytt mål","＋ New goal"],goalPh:["Namn på målet, t.ex. Resa","Goal name, e.g. Trip"],linePh:["Skriv här","Write here"],del:["Ta bort","Remove"],
+incHead:["Inkomster","Income"],outHead:["Fasta utgifter","Fixed expenses"],restHead:["Sparande","Saving"],goalsHead:["Sparande mål","Savings goals"],goalsNote:["Skapa och namnge dina mål här. Pengarna lägger du in under Budget.","Create and name your goals here. You add the money under Budget."],noGoals:["Du har inga sparande mål ännu.","You have no savings goals yet."],toGoals:["Skapa ett under Sparande →","Create one under Savings →"],restSub:["Fördela resten","Split the rest"],varHead:["Rörliga utgifter","Variable expenses"],newLine:["Ny rad","New line"],newGoal:["Nytt mål","New goal"],goalPh:["Namn på målet, t.ex. Resa","Goal name, e.g. Trip"],linePh:["Skriv här","Write here"],del:["Ta bort","Remove"],
 restIntro:[v=>`Efter utgifterna har ni ${v} kvar. Bestäm vad som ska sparas, resten är ert att leva på.`,v=>`After expenses you have ${v} left. Decide what to save, the rest is yours to live on.`],lifeRow:["Kvar att leva på","Left to live on"],
 overAlloc:[v=>`Ni har fördelat ${v} mer än ni har kvar. Sänk en rad.`,v=>`You have split ${v} more than you have left. Lower one line.`],useRec:["Återställ till förslaget","Reset to the suggestion"],
 aBuf:["Buffert","Buffer"],aGoal:["Studier & mål","Studies & goals"],aLong:["Långsiktigt","Long-term"],potOther:["Övrigt","Other"],
@@ -614,7 +618,7 @@ function openYears(){const y0=NOW.getFullYear(),ys=new Set([P.y]);for(let y=y0-5
   const on=$("yr_list").querySelector(".on");if(on)$("yr_list").scrollTop=on.offsetTop-$("yr_list").offsetTop-96;
   $("yrs").classList.add("on")}
 function refreshMonth(){setDates();buildSheet();render()}
-function go(x){tab=x;closeYears();FX.tab(x);setTimeout(yearScroll,0);["h","b","s","r","m","e","x","c"].forEach(s=>$(s).classList.toggle("hide",s!==x));document.querySelectorAll("nav button,#drawer>button").forEach(b=>b.classList.toggle("on",b.dataset.go===x));$("drawer").classList.remove("on");$("scrim").classList.remove("on");$("ttl").textContent=t("ttl"+x.toUpperCase());window.scrollTo(0,0)}
+function go(x){tab=x;try{sessionStorage.setItem("kronkoll.tab",x)}catch(e){}closeYears();FX.tab(x);setTimeout(yearScroll,0);["h","b","s","r","m","e","x","c"].forEach(s=>$(s).classList.toggle("hide",s!==x));document.querySelectorAll("nav button,#drawer>button").forEach(b=>b.classList.toggle("on",b.dataset.go===x));$("drawer").classList.remove("on");$("scrim").classList.remove("on");$("ttl").textContent=t("ttl"+x.toUpperCase());window.scrollTo(0,0)}
 $("menu").onclick=()=>{$("drawer").classList.add("on");$("scrim").classList.add("on")};$("scrim").onclick=()=>{$("drawer").classList.remove("on");$("scrim").classList.remove("on")};
 
 document.addEventListener("input",e=>{const x=e.target;
@@ -758,7 +762,7 @@ const WIDE=matchMedia("(min-width:700px)"),RAIL=matchMedia("(min-width:1024px)")
 function layout(){const D=["d_inc","d_out","d_var"].map(x=>$(x));if(WIDE.matches)D.forEach(d=>{d.removeAttribute("name");d.open=true});else{D.forEach(d=>{d.open=false;d.setAttribute("name","bud")});if(!hasData())D[0].open=true}}
 [WIDE,RAIL].forEach(m=>m.addEventListener("change",()=>{closeYears();layout();render()}));
 $("b").addEventListener("click",e=>{if(WIDE.matches&&e.target.closest("summary"))e.preventDefault()});
-seedExample();applyTheme();setDates();applyLang();go("h");layout();
+seedExample();applyTheme();setDates();applyLang();let startTab="h";try{const s=sessionStorage.getItem("kronkoll.tab");if(s&&$(s)&&"hbsrmexc".includes(s))startTab=s}catch(e){}go(startTab);layout();
 document.addEventListener("visibilitychange",()=>{if(document.hidden)return;const d=new Date(),same=d.getMonth()===NOW.getMonth()&&d.getFullYear()===NOW.getFullYear();NOW=d;if(same){render();return}P={y:d.getFullYear(),m:d.getMonth()};refreshMonth()});
 /* One shared household budget, so both people see the same figures. The page works without storage. */
 (async()=>{try{
