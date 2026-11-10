@@ -353,3 +353,21 @@ nav .nhead{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:up
 .zprev{margin:6px 0 2px;font-size:14px;color:var(--soft)}
 html:root.hc{--glass:color-mix(in srgb,var(--paper) 97%,transparent);--glass2:color-mix(in srgb,var(--paper) 95%,transparent);--soft:color-mix(in srgb,var(--ink) 80%,var(--paper));--rule:color-mix(in srgb,var(--ink) 24%,transparent)}
 @media (min-width:1024px){#v>:nth-child(1){grid-column:span 5;align-self:start}#v>:nth-child(2){grid-column:span 7}#v>:nth-child(3){grid-column:span 5}#u>:nth-child(1){grid-column:span 8}}
+/* Opening: the icon on the same dark background as the phone's start screen, then the app eases in piece by piece. */
+#intro{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:radial-gradient(60% 45% at 50% 46%,#1a2238,#0b101c 70%);pointer-events:none;animation:introSafe .45s 2.6s forwards}
+#intro img{width:104px;height:104px;filter:drop-shadow(0 14px 30px rgba(217,71,107,.35));animation:introIcon .42s cubic-bezier(.2,.9,.3,1) both}
+html.reveal #intro{animation:introOut .5s cubic-bezier(.4,0,.2,1) forwards}html.reveal #intro img{animation:introIconOut .5s cubic-bezier(.4,0,.2,1) forwards}
+html.boot #fx{opacity:0}#fx{transition:opacity 1.1s ease}
+html.boot main section{animation:none}
+html.enter .top{animation:introDown .55s cubic-bezier(.2,.9,.25,1) both}
+html.enter nav,html.enter #side{animation:introUp .6s .12s cubic-bezier(.2,.9,.25,1) both}
+html.enter main section:not(.hide)>*{animation:introRise .62s cubic-bezier(.2,.9,.25,1) both;animation-delay:calc(var(--i,0) * 65ms + 90ms)}
+@keyframes introIcon{from{opacity:0;scale:.82}to{opacity:1;scale:1}}
+@keyframes introIconOut{to{opacity:0;scale:1.12}}
+@keyframes introOut{to{opacity:0;visibility:hidden}}
+@keyframes introSafe{to{opacity:0;visibility:hidden}}
+@keyframes introDown{from{opacity:0;translate:0 -14px}}
+@keyframes introUp{from{opacity:0;translate:0 26px}}
+@keyframes introRise{from{opacity:0;translate:0 22px;scale:.985}}
+@media (prefers-reduced-motion:reduce){#intro{animation:introOut .2s .1s forwards!important}#intro img{animation:none!important}}
+html.still #intro img{animation:none}html.still.reveal #intro{animation:introOut .2s forwards}

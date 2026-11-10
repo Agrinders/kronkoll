@@ -2,7 +2,15 @@
 function layout(){const D=["d_inc","d_out","d_var"].map(x=>$(x));if(WIDE.matches)D.forEach(d=>{d.removeAttribute("name");d.open=true});else{D.forEach(d=>{d.open=false;d.setAttribute("name","bud")});if(!hasData())D[0].open=true}}
 [WIDE,RAIL].forEach(m=>m.addEventListener("change",()=>{closeYears();layout();render()}));
 $("b").addEventListener("click",e=>{if(WIDE.matches&&e.target.closest("summary"))e.preventDefault()});
-seedExample();applyTheme();applyLang();let startTab="h";try{const s=sessionStorage.getItem("kronkoll.tab");if(s&&$(s)&&"hbsarmvlunc".includes(s))startTab=s}catch(e){}go(startTab);layout();setInterval(guideDot,6e4);document.addEventListener("visibilitychange",()=>{if(!document.hidden)guideDot()});
+seedExample();applyTheme();applyLang();let startTab="h";try{const s=sessionStorage.getItem("kronkoll.tab");if(s&&$(s)&&"hbsarmvlunc".includes(s))startTab=s}catch(e){}go(startTab);layout();
+/* Opening transition: wait until the first screen is drawn and the fonts are in, then reveal it. */
+(()=>{const H=document.documentElement,still=!S.motion||matchMedia("(prefers-reduced-motion:reduce)").matches;if(still)H.classList.add("still");
+  const show=()=>{if(H.classList.contains("reveal"))return;const sec=document.querySelector("main section:not(.hide)");if(sec)[...sec.children].forEach((c,i)=>c.style.setProperty("--i",Math.min(i,7)));
+    H.classList.remove("boot");H.classList.add("reveal");if(!still)H.classList.add("enter");
+    setTimeout(()=>{H.classList.remove("enter");$("intro").remove();if(sec)[...sec.children].forEach(c=>c.style.removeProperty("--i"))},1400)};
+  const fonts=document.fonts&&document.fonts.ready?Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,800))]):Promise.resolve();
+  fonts.then(()=>setTimeout(()=>requestAnimationFrame(show),Math.max(0,(still?0:720)-performance.now())));setTimeout(show,1800)})();
+setInterval(guideDot,6e4);document.addEventListener("visibilitychange",()=>{if(!document.hidden)guideDot()});
 document.addEventListener("visibilitychange",()=>{if(document.hidden)return;const d=new Date(),same=d.getMonth()===NOW.getMonth()&&d.getFullYear()===NOW.getFullYear();NOW=d;if(same){render();return}P={y:d.getFullYear(),m:d.getMonth()};refreshMonth()});
 /* One shared household budget, so both people see the same figures. The page works without storage. */
 (async()=>{try{

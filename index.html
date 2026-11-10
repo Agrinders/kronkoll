@@ -5,6 +5,7 @@
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
 <title>Kronkoll</title>
+<script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400;500;600;700&display=swap">
@@ -364,10 +365,29 @@ nav .nhead{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:up
 .zprev{margin:6px 0 2px;font-size:14px;color:var(--soft)}
 html:root.hc{--glass:color-mix(in srgb,var(--paper) 97%,transparent);--glass2:color-mix(in srgb,var(--paper) 95%,transparent);--soft:color-mix(in srgb,var(--ink) 80%,var(--paper));--rule:color-mix(in srgb,var(--ink) 24%,transparent)}
 @media (min-width:1024px){#v>:nth-child(1){grid-column:span 5;align-self:start}#v>:nth-child(2){grid-column:span 7}#v>:nth-child(3){grid-column:span 5}#u>:nth-child(1){grid-column:span 8}}
+/* Opening: the icon on the same dark background as the phone's start screen, then the app eases in piece by piece. */
+#intro{position:fixed;inset:0;z-index:200;display:grid;place-items:center;background:radial-gradient(60% 45% at 50% 46%,#1a2238,#0b101c 70%);pointer-events:none;animation:introSafe .45s 2.6s forwards}
+#intro img{width:104px;height:104px;filter:drop-shadow(0 14px 30px rgba(217,71,107,.35));animation:introIcon .42s cubic-bezier(.2,.9,.3,1) both}
+html.reveal #intro{animation:introOut .5s cubic-bezier(.4,0,.2,1) forwards}html.reveal #intro img{animation:introIconOut .5s cubic-bezier(.4,0,.2,1) forwards}
+html.boot #fx{opacity:0}#fx{transition:opacity 1.1s ease}
+html.boot main section{animation:none}
+html.enter .top{animation:introDown .55s cubic-bezier(.2,.9,.25,1) both}
+html.enter nav,html.enter #side{animation:introUp .6s .12s cubic-bezier(.2,.9,.25,1) both}
+html.enter main section:not(.hide)>*{animation:introRise .62s cubic-bezier(.2,.9,.25,1) both;animation-delay:calc(var(--i,0) * 65ms + 90ms)}
+@keyframes introIcon{from{opacity:0;scale:.82}to{opacity:1;scale:1}}
+@keyframes introIconOut{to{opacity:0;scale:1.12}}
+@keyframes introOut{to{opacity:0;visibility:hidden}}
+@keyframes introSafe{to{opacity:0;visibility:hidden}}
+@keyframes introDown{from{opacity:0;translate:0 -14px}}
+@keyframes introUp{from{opacity:0;translate:0 26px}}
+@keyframes introRise{from{opacity:0;translate:0 22px;scale:.985}}
+@media (prefers-reduced-motion:reduce){#intro{animation:introOut .2s .1s forwards!important}#intro img{animation:none!important}}
+html.still #intro img{animation:none}html.still.reveal #intro{animation:introOut .2s forwards}
 </style>
 <script src="app-shell.js"></script>
 </head>
 <body>
+<div id="intro" aria-hidden="true"><img src="icons/icon-192.png" alt="" width="104" height="104"></div>
 <canvas id="fx" aria-hidden="true"></canvas>
 <div id="toasts"></div><div id="scrim"></div>
 <div id="modal"><div class="mbox"><b id="m_t"></b><p id="m_p"></p><div class="mact"><button class="btn out" id="m_no"></button><button class="btn" id="m_yes"></button></div></div></div>
@@ -1235,7 +1255,15 @@ const WIDE=matchMedia("(min-width:700px)"),RAIL=matchMedia("(min-width:1024px)")
 function layout(){const D=["d_inc","d_out","d_var"].map(x=>$(x));if(WIDE.matches)D.forEach(d=>{d.removeAttribute("name");d.open=true});else{D.forEach(d=>{d.open=false;d.setAttribute("name","bud")});if(!hasData())D[0].open=true}}
 [WIDE,RAIL].forEach(m=>m.addEventListener("change",()=>{closeYears();layout();render()}));
 $("b").addEventListener("click",e=>{if(WIDE.matches&&e.target.closest("summary"))e.preventDefault()});
-seedExample();applyTheme();applyLang();let startTab="h";try{const s=sessionStorage.getItem("kronkoll.tab");if(s&&$(s)&&"hbsarmvlunc".includes(s))startTab=s}catch(e){}go(startTab);layout();setInterval(guideDot,6e4);document.addEventListener("visibilitychange",()=>{if(!document.hidden)guideDot()});
+seedExample();applyTheme();applyLang();let startTab="h";try{const s=sessionStorage.getItem("kronkoll.tab");if(s&&$(s)&&"hbsarmvlunc".includes(s))startTab=s}catch(e){}go(startTab);layout();
+/* Opening transition: wait until the first screen is drawn and the fonts are in, then reveal it. */
+(()=>{const H=document.documentElement,still=!S.motion||matchMedia("(prefers-reduced-motion:reduce)").matches;if(still)H.classList.add("still");
+  const show=()=>{if(H.classList.contains("reveal"))return;const sec=document.querySelector("main section:not(.hide)");if(sec)[...sec.children].forEach((c,i)=>c.style.setProperty("--i",Math.min(i,7)));
+    H.classList.remove("boot");H.classList.add("reveal");if(!still)H.classList.add("enter");
+    setTimeout(()=>{H.classList.remove("enter");$("intro").remove();if(sec)[...sec.children].forEach(c=>c.style.removeProperty("--i"))},1400)};
+  const fonts=document.fonts&&document.fonts.ready?Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,800))]):Promise.resolve();
+  fonts.then(()=>setTimeout(()=>requestAnimationFrame(show),Math.max(0,(still?0:720)-performance.now())));setTimeout(show,1800)})();
+setInterval(guideDot,6e4);document.addEventListener("visibilitychange",()=>{if(!document.hidden)guideDot()});
 document.addEventListener("visibilitychange",()=>{if(document.hidden)return;const d=new Date(),same=d.getMonth()===NOW.getMonth()&&d.getFullYear()===NOW.getFullYear();NOW=d;if(same){render();return}P={y:d.getFullYear(),m:d.getMonth()};refreshMonth()});
 /* One shared household budget, so both people see the same figures. The page works without storage. */
 (async()=>{try{
