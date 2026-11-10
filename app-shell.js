@@ -19,9 +19,9 @@
     const box=document.createElement("div");box.style.cssText="display:grid;gap:8px;margin-bottom:8px";
     box.innerHTML=`<button class="btn" id="bk_save">${L.save}</button><button class="btn out" id="bk_load">${L.load}</button><input id="bk_file" type="file" accept=".json,application/json" hidden>`;
     r.before(box);
-    document.getElementById("bk_save").onclick=()=>{fresh();const d=new Date().toISOString().slice(0,10),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({app:"kronkoll",saved:new Date().toISOString(),data},null,1)],{type:"application/json"}));a.download=`kronkoll-backup-${d}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast(L.saved,"ok")};
+    document.getElementById("bk_save").onclick=()=>{fresh();const d=new Date().toISOString().slice(0,10),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({app:"kronkoll",saved:new Date().toISOString(),data},null,1)],{type:"application/json"}));a.download=`kronkoll-backup-${d}.json`;try{localStorage.setItem("kronkoll.backupAt",Date.now())}catch(e){}dispatchEvent(new Event("kronkoll-backup"));document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast(L.saved,"ok")};
     const f=document.getElementById("bk_file");document.getElementById("bk_load").onclick=()=>f.click();
-    f.onchange=async()=>{const x=f.files[0];f.value="";if(!x)return;try{const v=JSON.parse(await x.text());if(v.app!=="kronkoll"||!v.data||typeof v.data!=="object")throw 0;if(!await ask(L.askT,L.ask))return;data=v.data;write();location.reload()}catch(e){toast(L.bad,"bad")}};
+    f.onchange=async()=>{const x=f.files[0];f.value="";if(!x)return;try{const v=JSON.parse(await x.text());if(v.app!=="kronkoll"||!v.data||typeof v.data!=="object")throw 0;if(!await ask(L.askT,L.ask))return;data=v.data;write();try{localStorage.setItem("kronkoll.backupAt",Date.now())}catch(e){}location.reload()}catch(e){toast(L.bad,"bad")}};
     const st=setInterval(()=>{const c=document.getElementById("c_st");if(c){c.textContent=L.why;clearInterval(st)}},200);
     new MutationObserver(()=>{const c=document.getElementById("c_st");if(c&&c.textContent!==L.why)c.textContent=L.why}).observe(document.getElementById("c_st"),{childList:true,characterData:true,subtree:true});
   }

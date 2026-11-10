@@ -10,7 +10,7 @@ extra='''<meta charset="utf-8"><meta name="viewport" content="width=device-width
 '''
 html='<!doctype html>\n<html lang="sv">\n<head>\n'+extra+head+'\n<script src="app-shell.js"></script>\n</head>\n<body>\n'+body+'\n<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")</script>\n</body>\n</html>\n'
 (d/'index.html').write_text(html,encoding='utf8')
-files=['index.html','app-shell.js','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png','icons/icon-maskable-512.png']
+files=['index.html','app-shell.js','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png','icons/icon-maskable-512.png','tax.json']
 ver=hashlib.sha256(b''.join((d/f).read_bytes() for f in files)).hexdigest()[:12]
 sw=(d/'sw.template.js').read_text(encoding='utf8').replace('__VERSION__',ver).replace('__FILES__',repr(['./']+files))
 (d/'sw.js').write_text(sw,encoding='utf8');print('built',ver)
