@@ -28,6 +28,7 @@ await step('end',async()=>{await p.click('[data-delrw="inc"][data-rid="r1"]');aw
 await step('cancel x',async()=>{await p.click('[data-delrw="inc"][data-rid="r2"]');await w();await p.click('#rd_no');await w();return p.evaluate(()=>rd.classList.contains('on'))});
 await step('kill',async()=>{await p.click('[data-delrw="inc"][data-rid="r2"]');await w();await p.click('[data-rdo="kill"]');await w();return p.evaluate(()=>RULES.length)});
 await step('delete one-time',async()=>{await p.click('[data-delrw="inc"][data-ix="0"]');await w();return p.evaluate(()=>rawMonth(P.y,P.m).inc.length)});
+await p.evaluate(()=>document.querySelectorAll('#toasts .toast').forEach(t=>t.remove()));
 await step('month nav',async()=>{await p.click('[data-mv="1"]');await w(100);await p.click('[data-now]');await w(100);return p.evaluate(()=>document.querySelector('#b_per b').textContent)});
 await step('year menu',async()=>{await p.click('#b_per .mnav b');await w();await p.click('[data-yr="2026"]');await w();return p.evaluate(()=>yrs.classList.contains('on'))});
 await step('overview jump',async()=>{await p.click('nav [data-go="h"]');await w(100);await p.click('[data-hy="-1"]');await w(60);await p.click('[data-hy="1"]');await w(60);await p.click('[data-jump="10"]');await w(100);return p.evaluate(()=>tab)});
