@@ -379,3 +379,6 @@ html.still #intro img{animation:none}html.still.reveal #intro{animation:introOut
 .pay:last-child{border-bottom:0}.pay .pn{font-weight:600;overflow-wrap:anywhere}.pay small{display:block;font-weight:500;font-size:calc(13px * var(--s));color:var(--soft);margin-top:1px}.pay b{font-weight:700;white-space:nowrap}
 /* Every field, its placeholder and the pickers use the app's own font, so Android never swaps in its system font. */
 input,select,textarea,.pick{font-family:var(--ui);font-weight:500}input::placeholder,textarea::placeholder{font-family:var(--ui);font-weight:500;color:var(--soft);opacity:1}
+/* Savings rate under Spenderat and Kvarvarande. */
+.srate{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule)}.srow{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.srow span{font-size:14px;font-weight:600;color:var(--soft)}.srow b{font:700 clamp(21px,6.4vw,28px)/1.1 var(--hand);letter-spacing:-.02em}
+.sbar{height:6px;border-radius:9px;background:var(--rule);margin-top:8px;overflow:hidden}.sbar i{display:block;height:100%;border-radius:9px;background:var(--c2);transition:width .4s ease}.srate small{display:block;margin-top:6px;font-size:13px;color:var(--soft)}

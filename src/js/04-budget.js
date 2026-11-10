@@ -123,7 +123,7 @@ function buildGoals(){$("s_goals").innerHTML=G.map(g=>`<div class="lnw"><div cla
 function renderBudget(){
   const p=planCalc(cur()),ae=document.activeElement;
   $("b_per").innerHTML=mnavHtml();$("sum_inc").textContent=kr(p.inc);$("sum_out").textContent=kr(p.fixed);$("sum_var").textContent=kr(p.vars);
-  const sp=spendOf(P.y,P.m);$("b_spent").textContent=kr(p.needs+sp.used);$("b_life").textContent=kr(sp.left);$("b_life").className=sp.left<0?"er":"";
+  const sp=spendOf(P.y,P.m);$("b_spent").textContent=kr(p.needs+sp.used);{const r=p.inc>0?p.save/p.inc*100:null;$("b_rl").textContent=tx("Sparkvot","Savings rate");$("b_rate").textContent=r==null?"–":r.toLocaleString(loc(),{maximumFractionDigits:r<10&&r>-10?1:0})+" %";$("b_rate").className=r!=null&&r<0?"er":"";$("b_rbar").style.width=Math.max(0,Math.min(100,r||0))+"%";$("b_rsub").textContent=p.inc>0?tx(`${kr(p.save)} sparat av ${kr(p.inc)} i inkomster`,`${kr(p.save)} saved of ${kr(p.inc)} income`):tx("Lägg in inkomster för att se sparkvoten","Add income to see the savings rate")}$("b_life").textContent=kr(sp.left);$("b_life").className=sp.left<0?"er":"";
   const sel=$("s_pot");if(ae!==sel){const prev=sel.value;sel.innerHTML=p.lines.map(l=>`<option value="${esc(l.k)}">${esc(potName(l))}</option>`).join("")+`<option value="">${t("potOther")}</option>`;if(potPicked&&[...sel.options].some(o=>o.value===prev))sel.value=prev}
   sel.setAttribute("aria-label",t("potHead"));$("s_pot_t").textContent=sel.selectedOptions[0]?sel.selectedOptions[0].text:"";
 }

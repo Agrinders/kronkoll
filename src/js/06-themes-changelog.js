@@ -5,6 +5,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
+{v:"2.7",d:"10 nov 2026",i:[["b","#b_rate",["Sparkvot","Savings rate"],["Se hur stor del av inkomsterna du sparat varje månad.","See how much of your income you saved each month."]]]},
 {v:"2.6",d:"10 nov 2026",i:[["h","#h_pay",["Ny Översikt","New Overview"],["Översikt visar nu det som är kvar, dina återkommande betalningar och Min ekonomi under året.","Overview now shows what is left, your recurring payments and My finances under the year."]]]},
 {v:"2.5",d:"10 nov 2026",i:[["v","#v_add",["Lån i menyn","Loans in the menu"],["Lån & skulder ligger nu i menyn längst ner, och Marknad finns under Verktyg.","Loans & debt is now in the bottom menu, and Market is under Tools."]]]},
 {v:"2.4",d:"10 nov 2026",i:[["m","#m_isk",["Skatt på ISK","Tax on ISK"],["Se ungefär hur mycket skatt ditt ISK ger för 2026.","See roughly how much tax your ISK gives for 2026."]]]},
