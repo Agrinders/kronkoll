@@ -1,0 +1,12 @@
+/* ---------- Estimated ISK tax 2026: 1.065 % (government bond rate 30 Nov 2025 + 1 point, times 30 %) on the base above 300 000 kr per person ---------- */
+const ISK={rate:.01065,free:300000};
+function renderIsk(){const hv=holdTotals().val,v=S.iskV>0?S.iskV:hv,base=v+S.iskIn/4,free=ISK.free*S.iskP,tax=Math.max(0,(base-free)*ISK.rate),ae=document.activeElement;
+  $("isk_h").textContent=tx("Skatt på ISK","Tax on ISK");$("isk_l").textContent=tx("Uppskattad skatt för 2026","Estimated tax for 2026");$("isk_big").textContent=kr(tax);
+  $("isk_sub").textContent=tax>0?tx(`Ungefär ${kr(tax/12)} i månaden · betalas via slutskatten våren 2027`,`About ${kr(tax/12)} a month · paid with your final tax in spring 2027`):tx(`Ingen skatt. Upp till ${kr(free)} är skattefritt.`,`No tax. Up to ${kr(free)} is tax-free.`);
+  $("isk_vl").textContent=tx("Värde på ISK, kr","Value of your ISK, kr");$("isk_inl").textContent=tx("Insättningar under året, kr","Deposits during the year, kr");$("isk_pl").textContent=tx("Hur många har eget ISK?","How many have their own ISK?");
+  if($("isk_v")!==ae)$("isk_v").value=S.iskV>0?fmtA(S.iskV):"";$("isk_v").placeholder=hv>0?fmtA(hv):"0";if($("isk_in")!==ae)$("isk_in").value=S.iskIn>0?fmtA(S.iskIn):"";
+  $("isk_p").innerHTML=[1,2].map(n=>`<button class="chip ${S.iskP===n?"on":""}" data-iskp="${n}">${n===1?tx("En person","One person"):tx("Två personer","Two people")}</button>`).join("");
+  $("isk_n").textContent=tx(`Skatten är 1,065 % på det som är över 300 000 kr per person 2026. Skatteverket räknar på värdet i början av varje kvartal plus insättningar, så det här är en uppskattning utifrån värdet nu.${S.iskP===2?" Två personer räknas som att värdet är jämnt fördelat.":""}${S.iskV>0?"":" Värdet hämtas från dina innehav, skriv in ett annat om allt inte ligger på ISK."}`,`The tax is 1.065% on the amount above 300,000 kr per person in 2026. Skatteverket uses the value at the start of each quarter plus deposits, so this is an estimate based on the value now.${S.iskP===2?" Two people assumes the value is split evenly.":""}${S.iskV>0?"":" The value comes from your holdings; enter another if not everything is in an ISK."}`)}
+$("isk_v").addEventListener("input",()=>{S.iskV=Math.max(0,parseA($("isk_v").value));persist();renderIsk()});
+$("isk_in").addEventListener("input",()=>{S.iskIn=Math.max(0,parseA($("isk_in").value));persist();renderIsk()});
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-iskp]");if(b){S.iskP=+b.dataset.iskp;persist();renderIsk()}});

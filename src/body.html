@@ -1,0 +1,124 @@
+
+<canvas id="fx" aria-hidden="true"></canvas>
+<div id="toasts"></div><div id="scrim"></div>
+<div id="modal"><div class="mbox"><b id="m_t"></b><p id="m_p"></p><div class="mact"><button class="btn out" id="m_no"></button><button class="btn" id="m_yes"></button></div></div></div>
+<aside id="drawer">
+<h2>Kronkoll</h2>
+<div class="sideh" data-i="toolsH"></div><button data-go="r"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m15.4 8.6-2.2 4.6-4.6 2.2 2.2-4.6z"/></svg><em data-i="ttlR" style="font-style:normal"></em></button><button data-go="v"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 9.5 12 4.5l8.5 5"/><path d="M5.5 10v7.5M10 10v7.5M14 10v7.5M18.5 10v7.5M3.5 20h17"/></svg><em data-i="ttlV" style="font-style:normal"></em></button><button data-go="l"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.8" y="6.5" width="18.4" height="11.5" rx="2.5"/><circle cx="12" cy="12.2" r="2.6"/><path d="M6.5 12.2h.01M17.5 12.2h.01"/></svg><em data-i="ttlL" style="font-style:normal"></em></button><button data-go="u"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4.5v3.5h3.5"/><path d="M12 8v4.3l3 1.8"/></svg><em data-i="ttlU" style="font-style:normal"></em></button><button data-go="n"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9-1.9 5.1-1.9-5.1L5 10.5l5.1-1.9z"/><path d="M18.5 16v4M16.5 18h4"/></svg><em data-i="ttlN" style="font-style:normal"></em></button><button data-go="c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M18 7h2M4 17h2M11 17h9"/><circle cx="15.5" cy="7" r="2.5"/><circle cx="8.5" cy="17" r="2.5"/></svg><em data-i="ttlC" style="font-style:normal"></em></button>
+<small data-i="disc"></small>
+</aside>
+<div id="rs"><div class="mbox"><b id="rs_t"></b><div class="seg" id="rs_f"></div><label for="rs_d" id="rs_l"></label><button type="button" class="dbtn" id="rs_d" value=""><span></span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="5" width="17" height="15.500" rx="3"/><path d="M3.500 10h17M8 3v4M16 3v4"/></svg></button><p class="note" id="rs_h"></p><div id="rs_amt"><label for="rs_a" id="rs_al"></label><input id="rs_a" type="text" inputmode="decimal"><div class="seg" id="rs_sc"></div></div><div style="height:14px"></div><div class="mact"><button class="btn out" id="rs_no"></button><button class="btn" id="rs_ok"></button></div></div></div>
+<div id="rd"><div class="mbox"><b id="rd_t"></b><p class="note" id="rd_s" style="margin:6px 0 12px"></p><div id="rd_o"></div><button class="btn out" id="rd_no" style="width:100%"></button></div></div>
+<div id="ps"><div class="mbox"><b data-i="pickGoal"></b><div id="ps_o"></div><button class="lnk" data-go="s" data-i="newGoalLink"></button><button class="btn out" id="ps_no" style="width:100%" data-i="cancel"></button></div></div>
+<div id="as"><div class="mbox"><b id="as_t"></b><label for="as_n" id="as_nl"></label><input id="as_n" type="text" maxlength="50" autocomplete="off"><label for="as_a" id="as_al"></label><input id="as_a" type="text" inputmode="decimal"><div class="seg" id="as_f"></div><label for="as_d" id="as_dl"></label><button type="button" class="dbtn" id="as_d" value=""><span></span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="5" width="17" height="15.500" rx="3"/><path d="M3.500 10h17M8 3v4M16 3v4"/></svg></button><div style="height:14px"></div><div class="mact"><button class="btn out" id="as_no"></button><button class="btn" id="as_ok"></button></div><button class="lnk hide" id="as_end" style="margin-top:10px;width:100%;text-align:center;color:var(--bad)"></button><button class="lnk hide" id="as_del" style="width:100%;text-align:center;color:var(--soft)"></button></div></div>
+<div id="dp" role="dialog" aria-modal="true"><div class="mbox"><div class="gnav"><button data-dm="-1" aria-label="‹">‹</button><span id="dp_t"></span><button data-dm="1" aria-label="›">›</button></div><div class="dwk" id="dp_w"></div><div class="dgr" id="dp_g"></div><div class="mact" style="margin-top:14px"><button class="btn out" id="dp_no"></button><button class="btn out" id="dp_now"></button></div><button class="lnk hide" id="dp_cl" style="width:100%;text-align:center;margin-top:8px;color:var(--soft)"></button></div></div>
+<div id="pk" role="dialog" aria-modal="true"><div class="mbox"><b id="pk_t"></b><input id="pk_q" type="search" autocomplete="off" class="hide"><div id="pk_l"></div><div class="mact" style="margin-top:12px"><button class="btn out" id="pk_no"></button></div></div></div>
+<div id="lo" role="dialog" aria-modal="true"><div class="mbox"><b id="lo_t"></b><div class="ltypes" id="lo_ty"></div><label for="lo_n" id="lo_nl"></label><input id="lo_n" type="text" maxlength="40" autocomplete="off"><label for="lo_b" id="lo_bl"></label><input id="lo_b" type="text" inputmode="decimal"><label for="lo_r" id="lo_rl"></label><input id="lo_r" type="text" inputmode="decimal"><label for="lo_p" id="lo_pl"></label><input id="lo_p" type="text" inputmode="decimal"><p class="note" id="lo_hint" style="margin:6px 0 0"></p><div style="height:14px"></div><div class="mact"><button class="btn out" id="lo_no"></button><button class="btn" id="lo_ok"></button></div><button class="lnk hide" id="lo_del" style="margin-top:10px;width:100%;text-align:center;color:var(--bad)"></button></div></div>
+<div id="hs"><div class="mbox"><b id="hs_t"></b>
+<div id="hs_find"><input id="hs_q" type="text" autocomplete="off" data-p="hsQ"><div id="hs_r"></div><button class="lnk" id="hs_man" data-i="hsManual"></button></div>
+<div id="hs_form" class="hide"><div id="hs_sel"><span id="hs_nm"></span><button class="lnk" id="hs_chg" data-i="hsChange" style="padding:0"></button></div><div id="hs_mw" class="hide"><label for="hs_name" data-i="hsName"></label><input id="hs_name" type="text" maxlength="40"><label for="hs_price" data-i="hsPrice"></label><input id="hs_price" type="text" inputmode="decimal"></div><label for="hs_qty" data-i="hsQty"></label><input id="hs_qty" type="text" inputmode="decimal"><label for="hs_cost" data-i="hsCost"></label><input id="hs_cost" type="text" inputmode="decimal"></div>
+<div class="mact" style="margin-top:14px"><button class="btn out" id="hs_no" data-i="cancel"></button><button class="btn" id="hs_ok" data-i="saveW"></button></div><button class="lnk hide" id="hs_del" data-i="hsDel" style="display:block;width:100%;text-align:center;color:var(--bad)"></button></div></div>
+<div id="yrs"><p data-i="pickYear"></p><div id="yr_list"></div></div>
+
+<main>
+<div class="top"><button class="menu" id="menu" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h11M4 17h16"/></svg></button><h1 id="ttl"></h1></div>
+
+<section id="h">
+<div class="sheet hide" id="h_bk"></div>
+<div class="sheet hide" id="h_ex"><span class="lbl" data-i="exNote"></span><br><button class="lnk" data-go="b" data-i="exGo"></button></div>
+<div class="sheet">
+<div class="lbl" id="h_lbl"></div><div class="big" id="h_big"></div><div class="lbl" id="h_day"></div>
+<div class="stack" id="h_stack"></div><div class="keys" id="h_keys"></div>
+</div>
+<div class="sheet" id="h_lines"></div>
+<div class="sheet hide" id="h_worth"><p class="head" data-i="worthHead"></p><div id="h_wrows"></div></div>
+<div class="sheet hide" id="h_next"><p class="head" data-i="nextHead"></p><div id="h_up"></div></div>
+<div class="sheet" id="h_year"><div class="yhead"><p class="head" id="y_t" style="margin:0"></p><div class="ynav"><button data-hy="-1" aria-label="‹">‹</button><button data-hy="1" aria-label="›">›</button></div></div><div class="tiles" id="y_tiles"></div><div class="ybars" id="y_bars"></div><div class="keys" id="y_keys"></div><div class="scroll ytable" id="y_sc"><table id="y_tbl"></table></div></div>
+<div class="sheet"><div class="lbl" data-i="topNow"></div><div id="h_top"></div><button class="lnk" data-go="r" data-i="seeAll"></button></div>
+</section>
+
+<section id="b" class="hide">
+<div class="mnavw" id="b_per"></div>
+<div class="sheet">
+<details name="bud" id="d_inc"><summary><span class="head" data-i="incHead"></span><span class="sumv" id="sum_inc"></span></summary><div id="l_inc"></div><button class="lnk" data-add="inc" data-i="newLine"></button></details>
+</div>
+<div class="sheet">
+<details name="bud" id="d_out"><summary><span class="head" data-i="outHead"></span><span class="sumv" id="sum_out"></span></summary><div id="l_items"></div><button class="lnk" data-add="items" data-i="newLine"></button></details>
+</div>
+<div class="sheet">
+<details name="bud" id="d_var"><summary><span class="head" data-i="varHead"></span><span class="sumv" id="sum_var"></span></summary><div id="l_vars"></div><button class="lnk" data-add="vars" data-i="newLine"></button></details>
+</div>
+<div class="sheet"><div class="split"><div><span data-i="spentL"></span><b id="b_spent"></b></div><div><span data-i="lifeRow"></span><b id="b_life"></b></div></div>
+</div>
+<div class="sheet"><p class="head" data-i="addSaveHead"></p>
+<div class="form"><input id="s_amt" type="number" inputmode="decimal" data-p="amountPh"><button type="button" class="pick" id="s_pot_b"><span id="s_pot_t"></span></button><select id="s_pot" hidden></select><button class="btn" id="s_add" data-i="bSaved"></button><button class="btn out" id="s_out" data-i="bWd"></button></div>
+</div>
+</section>
+
+<section id="s" class="hide">
+<div class="sheet"><div class="gnav"><button data-gv="-1" aria-label="‹">‹</button><span id="s_lbl"></span><button data-gv="1" aria-label="›">›</button></div><div class="big" id="s_big"></div><div class="bar"><i id="s_bar" style="width:0"></i></div><div class="lbl" id="s_goal" style="margin-top:6px"></div><div class="dots" id="s_dots"></div></div>
+<div class="mnavw" id="s_per"></div>
+<div class="sheet"><div class="lbl" id="s_month"></div><div class="cols" id="s_cols"></div></div>
+<div class="sheet"><p class="head" data-i="goalsHead"></p><p class="note" style="margin-top:-4px" data-i="goalsNote"></p><div id="s_goals"></div><button class="lnk" id="g_add" data-i="newGoal"></button></div>
+<div class="sheet"><p class="head" data-i="potHead"></p><div id="s_pots"></div></div>
+<div class="sheet"><details><summary><span class="head" data-i="entries"></span><span class="sumv" id="s_cnt"></span></summary><div id="s_list"></div></details></div>
+</section>
+
+<section id="a" class="hide">
+<div class="sheet"><div class="lbl" id="a_lbl"></div><div class="big" id="a_big"></div><div class="lbl" id="a_sub"></div><div class="lbl" id="a_next" style="margin-top:6px"></div></div>
+<div class="sheet"><p class="head" id="a_head"></p><div id="a_list"></div><button class="addb" id="a_add"></button><p class="note" id="a_note"></p><div id="a_old"></div></div>
+</section>
+
+<section id="r" class="hide">
+<div class="sheet" id="r_guide"></div>
+<div class="sheet" id="r_see"></div>
+<div class="sheet"><div class="lbl" id="r_lbl"></div><div class="big verdict" id="r_big"></div><div class="lbl" id="r_sub"></div></div>
+<div class="sheet"><p class="head" data-i="changeHead"></p><div id="r_find"></div></div>
+<div class="sheet"><p class="head" data-i="cmpHead"></p><div class="scroll"><table id="r_tbl"></table></div><p class="note" data-i="cmpNote"></p></div>
+<div class="sheet"><details><summary><span class="head" data-i="ecoHead"></span></summary><div id="r_eco"></div></details></div>
+<div class="sheet"><details><summary><span class="head" data-i="howHead"></span></summary><div id="r_how"></div></details></div>
+</section>
+
+<section id="m" class="hide">
+<div class="sheet" id="m_hold"><p class="head" data-i="holdHead"></p><div id="hd_top"></div><div id="hd_list"></div><button class="addb" id="hold_add" data-i="holdAdd"></button><p class="note" data-i="holdPriv"></p></div>
+<div class="sheet" id="m_isk"><p class="head" id="isk_h"></p><div class="lbl" id="isk_l"></div><div class="big" id="isk_big"></div><div class="lbl" id="isk_sub"></div><div class="set" style="margin-top:12px"><label for="isk_v" id="isk_vl"></label><input id="isk_v" type="text" inputmode="decimal"></div><div class="set"><label for="isk_in" id="isk_inl"></label><input id="isk_in" type="text" inputmode="decimal" placeholder="0"></div><label class="xl" id="isk_pl"></label><div class="chips" id="isk_p" style="margin-top:6px"></div><p class="note" id="isk_n"></p></div>
+<div class="sheet"><span class="stamp" id="m_age"></span><p class="note" data-i="notLive"></p><p class="note"><span data-i="liveAt"></span> <a href="https://www.avanza.se/" target="_blank" rel="noopener">Avanza</a> · <a href="https://www.google.com/finance/" target="_blank" rel="noopener">Google Finance</a></p></div>
+<div class="sheet"><p class="head" data-i="mktHead"></p><div id="m_idx"></div></div>
+<div class="sheet"><p class="head" data-i="whereHead"></p><div id="m_where"></div></div>
+<div class="sheet"><p class="head" data-i="fundHead"></p><div id="m_fund"></div><p class="note" data-i="fundNote"></p></div>
+<div class="sheet"><p class="head" data-i="rateHead"></p><div id="m_rate"></div><p class="note" data-i="rateNote"></p></div>
+<div class="sheet"><p class="note" style="margin:0" data-i="riskNote"></p></div>
+</section>
+
+
+<section id="v" class="hide">
+<div class="sheet"><div class="lbl" id="v_lbl"></div><div class="big" id="v_big"></div><div class="keys" id="v_keys"></div><p class="note" id="v_free" style="margin-top:8px"></p></div>
+<div class="sheet"><p class="head" id="v_head"></p><div id="v_list"></div><button class="addb" id="v_add"></button><p class="note" id="v_note"></p></div>
+<div class="sheet" id="v_what"><p class="head" id="v_wh"></p><div class="set"><label for="v_ex" id="v_exl"></label><input id="v_ex" type="text" inputmode="decimal" placeholder="0"></div><div id="v_wr"></div><div id="v_rate" style="margin-top:14px"></div></div>
+</section>
+
+<section id="l" class="hide">
+<div class="sheet"><div class="lbl" data-i="payResult"></div><div class="big" id="l_big"></div><div class="lbl" id="l_sub"></div><button class="lnk hide" id="l_use" style="margin-top:6px;padding-inline:0"></button></div>
+<div class="sheet"><div class="set"><label for="l_h" data-i="payHours"></label><input id="l_h" type="text" inputmode="decimal" placeholder="0"></div><div class="set"><label for="l_r" data-i="payRate"></label><input id="l_r" type="text" inputmode="decimal" placeholder="0"></div></div>
+<div class="sheet"><div class="lbl" data-i="netMo"></div><div class="big" id="x_big"></div><div class="keys" id="x_leg"></div><p class="note" id="x_note"></p></div>
+<div class="sheet"><p class="head" data-i="calcHead"></p><div class="set"><label for="x_pay" data-i="fPay"></label><input id="x_pay" type="text" inputmode="decimal" placeholder="0"></div><div class="seg" id="x_mode"></div>
+<div id="x_tbl"><label class="xl" id="x_koml"></label><button type="button" class="selbtn" id="x_kom"><span></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 4 4 4-4"/></svg></button><label class="xl" id="x_kyl"></label><div class="chips" id="x_ky"></div><div id="x_fw" class="hide"><label class="xl" id="x_forsl"></label><button type="button" class="selbtn" id="x_fors"><span></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 4 4 4-4"/></svg></button></div><label class="xl" id="x_coll"></label><button type="button" class="selbtn" id="x_col"><span></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 4 4 4-4"/></svg></button><div class="tt" id="x_tw" style="margin-top:14px"><button data-tt="-1" aria-label="‹">‹</button><span id="x_tl"></span><button data-tt="1" aria-label="›">›</button></div><p class="note" id="x_why"></p></div>
+<div class="set" id="x_pw"><label for="x_pct" data-i="fPct"></label><input id="x_pct" type="text" inputmode="decimal" placeholder="0"></div></div>
+<div class="sheet"><p class="head" data-i="ttHead"></p><p class="note" style="margin-top:-4px" id="tt_n"></p><div class="tt"><button data-tt="-1" aria-label="‹">‹</button><span id="tt_l"></span><button data-tt="1" aria-label="›">›</button></div><div class="ttw"><table id="tt_t"></table></div><p class="note"><a href="https://www.skatteverket.se/foretag/arbetsgivare/arbetsgivaravgifterochskatteavdrag/skattetabeller" target="_blank" rel="noopener" data-i="ttLink"></a></p></div>
+</section>
+
+<section id="u" class="hide">
+<div class="sheet"><p class="head" id="u_head"></p><p class="note" id="u_note" style="margin-top:-4px"></p><div id="u_list"></div><button class="lnk hide" id="u_clear" style="margin-top:10px;padding-inline:0;color:var(--soft)"></button></div>
+</section>
+
+<section id="n" class="hide"></section>
+
+<section id="c" class="hide">
+<div class="sheet"><div class="lbl" data-i="theme"></div><div class="chips" id="c_th"></div><div class="lbl" data-i="themesL"></div><div id="c_tm" style="margin:6px 0 14px"></div><div class="lbl" data-i="notif"></div><div class="chips" id="c_tg"></div><div class="lbl" data-i="sound"></div><div class="chips" id="c_sn"></div><div class="lbl" data-i="clickL"></div><div class="chips" id="c_ck"></div><div class="lbl" data-i="lang"></div><div class="chips" id="c_lg"></div></div>
+<div class="sheet"><p class="head" id="c_rh"></p><div class="lbl" id="c_zl"></div><div class="chips" id="c_zm"></div><div id="c_zp" class="zprev"></div><div class="lbl" id="c_hcl"></div><div class="chips" id="c_hc"></div><div class="lbl" data-i="motion"></div><div class="chips" id="c_mo"></div></div>
+<div class="sheet"><div id="set_in"></div><div id="h_c"></div></div>
+<div class="sheet"><div class="lbl" data-i="yourData"></div><p class="note" id="c_st"></p><p class="note" id="c_bk" style="margin-top:4px;font-weight:600"></p><button class="btn out" id="reset" style="width:100%;margin-top:10px"></button></div>
+</section>
+</main>
+<nav><button data-go="h"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5V12l6 6"/></svg><em data-i="nH" style="font-style:normal"></em></button><button data-go="b" id="nav_b"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14M5 12h14M5 18.5h8"/></svg><em data-i="nB" style="font-style:normal"></em></button><button data-go="s"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16.5c0-5 3.6-9 8-9s8 4 8 9"/><path d="M4 16.5h16M12 7.5V4.5"/></svg><em data-i="nS" style="font-style:normal"></em></button><button data-go="a"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 3l4 4-4 4"/><path d="M3 11V9.5A2.5 2.5 0 0 1 5.500 7H21"/><path d="M7 21l-4-4 4-4"/><path d="M21 13v1.500a2.500 2.500 0 0 1-2.500 2.500H3"/></svg><em data-i="nA" style="font-style:normal"></em></button><button data-go="m"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17l5.5-6 4 3.5L20 7"/><path d="M15 7h5v5"/></svg><em data-i="nM" style="font-style:normal"></em></button><div class="more nhead" data-i="toolsH"></div><button class="more" data-go="r"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m15.4 8.6-2.2 4.6-4.6 2.2 2.2-4.6z"/></svg><em data-i="ttlR" style="font-style:normal"></em></button><button class="more" data-go="v"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 9.5 12 4.5l8.5 5"/><path d="M5.5 10v7.5M10 10v7.5M14 10v7.5M18.5 10v7.5M3.5 20h17"/></svg><em data-i="ttlV" style="font-style:normal"></em></button><button class="more" data-go="l"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.8" y="6.5" width="18.4" height="11.5" rx="2.5"/><circle cx="12" cy="12.2" r="2.6"/><path d="M6.5 12.2h.01M17.5 12.2h.01"/></svg><em data-i="ttlL" style="font-style:normal"></em></button><button class="more first" data-go="u"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4.5v3.5h3.5"/><path d="M12 8v4.3l3 1.8"/></svg><em data-i="ttlU" style="font-style:normal"></em></button><button class="more" data-go="n"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9-1.9 5.1-1.9-5.1L5 10.5l5.1-1.9z"/><path d="M18.5 16v4M16.5 18h4"/></svg><em data-i="ttlN" style="font-style:normal"></em></button><button class="more" data-go="c"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M18 7h2M4 17h2M11 17h9"/><circle cx="15.5" cy="7" r="2.5"/><circle cx="8.5" cy="17" r="2.5"/></svg><em data-i="ttlC" style="font-style:normal"></em></button></nav>
+

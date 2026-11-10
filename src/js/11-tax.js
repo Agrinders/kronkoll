@@ -1,0 +1,40 @@
+/* ---------- Exact tax tables (Skatteverket 2026, fetched by the GitHub job into tax.json) ---------- */
+let TAXD=null,taxLoading=false;
+const COLS=[[1,"Lön, under 66 år","Salary, under 66"],[3,"Lön, 66 år eller äldre","Salary, 66 or older"],[5,"A-kassa och liknande ersättning","Unemployment benefit and similar"],[2,"Pension, 66 år eller äldre","Pension, 66 or older"],[6,"Pension, under 66 år","Pension, under 66"],[4,"Sjuk- eller aktivitetsersättning","Sickness or activity compensation"]];
+const colName=c=>{const x=COLS.find(z=>z[0]===c)||COLS[0];return tx(x[1],x[2])};
+function loadTax(){if(TAXD||taxLoading)return;taxLoading=true;fetch("tax.json").then(r=>r.ok?r.json():Promise.reject()).then(j=>{TAXD=j;taxLoading=false;renderTax()}).catch(()=>{taxLoading=false;if(tab==="l")renderTax()})}
+function exactTax(pay,n,c){const T=TAXD&&TAXD.t[String(n)];if(!T)return null;const p=Math.floor(pay);if(p<=0)return 0;for(const r of T.b)if(p>=r[0]&&p<=r[1])return r[1+c];const q=T.p.find(r=>p>=r[0]&&(!r[1]||p<=r[1]));return q?Math.floor(p*q[1+c]/100):null}
+const komOf=()=>TAXD&&TAXD.k.find(x=>x[0]===S.taxKom);
+function komRate(){const K=komOf();if(!K)return null;if(!S.taxKy)return K[1];const f=K[2].find(x=>x[0]===S.taxFors)||K[2][0];return f?f[1]:K[1]}
+const autoT=()=>{const r=komRate();return r==null?null:Math.min(42,Math.max(29,Math.round(r)))};
+function setAuto(){const a=autoT();if(a)S.taxT=a}
+function taxFor(pay){if(S.taxMode==="p")return pay*S.taxPct/100;if(TAXD)return exactTax(pay,S.taxT,S.taxCol);if(S.taxCol!==1)return null;const last=TAX_PAY.length-1;if(pay<TAX_PAY[0]||pay>TAX_PAY[last])return null;const r=TAX_T[S.taxT];let i=TAX_PAY.findIndex(p=>p>=pay);if(TAX_PAY[i]===pay)return r[i];return r[i-1]+(r[i]-r[i-1])*(pay-TAX_PAY[i-1])/(TAX_PAY[i]-TAX_PAY[i-1])}
+function renderTaxTable(){const n=S.taxT,f=v=>v.toLocaleString("sv-SE");$("tt_l").textContent=TAXD?tx(`Tabell ${n} · kolumn ${S.taxCol}`,`Table ${n} · column ${S.taxCol}`):t("ttNum",n);
+  const pays=TAXD?Array.from({length:96},(_,i)=>5000+i*1000):TAX_PAY,mark=Math.round(S.taxPay/1000)*1000;
+  $("tt_t").innerHTML=`<thead><tr><th>${t("ttPay")}</th><th>${t("ttTax")}</th><th>${t("ttLeft")}</th></tr></thead><tbody>`+pays.map((p,i)=>{const x=TAXD?exactTax(p,n,S.taxCol):TAX_T[n][i];return`<tr${p===mark&&S.taxMode==="t"?' class="me"':""}><td>${f(p)}</td><td>${f(x)}</td><td>${f(p-x)}</td></tr>`}).join("")+`</tbody>`;
+  $("tt_n").textContent=TAXD?tx(`Skatteverkets månadstabeller för 2026. ${colName(S.taxCol)}. Visas per 1 000 kr, din exakta skatt står ovan.`,`Skatteverket's monthly tables for 2026. ${colName(S.taxCol)}. Shown per 1,000 kr; your exact tax is shown above.`):t("ttNote")}
+function renderTax(){renderTaxTable();const ae=document.activeElement,pay=S.taxPay,tbl=S.taxMode==="t",tq=taxFor(pay),K=komOf(),a=autoT();
+  if($("x_pay")!==ae)$("x_pay").value=fmtA(pay);if($("x_pct")!==ae)$("x_pct").value=(S.taxPct||0).toLocaleString("sv-SE",{maximumFractionDigits:2});
+  $("x_mode").innerHTML=[["t","modeT"],["p","modeP"]].map(([v,l])=>`<button class="${S.taxMode===v?"on":""}" data-xm="${v}">${t(l)}</button>`).join("");
+  $("x_tbl").classList.toggle("hide",!tbl);$("x_pw").classList.toggle("hide",tbl);$("x_tl").textContent=t("ttNum",S.taxT);
+  $("x_koml").textContent=tx("Kommun du är folkbokförd i","Municipality you are registered in");$("x_kyl").textContent=tx("Medlem i Svenska kyrkan","Member of the Church of Sweden");$("x_forsl").textContent=tx("Församling","Parish");$("x_coll").textContent=tx("Vad räknar du på?","What are you calculating?");
+  const sl=(id,v,ph)=>{$(id).querySelector("span").textContent=v||ph;$(id).classList.toggle("empty",!v)};sl("x_kom",S.taxKom,tx("Välj kommun","Choose municipality"));sl("x_col",colName(S.taxCol),"");
+  $("x_ky").innerHTML=[["1",tx("Ja","Yes")],["0",tx("Nej","No")]].map(([v,l])=>`<button class="chip ${(S.taxKy?"1":"0")===v?"on":""}" data-xky="${v}">${l}</button>`).join("");
+  const many=K&&S.taxKy&&new Set(K[2].map(x=>x[1])).size>1;$("x_fw").classList.toggle("hide",!many);if(many)sl("x_fors",S.taxFors||(K[2][0]||[])[0],"");
+  const r=komRate(),pc=v=>v.toLocaleString(loc(),{maximumFractionDigits:3});
+  $("x_why").textContent=!TAXD?(taxLoading?tx("Hämtar Skatteverkets tabeller …","Loading Skatteverket's tables …"):tx("Tabellerna kunde inte hämtas. Kontrollera internet, så räknar jag ungefärligt så länge.","The tables could not be loaded. Check your connection; until then I estimate.")):K?(a===S.taxT?tx(`${S.taxKom}: ${pc(r)} % ${S.taxKy?"med":"utan"} kyrkoavgift ger tabell ${a}. Står något annat på lönespecen, ändra med pilarna.`,`${S.taxKom}: ${pc(r)}% ${S.taxKy?"with":"without"} church fee gives table ${a}. If your payslip says otherwise, change it with the arrows.`):tx(`Du har valt tabell ${S.taxT}. Din kommun ger tabell ${a}.`,`You chose table ${S.taxT}. Your municipality gives table ${a}.`)):tx("Välj kommun så väljer jag rätt tabell, eller välj tabell med pilarna. Tabellnumret står på lönespecen.","Choose your municipality and I pick the right table, or choose with the arrows. The table number is on your payslip.");
+  $("x_big").textContent=tq==null?"–":(tbl&&!TAXD?"ca ":"")+kr(pay-tq);
+  $("x_leg").innerHTML=tq==null?"":`<span>${t("taxMo")} <b>${kr(tq)}</b></span><span>${t("eff")} <b>${pay?(tq/pay*100).toLocaleString("sv-SE",{maximumFractionDigits:1})+" %":"–"}</b></span>`;
+  $("x_note").textContent=!tbl?t("pctNote"):TAXD?tx(`Exakt enligt Skatteverkets tabell ${S.taxT} för 2026, kolumn ${S.taxCol}: ${colName(S.taxCol).toLowerCase()}.`,`Exact according to Skatteverket's table ${S.taxT} for 2026, column ${S.taxCol}: ${colName(S.taxCol).toLowerCase()}.`):tq==null?t("ttRange"):t("ttApprox");$("x_note").className="note "+(tq==null?"wn":"");
+  const g=S.payH*S.payR;$("l_use").classList.toggle("hide",!(g>0&&Math.round(g)!==Math.round(pay)));$("l_use").textContent=tx(`Räkna skatt på ${kr(g)} ↓`,`Calculate tax on ${kr(g)} ↓`)}
+let PK=null;
+function openPK(title,items,pick,search){PK={items,pick};$("pk_t").textContent=title;$("pk_no").textContent=t("cancel");$("pk_q").classList.toggle("hide",!search);$("pk_q").value="";$("pk_q").placeholder=tx("Sök","Search");paintPK();$("pk").classList.add("on");if(search)setTimeout(()=>$("pk_q").focus(),60)}
+function paintPK(){const q=$("pk_q").value.trim().toLowerCase(),L=PK.items.filter(x=>!q||x[1].toLowerCase().includes(q)).sort((a,b)=>q?(b[1].toLowerCase().startsWith(q)-a[1].toLowerCase().startsWith(q)):0);$("pk_l").innerHTML=L.length?L.map(x=>`<button class="pko ${x[3]?"on":""}" data-pko="${esc(String(x[0]))}"><span>${esc(x[1])}</span>${x[2]?`<small>${esc(x[2])}</small>`:""}</button>`).join(""):`<p class="note">${t("hsNone")}</p>`}
+const closePK=()=>{$("pk").classList.remove("on");PK=null};
+$("pk_q").addEventListener("input",()=>PK&&paintPK());$("pk_no").onclick=closePK;
+$("pk").addEventListener("click",e=>{if(e.target===$("pk"))return closePK();const b=e.target.closest("[data-pko]");if(b&&PK){const f=PK.pick;closePK();f(b.dataset.pko)}});
+$("x_kom").onclick=()=>{if(!TAXD){loadTax();toast(tx("Hämtar skattetabellerna · Försök igen om en stund","Loading the tax tables · Try again in a moment"),"info");return}const pc=v=>v.toLocaleString(loc(),{maximumFractionDigits:3})+" %";openPK(tx("Välj kommun","Choose municipality"),TAXD.k.map(k=>[k[0],k[0],pc(k[1]),k[0]===S.taxKom]),v=>{S.taxKom=v;S.taxFors="";setAuto();persist();renderTax()},true)};
+$("x_fors").onclick=()=>{const K=komOf();if(!K)return;openPK(tx("Välj församling","Choose parish"),K[2].map(f=>[f[0],f[0],f[1].toLocaleString(loc(),{maximumFractionDigits:3})+" %",f[0]===S.taxFors]),v=>{S.taxFors=v;setAuto();persist();renderTax()},K[2].length>8)};
+$("x_col").onclick=()=>openPK(tx("Vad räknar du på?","What are you calculating?"),COLS.map(c=>[c[0],tx(c[1],c[2]),tx("Kolumn ","Column ")+c[0],c[0]===S.taxCol]),v=>{S.taxCol=+v;persist();renderTax()});
+$("l_use").onclick=()=>{S.taxPay=Math.round(S.payH*S.payR);S.taxMode="t";persist();renderTax();$("x_pay").scrollIntoView({behavior:"smooth",block:"center"})};
+

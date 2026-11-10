@@ -1,0 +1,22 @@
+name: Test the app
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check that the built files are up to date
+        run: |
+          python3 build.py
+          git diff --exit-code index.html sw.js || (echo "Run python3 build.py and commit index.html and sw.js"; exit 1)
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm test

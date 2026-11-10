@@ -1,0 +1,12 @@
+{
+  "name": "kronkoll",
+  "private": true,
+  "description": "Kronkoll budget app. Build with python3 build.py, test with npm test.",
+  "scripts": {
+    "build": "python3 build.py",
+    "test": "node tests/smoke.js && node tests/features.js"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}
