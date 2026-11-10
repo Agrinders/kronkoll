@@ -382,3 +382,6 @@ input,select,textarea,.pick{font-family:var(--ui);font-weight:500}input::placeho
 /* Savings rate under Spenderat and Kvarvarande. */
 .srate{margin-top:14px;padding-top:12px;border-top:1px solid var(--rule)}.srow{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.srow span{font-size:14px;font-weight:600;color:var(--soft)}.srow b{font:700 clamp(21px,6.4vw,28px)/1.1 var(--hand);letter-spacing:-.02em}
 .sbar{height:6px;border-radius:9px;background:var(--rule);margin-top:8px;overflow:hidden}.sbar i{display:block;height:100%;border-radius:9px;background:var(--c2);transition:width .4s ease}.srate small{display:block;margin-top:6px;font-size:13px;color:var(--soft)}
+/* Greeting at the top of Översikt, and the savings goal. */
+.hello{margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid var(--rule);display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}.hello b{font:700 22px/1.15 var(--hand);letter-spacing:-.01em}.hello span{font-size:14px;color:var(--soft)}
+.sgoal{font-size:13px;font-weight:600;color:var(--soft);text-align:right;margin-top:2px}.sbar.hit i{background:var(--good)}

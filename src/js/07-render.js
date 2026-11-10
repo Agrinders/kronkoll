@@ -14,12 +14,12 @@ function renderSettings(){
 function applyTheme(){S.theme==="auto"?document.documentElement.removeAttribute("data-theme"):document.documentElement.setAttribute("data-theme",S.theme)}
 const setF=(k,l)=>`<div class="set"><label for="f_${k}">${t(l)}</label><input id="f_${k}" type="number" inputmode="decimal" data-s="${k}" value="${S[k]}"></div>`;
 function build(){
-  $("set_in").innerHTML=setF("adults","fAdults")+setF("buf","bufF")+setF("lifePct","lifeF");
+  $("set_in").innerHTML=setF("adults","fAdults")+setF("buf","bufF")+setF("lifePct","lifeF")+setF("rateGoal","rateF");
   buildSheet();buildGoals();
 }
 function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render();if(typeof fitNav==="function")fitNav()}
 function render(){guideDot();$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderTax();renderResults();renderSubs();renderLoans();renderIsk();renderHist();renderBk();renderMarket();renderSettings();renderPay();renderVersion();renderHold();FX.sync(planCalc(nowMd()))}
-function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({iskV:S.iskV,iskIn:S.iskIn,iskP:S.iskP,taxKom:S.taxKom,taxKy:S.taxKy,taxFors:S.taxFors,taxCol:S.taxCol,zoom:S.zoom,hc:S.hc,lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,taxT:S.taxT,taxPay:S.taxPay,taxPct:S.taxPct,taxMode:S.taxMode,payH:S.payH,payR:S.payR,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,click:S.click,recV:S.recV||0}).catch(()=>{}),150)}
+function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({rateGoal:S.rateGoal,iskV:S.iskV,iskIn:S.iskIn,iskP:S.iskP,taxKom:S.taxKom,taxKy:S.taxKy,taxFors:S.taxFors,taxCol:S.taxCol,zoom:S.zoom,hc:S.hc,lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,taxT:S.taxT,taxPay:S.taxPay,taxPct:S.taxPct,taxMode:S.taxMode,payH:S.payH,payR:S.payR,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,click:S.click,recV:S.recV||0}).catch(()=>{}),150)}
 const yrOpen=()=>$("yrs").classList.contains("on");
 function closeYears(){$("yrs").classList.remove("on")}
 addEventListener("scroll",()=>{if(yrOpen())closeYears()},{passive:true});
@@ -39,7 +39,7 @@ document.addEventListener("input",e=>{const x=e.target;
   if(x.dataset.gt){const g=G.find(z=>z.k===x.dataset.gt);if(g){g.t=Math.max(0,parseA(x.value));saveGoals();renderSaving()}return}
   if(x.dataset.gs){const g=G.find(z=>z.k===x.dataset.gs);if(g){g.s=Math.max(0,parseA(x.value));saveGoals();render()}return}
   if(x.dataset.goal){const g=G.find(z=>z.k===x.dataset.goal);if(g){g.n=x.value;saveGoals();buildSheet();render()}return}
-  if(x.dataset.s){const k=x.dataset.s;S[k]=+x.value||0;if(["saved","buf","lifePct","adults"].includes(k))persist();render()}
+  if(x.dataset.s){const k=x.dataset.s;S[k]=+x.value||0;if(["saved","buf","lifePct","adults","rateGoal"].includes(k))persist();render()}
   else if(x.dataset.rw){const rw=x.dataset.rw,f=x.dataset.f,v=f==="a"?Math.max(0,parseA(x.value)):x.value;
     if(x.dataset.rid){const r=ruleById(x.dataset.rid),k=mk(P.y,P.m);if(r){if(f==="n")r.n=v;else setForward(r,k,v);saveRule(r)}}
     else{const i=+x.dataset.ix;editMonth(md=>{if(md[rw][i])md[rw][i][f]=v})}render()}});

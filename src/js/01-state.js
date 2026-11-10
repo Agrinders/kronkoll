@@ -1,5 +1,5 @@
 const $=id=>document.getElementById(id);
-const S={iskV:0,iskIn:0,iskP:1,taxKom:"",taxKy:false,taxFors:"",taxCol:1,zoom:1,hc:false,lang:"sv",saved:0,buf:3,lifePct:15,adults:2,taxT:32,theme:"auto",toasts:true,sound:true,click:true,motion:true,taxPay:25000,taxMode:"t",taxPct:30,payH:0,payR:0};
+const S={rateGoal:30,iskV:0,iskIn:0,iskP:1,taxKom:"",taxKy:false,taxFors:"",taxCol:1,zoom:1,hc:false,lang:"sv",saved:0,buf:3,lifePct:15,adults:2,taxT:32,theme:"auto",toasts:true,sound:true,click:true,motion:true,taxPay:25000,taxMode:"t",taxPct:30,payH:0,payR:0};
 let NOW=new Date();
 const MNS=[["Januari","Februari","Mars","April","Maj","Juni","Juli","Augusti","September","Oktober","November","December"],["January","February","March","April","May","June","July","August","September","October","November","December"]];
 const li=()=>S.lang==="sv"?0:1,mn=i=>MNS[li()][i],ms=i=>mn(i).slice(0,3),loc=()=>S.lang==="sv"?"sv-SE":"en-GB";
