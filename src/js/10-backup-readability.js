@@ -8,11 +8,12 @@ function renderBk(){const last=lsN("kronkoll.backupAt"),real=!exampleMode&&hasDa
 addEventListener("kronkoll-backup",()=>{lsSet("kronkoll.bkSnooze",0);renderBk()});
 
 /* ---------- Readability ---------- */
+try{const g=localStorage.getItem("kronkoll.bg");if(g==="mist")S.bg="mist"}catch(e){}
 try{const r=JSON.parse(localStorage.getItem("kronkoll.read")||"null");if(r){S.zoom=+r.z||1;S.hc=!!r.hc}}catch(e){}
 function applyRead(){const z=[.9,1,1.15,1.3].includes(S.zoom)?S.zoom:1;document.body.style.zoom=z===1?"":z;document.documentElement.style.setProperty("--z",z);document.documentElement.classList.toggle("hc",!!S.hc);try{localStorage.setItem("kronkoll.read",JSON.stringify({z,hc:S.hc}))}catch(e){}}
 applyRead();
 function renderRead(){$("c_rh").textContent=tx("Läsbarhet","Readability");$("c_zl").textContent=tx("Storlek på text och knappar","Size of text and buttons");$("c_hcl").textContent=tx("Tydligare kontrast","Stronger contrast");
   $("c_zm").innerHTML=[[.9,"Mindre","Smaller"],[1,"Normal","Normal"],[1.15,"Större","Larger"],[1.3,"Störst","Largest"]].map(([v,a,b])=>`<button class="chip ${S.zoom===v?"on":""}" data-zm="${v}">${tx(a,b)}</button>`).join("");
   $("c_zp").textContent=tx("Gör allt i appen mindre eller större. Tydligare kontrast gör panelerna helt täckande och texten mörkare.","Makes everything in the app smaller or larger. Stronger contrast makes the panels solid and the text darker.");
-  $("c_hc").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.hc?"1":"0")===v?"on":""}" data-hc="${v}">${t(k)}</button>`).join("")}
+  $("c_bgl").textContent=tx("Bakgrund","Background");$("c_bg").innerHTML=[["lines",tx("Linjer","Lines")],["mist",tx("Dimma (test)","Mist (test)")]].map(([v,l])=>`<button class="chip ${S.bg===v?"on":""}" data-bg="${v}">${l}</button>`).join("");$("c_hc").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.hc?"1":"0")===v?"on":""}" data-hc="${v}">${t(k)}</button>`).join("")}
 

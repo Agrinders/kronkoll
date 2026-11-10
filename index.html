@@ -516,7 +516,7 @@ input,select,textarea,.pick{font-family:var(--ui);font-weight:500}input::placeho
 
 <section id="c" class="hide">
 <div class="sheet"><div class="lbl" data-i="theme"></div><div class="chips" id="c_th"></div><div class="lbl" data-i="themesL"></div><div id="c_tm" style="margin:6px 0 14px"></div><div class="lbl" data-i="notif"></div><div class="chips" id="c_tg"></div><div class="lbl" data-i="sound"></div><div class="chips" id="c_sn"></div><div class="lbl" data-i="clickL"></div><div class="chips" id="c_ck"></div><div class="lbl" data-i="lang"></div><div class="chips" id="c_lg"></div></div>
-<div class="sheet"><p class="head" id="c_rh"></p><div class="lbl" id="c_zl"></div><div class="chips" id="c_zm"></div><div id="c_zp" class="zprev"></div><div class="lbl" id="c_hcl"></div><div class="chips" id="c_hc"></div><div class="lbl" data-i="motion"></div><div class="chips" id="c_mo"></div></div>
+<div class="sheet"><p class="head" id="c_rh"></p><div class="lbl" id="c_zl"></div><div class="chips" id="c_zm"></div><div id="c_zp" class="zprev"></div><div class="lbl" id="c_hcl"></div><div class="chips" id="c_hc"></div><div class="lbl" id="c_bgl"></div><div class="chips" id="c_bg"></div><div class="lbl" data-i="motion"></div><div class="chips" id="c_mo"></div></div>
 <div class="sheet"><div id="set_in"></div><div id="h_c"></div></div>
 <div class="sheet"><div class="lbl" data-i="yourData"></div><p class="note" id="c_st"></p><p class="note" id="c_bk" style="margin-top:4px;font-weight:600"></p><button class="btn out" id="reset" style="width:100%;margin-top:10px"></button></div>
 </section>
@@ -525,7 +525,7 @@ input,select,textarea,.pick{font-family:var(--ui);font-weight:500}input::placeho
 
 <script>
 const $=id=>document.getElementById(id);
-const S={rateGoal:30,iskV:0,iskIn:0,iskP:1,taxKom:"",taxKy:false,taxFors:"",taxCol:1,zoom:1,hc:false,lang:"sv",saved:0,buf:3,lifePct:15,adults:2,taxT:32,theme:"auto",toasts:true,sound:true,click:true,motion:true,taxPay:25000,taxMode:"t",taxPct:30,payH:0,payR:0};
+const S={bg:"lines",rateGoal:30,iskV:0,iskIn:0,iskP:1,taxKom:"",taxKy:false,taxFors:"",taxCol:1,zoom:1,hc:false,lang:"sv",saved:0,buf:3,lifePct:15,adults:2,taxT:32,theme:"auto",toasts:true,sound:true,click:true,motion:true,taxPay:25000,taxMode:"t",taxPct:30,payH:0,payR:0};
 let NOW=new Date();
 const MNS=[["Januari","Februari","Mars","April","Maj","Juni","Juli","Augusti","September","Oktober","November","December"],["January","February","March","April","May","June","July","August","September","October","November","December"]];
 const li=()=>S.lang==="sv"?0:1,mn=i=>MNS[li()][i],ms=i=>mn(i).slice(0,3),loc=()=>S.lang==="sv"?"sv-SE":"en-GB";
@@ -859,6 +859,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
+{v:"2.8",d:"10 nov 2026",i:[["c","#c_bg",["Dimma som bakgrund (test)","Mist background (test)"],["Prova moln och dimma i stället för linjer under Inställningar, Läsbarhet.","Try clouds and mist instead of lines under Settings, Readability."]]]},
 {v:"2.7",d:"10 nov 2026",i:[["b","#b_rate",["Sparkvot med mål","Savings rate with a goal"],["Se hur stor del av inkomsterna du sparat. Målet är 30 % och kan ändras i Inställningar.","See how much of your income you saved. The goal is 30% and can be changed in Settings."]],["h","#h_hi",["Hälsning","Greeting"],["Översikt hälsar dig beroende på tid på dygnet.","Overview greets you depending on the time of day."]]]},
 {v:"2.6",d:"10 nov 2026",i:[["h","#h_pay",["Ny Översikt","New Overview"],["Översikt visar nu det som är kvar, dina återkommande betalningar och Min ekonomi under året.","Overview now shows what is left, your recurring payments and My finances under the year."]]]},
 {v:"2.5",d:"10 nov 2026",i:[["v","#v_add",["Lån i menyn","Loans in the menu"],["Lån & skulder ligger nu i menyn längst ner, och Marknad finns under Verktyg.","Loans & debt is now in the bottom menu, and Market is under Tools."]]]},
@@ -897,7 +898,7 @@ function build(){
 }
 function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render();if(typeof fitNav==="function")fitNav()}
 function render(){guideDot();$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderTax();renderResults();renderSubs();renderLoans();renderIsk();renderHist();renderBk();renderMarket();renderSettings();renderPay();renderVersion();renderHold();FX.sync(planCalc(nowMd()))}
-function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({rateGoal:S.rateGoal,iskV:S.iskV,iskIn:S.iskIn,iskP:S.iskP,taxKom:S.taxKom,taxKy:S.taxKy,taxFors:S.taxFors,taxCol:S.taxCol,zoom:S.zoom,hc:S.hc,lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,taxT:S.taxT,taxPay:S.taxPay,taxPct:S.taxPct,taxMode:S.taxMode,payH:S.payH,payR:S.payR,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,click:S.click,recV:S.recV||0}).catch(()=>{}),150)}
+function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({bg:S.bg,rateGoal:S.rateGoal,iskV:S.iskV,iskIn:S.iskIn,iskP:S.iskP,taxKom:S.taxKom,taxKy:S.taxKy,taxFors:S.taxFors,taxCol:S.taxCol,zoom:S.zoom,hc:S.hc,lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,taxT:S.taxT,taxPay:S.taxPay,taxPct:S.taxPct,taxMode:S.taxMode,payH:S.payH,payR:S.payR,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,click:S.click,recV:S.recV||0}).catch(()=>{}),150)}
 const yrOpen=()=>$("yrs").classList.contains("on");
 function closeYears(){$("yrs").classList.remove("on")}
 addEventListener("scroll",()=>{if(yrOpen())closeYears()},{passive:true});
@@ -1028,13 +1029,14 @@ function renderBk(){const last=lsN("kronkoll.backupAt"),real=!exampleMode&&hasDa
 addEventListener("kronkoll-backup",()=>{lsSet("kronkoll.bkSnooze",0);renderBk()});
 
 /* ---------- Readability ---------- */
+try{const g=localStorage.getItem("kronkoll.bg");if(g==="mist")S.bg="mist"}catch(e){}
 try{const r=JSON.parse(localStorage.getItem("kronkoll.read")||"null");if(r){S.zoom=+r.z||1;S.hc=!!r.hc}}catch(e){}
 function applyRead(){const z=[.9,1,1.15,1.3].includes(S.zoom)?S.zoom:1;document.body.style.zoom=z===1?"":z;document.documentElement.style.setProperty("--z",z);document.documentElement.classList.toggle("hc",!!S.hc);try{localStorage.setItem("kronkoll.read",JSON.stringify({z,hc:S.hc}))}catch(e){}}
 applyRead();
 function renderRead(){$("c_rh").textContent=tx("Läsbarhet","Readability");$("c_zl").textContent=tx("Storlek på text och knappar","Size of text and buttons");$("c_hcl").textContent=tx("Tydligare kontrast","Stronger contrast");
   $("c_zm").innerHTML=[[.9,"Mindre","Smaller"],[1,"Normal","Normal"],[1.15,"Större","Larger"],[1.3,"Störst","Largest"]].map(([v,a,b])=>`<button class="chip ${S.zoom===v?"on":""}" data-zm="${v}">${tx(a,b)}</button>`).join("");
   $("c_zp").textContent=tx("Gör allt i appen mindre eller större. Tydligare kontrast gör panelerna helt täckande och texten mörkare.","Makes everything in the app smaller or larger. Stronger contrast makes the panels solid and the text darker.");
-  $("c_hc").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.hc?"1":"0")===v?"on":""}" data-hc="${v}">${t(k)}</button>`).join("")}
+  $("c_bgl").textContent=tx("Bakgrund","Background");$("c_bg").innerHTML=[["lines",tx("Linjer","Lines")],["mist",tx("Dimma (test)","Mist (test)")]].map(([v,l])=>`<button class="chip ${S.bg===v?"on":""}" data-bg="${v}">${l}</button>`).join("");$("c_hc").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.hc?"1":"0")===v?"on":""}" data-hc="${v}">${t(k)}</button>`).join("")}
 
 /* ---------- Exact tax tables (Skatteverket 2026, fetched by the GitHub job into tax.json) ---------- */
 let TAXD=null,taxLoading=false;
@@ -1126,7 +1128,7 @@ function renderIsk(){const hv=holdTotals().val,v=S.iskV>0?S.iskV:hv,base=v+S.isk
   $("isk_n").textContent=tx(`Skatten är 1,065 % på det som är över 300 000 kr per person 2026. Skatteverket räknar på värdet i början av varje kvartal plus insättningar, så det här är en uppskattning utifrån värdet nu.${S.iskP===2?" Två personer räknas som att värdet är jämnt fördelat.":""}${S.iskV>0?"":" Värdet hämtas från dina innehav, skriv in ett annat om allt inte ligger på ISK."}`,`The tax is 1.065% on the amount above 300,000 kr per person in 2026. Skatteverket uses the value at the start of each quarter plus deposits, so this is an estimate based on the value now.${S.iskP===2?" Two people assumes the value is split evenly.":""}${S.iskV>0?"":" The value comes from your holdings; enter another if not everything is in an ISK."}`)}
 $("isk_v").addEventListener("input",()=>{S.iskV=Math.max(0,parseA($("isk_v").value));persist();renderIsk()});
 $("isk_in").addEventListener("input",()=>{S.iskIn=Math.max(0,parseA($("isk_in").value));persist();renderIsk()});
-document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-iskp]");if(b){S.iskP=+b.dataset.iskp;persist();renderIsk()}});
+document.addEventListener("click",e=>{const g=e.target.closest&&e.target.closest("[data-bg]");if(g){S.bg=g.dataset.bg;try{localStorage.setItem("kronkoll.bg",S.bg)}catch(err){}persist();renderRead();FX.setMotion();return}const b=e.target.closest&&e.target.closest("[data-iskp]");if(b){S.iskP=+b.dataset.iskp;persist();renderIsk()}});
 /* ---------- Shared clicks for the new parts ---------- */
 document.addEventListener("click",e=>{const g=x=>e.target.closest&&e.target.closest(x);let b;
   if(b=g("[data-hu]"))return histUndo(b.dataset.hu);
@@ -1226,10 +1228,11 @@ const FX=(()=>{
   const VS=`#version 300 es
 in vec2 a;void main(){gl_Position=vec4(a,0.,1.);}`;
   const FS=`#version 300 es
-precision highp float;uniform vec2 R;uniform float T,Dk,Sc;uniform vec3 M,W,C1,C2,C3,BG,Rip[3];uniform vec2 P[3];out vec4 o;
+precision highp float;uniform vec2 R;uniform float T,Dk,Sc,Mi;uniform vec3 M,W,C1,C2,C3,BG,Rip[3];uniform vec2 P[3];out vec4 o;
 float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
 float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
 float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<3;i++){v+=a*n(p);p=p*2.03+vec2(17.,9.);a*=.5;}return v;}
+float fbm5(vec2 p){float v=0.,a=.5;mat2 r=mat2(.8,.6,-.6,.8);for(int i=0;i<5;i++){v+=a*n(p);p=r*p*2.02+vec2(3.1,7.7);a*=.5;}return v;}
 float body(vec2 p,vec2 c,float w){vec2 d=p-c;float s=.26+.62*sqrt(max(w,0.));return exp(-dot(d,d)/(s*s))*(.55+w);}
 void main(){vec2 uv=(gl_FragCoord.xy-.5*R)/min(R.x,R.y);uv.y+=Sc;{vec2 d=uv-vec2(M.x,M.y+Sc);uv-=d*exp(-dot(d,d)*7.)*.26*M.z;}
   for(int i=0;i<3;i++){float a=Rip[i].z;if(a>=0.&&a<1.){vec2 d=uv-vec2(Rip[i].x,Rip[i].y+Sc);float r=length(d),q=r-a*1.5;uv+=d/(r+.001)*sin(q*24.)*exp(-q*q*22.)*(1.-a)*.05;}}
@@ -1239,6 +1242,15 @@ void main(){vec2 uv=(gl_FragCoord.xy-.5*R)/min(R.x,R.y);uv.y+=Sc;{vec2 d=uv-vec2
   float f1=body(p,P[0]+.1*vec2(cos(t*1.3),sin(t)),W.x),f2=body(p,P[1]+.12*vec2(sin(t*.9+2.),cos(t*1.2)),W.y),f3=body(p,P[2]+.11*vec2(cos(t*.7+4.),sin(t*1.1+1.)),W.z);
   float H=f1+f2+f3;vec3 col=(C1*f1+C2*f2+C3*f3)/(H+.0001);
   float m=smoothstep(.02,.95,H);vec3 base=mix(BG,col,m*mix(.62,.72,Dk));
+  if(Mi>.5){
+    /* Mist: slow layered clouds tinted by the month's colours, no lines. */
+    float c1=fbm5(p*1.1+vec2(T*.034,-T*.012)),c2=fbm5(p*2.3+vec2(c1*1.9,-T*.04)+vec2(-T*.018,0.)),c3=fbm5(p*4.8-vec2(T*.055,c2*1.3));
+    float cl=smoothstep(.3,.78,c1*.58+c2*.44+c3*.2);float wisp=smoothstep(.5,.9,c2*.72+c3*.5);float deep=smoothstep(.55,.2,c1*.7+c2*.3);
+    vec3 haze=mix(BG,col,m*mix(.36,.5,Dk)+.1);
+    vec3 cloud=mix(col,vec3(1.),mix(.66,.42,Dk));
+    base=mix(haze,cloud,cl*mix(.7,.6,Dk));base=mix(base,mix(vec3(1.),min(col*1.5+.18,vec3(1.)),Dk),wisp*mix(.34,.3,Dk));base*=1.-deep*mix(.06,.22,Dk);
+    base*=1.-.18*smoothstep(.2,1.4,length(uv-vec2(0.,Sc)));
+    base+=(h(gl_FragCoord.xy+fract(T))-.5)/140.;o=vec4(base,1.);return;}
   float v=H*8.-T*.16;float l=abs(fract(v)-.5)/max(fwidth(v),.0001);float line=(1.-smoothstep(.6,1.9,l))*smoothstep(.03,.3,H);
   vec3 ink=mix(col*.62,min(col*1.7+.12,vec3(1.)),Dk);base=mix(base,ink,line*mix(.42,.55,Dk));
   base+=(h(gl_FragCoord.xy+fract(T))-.5)/160.;o=vec4(base,1.);}`;
@@ -1250,12 +1262,12 @@ void main(){vec2 uv=(gl_FragCoord.xy-.5*R)/min(R.x,R.y);uv.y+=Sc;{vec2 d=uv-vec2
   function init(){const sh=(k,src)=>{const o=gl.createShader(k);gl.shaderSource(o,src);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw new Error(gl.getShaderInfoLog(o));return o};
     pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(pr);gl.useProgram(pr);
     gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);const a=gl.getAttribLocation(pr,"a");gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,2,gl.FLOAT,false,0,0);
-    ["R","T","Dk","Sc","M","W","C1","C2","C3","BG","Rip","P"].forEach(n=>U[n]=gl.getUniformLocation(pr,n));colors();size()}
+    ["R","T","Dk","Sc","Mi","M","W","C1","C2","C3","BG","Rip","P"].forEach(n=>U[n]=gl.getUniformLocation(pr,n));colors();size()}
   function colors(){const cs=getComputedStyle(document.documentElement);gl.useProgram(pr);["1","2","3"].forEach(i=>gl.uniform3fv(U["C"+i],hex(cs.getPropertyValue("--f"+i))));gl.uniform3fv(U.BG,hex(cs.getPropertyValue("--fbg")));gl.uniform1f(U.Dk,cs.getPropertyValue("--dk").trim()==="1"?1:0);kick()}
   function size(){const k=Math.min(devicePixelRatio||1,1.5,Math.sqrt(1.6e6/(innerWidth*innerHeight))),W=Math.round(innerWidth*k),H=Math.round(innerHeight*k);if(c.width!==W||c.height!==H){c.width=W;c.height=H;gl.viewport(0,0,W,H)}gl.uniform2f(U.R,W,H);kick()}
   function draw(now){const T=still()?42:(now-t0)/1000,asp=innerWidth/innerHeight,sx=asp>1?asp:1,sy=asp>1?.47:Math.min(1,.5/asp/1.07),st=still()?1:.05;
     w=w.map((v,i)=>v+(wT[i]-v)*st);pulse=pulse.map(v=>v*.97);pos.forEach((p,i)=>{p[0]+=(posT[i][0]-p[0])*(still()?1:.03);p[1]+=(posT[i][1]-p[1])*(still()?1:.03)});
-    mz+=(mzT-mz)*.08;gl.uniform3f(U.M,mouse[0],mouse[1],still()?0:mz);gl.uniform1f(U.T,T);gl.uniform1f(U.Sc,window.scrollY*.00035);gl.uniform3f(U.W,w[0]+pulse[0]*.5,w[1]+pulse[1]*.5,w[2]+pulse[2]*.5);
+    mz+=(mzT-mz)*.08;gl.uniform3f(U.M,mouse[0],mouse[1],still()?0:mz);gl.uniform1f(U.T,T);gl.uniform1f(U.Mi,S.bg==="mist"?1:0);gl.uniform1f(U.Sc,window.scrollY*.00035);gl.uniform3f(U.W,w[0]+pulse[0]*.5,w[1]+pulse[1]*.5,w[2]+pulse[2]*.5);
     gl.uniform2fv(U.P,new Float32Array(pos.flatMap(p=>[p[0]*sx,p[1]*sy])));
     gl.uniform3fv(U.Rip,new Float32Array(rip.flatMap(r=>[r[0],r[1],still()?-9:(T-r[2])/2.4])));gl.drawArrays(gl.TRIANGLES,0,3)}
   function loop(now){raf=requestAnimationFrame(loop);if(now-last<33)return;last=now;draw(now)}
@@ -1297,7 +1309,7 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     if(!checked&&!snap.metadata.fromCache){checked=true;if(snap.empty)importOld().catch(()=>{})}
     const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});const keepR=RULES.filter(r=>DIRTYR.has(r.id)),real=snap.docs.some(d=>/^(pm|rec|dep|exp|hold|sub|loan)_|^started$/.test(d.id)),ex=exampleMode&&!real;if(!ex){exampleMode=false;PM={};RULES=[]}deps=[];HOLD=[];SL=[];LO=[];allIds=snap.docs.map(d=>d.id);const old=S.lang;let sawGoals=false;const MIG=[];
     snap.docs.forEach(d=>{const v=d.data()||{};
-      if(d.id==="plan"){["saved","buf","lifePct","adults","taxT","taxPay","taxPct","payH","payR","taxCol","zoom","iskV","iskIn","iskP","rateGoal"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});["taxKom","taxFors"].forEach(k=>{if(typeof v[k]==="string")S[k]=v[k]});["taxKy","hc"].forEach(k=>{if(typeof v[k]==="boolean")S[k]=v[k]});applyRead();if(v.taxMode==="t"||v.taxMode==="p")S.taxMode=v.taxMode;if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.sound==="boolean")S.sound=v.sound;if(typeof v.click==="boolean")S.click=v.click;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
+      if(d.id==="plan"){["saved","buf","lifePct","adults","taxT","taxPay","taxPct","payH","payR","taxCol","zoom","iskV","iskIn","iskP","rateGoal"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});["taxKom","taxFors"].forEach(k=>{if(typeof v[k]==="string")S[k]=v[k]});if(v.bg==="mist"||v.bg==="lines")S.bg=v.bg;["taxKy","hc"].forEach(k=>{if(typeof v[k]==="boolean")S[k]=v[k]});applyRead();if(v.taxMode==="t"||v.taxMode==="p")S.taxMode=v.taxMode;if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.sound==="boolean")S.sound=v.sound;if(typeof v.click==="boolean")S.click=v.click;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
       else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
       else if(v.kind==="hold"&&typeof v.qty==="number")HOLD.push({id:String(v.id),ref:String(v.ref||""),name:String(v.name||""),qty:v.qty,cost:+v.cost||0,...(typeof v.manual==="number"?{manual:v.manual}:{})});
       else if(v.kind==="goals"){sawGoals=true;if(!goalsDirty&&Array.isArray(v.list))G=v.list.map(g=>({k:String(g.k),n:String(g.n||""),s:+g.s||0,t:+g.t||0}))}
