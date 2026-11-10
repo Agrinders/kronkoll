@@ -31,5 +31,5 @@ check('total debt',await ev(()=>v_big.innerText),'2 020 000 kr');check('interest
 check('ISK tax one person',await ev(()=>{S.iskV=420000;S.iskIn=0;S.iskP=1;renderIsk();return isk_big.innerText}),'1 278 kr');
 check('ISK tax two people',await ev(()=>{S.iskP=2;renderIsk();return isk_big.innerText}),'0 kr');
 // Larger text never makes the page scroll sideways
-await ev(()=>{S.zoom=1.3;applyRead()});const over=[];for(const t of ['h','b','s','a','m','v','l','u','c']){await ev(x=>go(x),t);await p.waitForTimeout(150);if(await ev(()=>document.documentElement.scrollWidth-innerWidth>0))over.push(t)}check('no sideways scroll at largest text',over,[]);
+await ev(()=>{S.zoom=1.3;applyRead()});const over=[];for(const t of ['h','b','s','a','v','m','l','u','c']){await ev(x=>go(x),t);await p.waitForTimeout(150);if(await ev(()=>document.documentElement.scrollWidth-innerWidth>0))over.push(t)}check('no sideways scroll at largest text',over,[]);
 check('no page errors',errs,[]);await b.close();srv.close();if(fails){console.log('FAILED:',fails);process.exit(1)}console.log('All checks passed')})().catch(e=>{console.error(e);process.exit(1)});

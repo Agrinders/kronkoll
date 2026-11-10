@@ -29,7 +29,7 @@ function openYears(anchor){const y0=NOW.getFullYear(),ys=new Set([P.y]);for(let 
   const on=$("yr_list").querySelector(".on");if(on)$("yr_list").scrollTop=on.offsetTop-$("yr_list").offsetTop-96;
   $("yrs").classList.add("on")}
 function refreshMonth(){buildSheet();render()}
-function go(x){$("ps").classList.remove("on");tab=x;if(x==="l")loadTax();if(x==="u")renderHist();if(x==="r")guideSeen();else guideDot();try{sessionStorage.setItem("kronkoll.tab",x)}catch(e){}closeYears();FX.tab(x);setTimeout(yearScroll,0);["h","b","s","a","r","m","v","l","u","n","c"].forEach(s=>$(s).classList.toggle("hide",s!==x));document.querySelectorAll("nav button,#drawer>button").forEach(b=>b.classList.toggle("on",b.dataset.go===x));$("drawer").classList.remove("on");$("scrim").classList.remove("on");$("ttl").textContent=t("ttl"+x.toUpperCase());window.scrollTo(0,0)}
+function go(x){$("ps").classList.remove("on");tab=x;if(x==="l")loadTax();if(x==="u")renderHist();if(x==="r")guideSeen();else guideDot();try{sessionStorage.setItem("kronkoll.tab",x)}catch(e){}closeYears();FX.tab(x);setTimeout(yearScroll,0);["h","b","s","a","v","r","m","l","u","n","c"].forEach(s=>$(s).classList.toggle("hide",s!==x));document.querySelectorAll("nav button,#drawer>button").forEach(b=>b.classList.toggle("on",b.dataset.go===x));$("drawer").classList.remove("on");$("scrim").classList.remove("on");$("ttl").textContent=t("ttl"+x.toUpperCase());window.scrollTo(0,0)}
 $("menu").onclick=()=>{$("drawer").classList.add("on");$("scrim").classList.add("on")};$("scrim").onclick=()=>{$("drawer").classList.remove("on");$("scrim").classList.remove("on")};
 
 document.addEventListener("input",e=>{const x=e.target;

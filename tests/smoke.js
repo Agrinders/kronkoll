@@ -36,6 +36,6 @@ await step('tax',async()=>{await p.evaluate(()=>go('l'));await w(60);await p.cli
 await step('settings',async()=>{await p.evaluate(()=>go('c'));await w(60);for(const s of ['[data-th="light"]','[data-th="auto"]','[data-tg="0"]','[data-tg="1"]','[data-sn="1"]','[data-sn="0"]','[data-ck="1"]','[data-ck="0"]','[data-mo="0"]','[data-mo="1"]','[data-lang="en"]','[data-lang="sv"]']){await p.click(s);await w(40)}});
 await step('backup button',async()=>{const [d]=await Promise.all([p.waitForEvent('download'),p.click('#bk_save')]);return d.suggestedFilename()});
 await step('reset arm',async()=>{await p.click('#reset');await w(60);return p.evaluate(()=>$('reset').dataset.arm)});
-await step('drawer all',async()=>{for(const g of ['v','l','u','n','c']){await p.click('#menu');await w(350);await p.click(`#drawer [data-go="${g}"]`);await w(350)}return p.evaluate(()=>tab)});
+await step('drawer all',async()=>{for(const g of ['r','m','l','u','n','c']){await p.click('#menu');await w(350);await p.click(`#drawer [data-go="${g}"]`);await w(350)}return p.evaluate(()=>tab)});
 await step('all onclick ids exist',()=>p.evaluate(()=>[...document.querySelectorAll('[data-go]')].length));
 console.log('page errors:',errs);await b.close();srv.close();if(fails||errs.length){console.log('FAILED:',fails,'steps,',errs.length,'page errors');process.exit(1)}console.log('All checks passed')})().catch(e=>{console.error(e);process.exit(1)});
