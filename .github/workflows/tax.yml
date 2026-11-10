@@ -1,0 +1,23 @@
+name: Update tax tables
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["tools/update_tax.py", ".github/workflows/tax.yml"]
+permissions:
+  contents: write
+jobs:
+  tax:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -u tools/update_tax.py
+      - run: |
+          git config user.name kronkoll-bot
+          git config user.email kronkoll-bot@users.noreply.github.com
+          git add tax.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Update tax tables from Skatteverket"
+          git pull --rebase origin main
+          git push
