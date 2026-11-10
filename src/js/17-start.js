@@ -48,3 +48,6 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     if(S.lang!==old){applyLang();go(tab);return}
     {const ae=document.activeElement;if(!ae||!ae.closest("#b,#s_goals")){buildSheet();buildGoals()}}render()},()=>{col=null;render()});
 }catch(e){}})();
+/* On narrow phones the longest menu word is shortened, so all menu buttons can stay the same size. */
+function fitNav(){const b=document.querySelector('nav [data-go="a"]'),e=b&&b.querySelector("em");if(!e||getComputedStyle(b).flexGrow==="0")return;e.textContent=t("nA");if(e.scrollWidth>b.clientWidth-4)e.textContent=t("nAs")}
+fitNav();addEventListener("resize",fitNav);document.fonts&&document.fonts.ready.then(fitNav);

@@ -371,6 +371,5 @@ html.enter main section:not(.hide)>*{animation:introRise .62s cubic-bezier(.2,.9
 @keyframes introRise{from{opacity:0;translate:0 22px;scale:.985}}
 @media (prefers-reduced-motion:reduce){#intro{animation:introOut .2s .1s forwards!important}#intro img{animation:none!important}}
 html.still #intro img{animation:none}html.still.reveal #intro{animation:introOut .2s forwards}
-/* Bottom menu on phones: every button gets the same padding around its label and the same space to the next, whatever the word length. */
-@media (max-width:1023px){nav{gap:4px}nav button:not(.more){flex:1 1 auto;padding-inline:9px}nav button em{display:block;white-space:nowrap;letter-spacing:normal}nav [data-go="a"] em{letter-spacing:normal;font-size:inherit}}
-@media (max-width:374px){nav{gap:2px;padding:4px}nav button:not(.more){padding-inline:6px}nav button{font-size:10.5px}}
+/* Bottom menu on phones: every button is exactly the same size, with the label centred. */
+@media (max-width:1023px){nav{gap:3px;padding:5px}nav button:not(.more){flex:1 1 0;padding-inline:2px}nav button em{display:block;white-space:nowrap;letter-spacing:-.01em;font-size:11px}}

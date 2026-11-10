@@ -17,7 +17,7 @@ function build(){
   $("set_in").innerHTML=setF("adults","fAdults")+setF("buf","bufF")+setF("lifePct","lifeF");
   buildSheet();buildGoals();
 }
-function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render()}
+function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render();if(typeof fitNav==="function")fitNav()}
 function render(){guideDot();$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderTax();renderResults();renderSubs();renderLoans();renderIsk();renderHist();renderBk();renderMarket();renderSettings();renderPay();renderVersion();renderHold();FX.sync(planCalc(nowMd()))}
 function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({iskV:S.iskV,iskIn:S.iskIn,iskP:S.iskP,taxKom:S.taxKom,taxKy:S.taxKy,taxFors:S.taxFors,taxCol:S.taxCol,zoom:S.zoom,hc:S.hc,lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,taxT:S.taxT,taxPay:S.taxPay,taxPct:S.taxPct,taxMode:S.taxMode,payH:S.payH,payR:S.payR,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,click:S.click,recV:S.recV||0}).catch(()=>{}),150)}
 const yrOpen=()=>$("yrs").classList.contains("on");
