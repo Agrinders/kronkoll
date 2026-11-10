@@ -79,19 +79,25 @@ function advise(md){
 }
 function spendOf(y,m){const p=planCalc(monthData(y,m));return{p,used:0,left:p.life}}
 
+/* Recurring payments on Översikt: budget lines that repeat plus subscriptions, the soonest and largest first. */
+let PAYALL=false;
+function payList(){const t0=new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()).getTime(),out=[];
+  RULES.filter(r=>(r.t==="items"||r.t==="vars")).forEach(r=>{for(let o=0;o<=13;o++){const d=new Date(NOW.getFullYear(),NOW.getMonth()+o,1),y=d.getFullYear(),m=d.getMonth(),k=mk(y,m);if(!due(r,y,m)||(r.skip||[]).includes(k))continue;const dated=r.ds||r.freq!=="m",day=Math.min(+r.date.split("-")[2]||1,new Date(y,m+1,0).getDate()),at=new Date(y,m,day).getTime();if(dated&&at<t0)continue;out.push({n:r.n,a:amtOf(r,k),f:r.freq,at:dated?at:null,sub:false});break}});
+  SL.filter(x=>!x.off&&!out.some(o=>normN(o.n)===normN(x.n))).forEach(x=>{const nx=subNext(x);out.push({n:x.n,a:x.a,f:x.f,at:nx?nx.getTime():null,sub:true})});
+  return out.filter(o=>o.a>0).sort((a,b)=>(a.at??9e15)-(b.at??9e15)||b.a-a.a)}
+function renderPays(){const L=payList(),mon=L.reduce((s,o)=>s+o.a/(o.f==="q"?3:o.f==="y"?12:1),0),show=PAYALL?L:L.slice(0,6);
+  $("hp_t").textContent=tx("Återkommande betalningar","Recurring payments");$("hp_all").textContent=PAYALL?tx("Visa färre","Show fewer"):tx("Se alla","See all");$("hp_all").classList.toggle("hide",L.length<=6);
+  $("hp_sum").textContent=L.length?tx(`${L.length} st · ca ${kr(mon)} i månaden`,`${L.length} · about ${kr(mon)} a month`):"";
+  const per=o=>o.f==="q"?tx("Varje kvartal","Every quarter"):o.f==="y"?tx("Varje år","Every year"):tx("Varje månad","Every month");
+  $("hp_list").innerHTML=L.length?show.map((o,i)=>{const k=PAYALL?0:i;return`<div class="pay" style="--k:${k}"><span class="pn">${esc(o.n||"–")}<small>${o.at?new Date(o.at).toLocaleDateString(loc(),{day:"numeric",month:"short"})+" · ":""}${per(o)}${o.sub?" · "+tx("abonnemang","subscription"):""}</small></span><b>${kr(o.a)}</b></div>`}).join(""):`<p class="note">${tx("Inga återkommande betalningar än. Gör en utgift i Budget återkommande, så syns den här.","No recurring payments yet. Make an expense in Budget repeat and it shows here.")}</p>`}
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#hp_all")){PAYALL=!PAYALL;renderPays()}});
 function renderHome(){
   const y=NOW.getFullYear(),m=NOW.getMonth(),s=spendOf(y,m),p=s.p,mName=mn(m).toLowerCase(),dim=new Date(y,m+1,0).getDate(),dl=Math.max(1,dim-NOW.getDate()+1),a=advise(monthData(y,m));
   $("h_lbl").textContent=t("leftIn",mName);$("h_big").textContent=kr(s.left);$("h_big").className="big"+(s.left<0?" er":"");
   $("h_day").textContent=s.left>=0?t("perDay",kr(s.left/dl),dl):t("overBy",kr(-s.left));
-  const parts=[[p.fixed,"--c1","fixedL"],[p.vars,"--c4","varL"],[Math.max(0,p.life),"--c3","life"],[p.save,"--c2","saving"]];
-  $("h_stack").innerHTML=parts.filter(x=>x[0]>0).map(x=>`<i style="flex:${x[0]} 0 0;background:var(${x[1]})" title="${t(x[2])}: ${kr(x[0])}"></i>`).join("");
-  $("h_keys").innerHTML=parts.map(x=>`<span><span class="dot" style="background:var(${x[1]})"></span>${t(x[2])} <b>${kr(x[0])}</b></span>`).join("");
-  const got=deps.filter(d=>{const x=new Date(d.at);return x.getFullYear()===y&&x.getMonth()===m}).reduce((v,d)=>v+d.amount,0);
-  $("h_lines").innerHTML=[[t("in"),kr(p.inc)],[t("out"),kr(p.fixed)],[t("varOut"),kr(p.vars)],[t("savedIn",mName),kr(got)],[t("rem"),kr(p.life)]].map(r=>`<div class="row"><span>${r[0]}</span><b>${r[1]}</b></div>`).join("");
   const f=a.F[0];$("h_top").innerHTML=`<p class="head" style="margin-top:4px">${esc(f[0])}</p><p class="note">${esc(f[1])}</p>`;
   $("h_ex").classList.toggle("hide",hasData());
-  const up=upcoming();$("h_next").classList.toggle("hide",!up.length);
-  $("h_up").innerHTML=up.map(u=>`<div class="up"><span class="dt">${new Date(u.at).toLocaleDateString(loc(),{day:"numeric",month:"short"})}</span><span>${esc(u.n||"–")}<small>${t(u.f==="q"?"short":u.f==="y"?"yearly":"once")}</small></span><b class="${u.tp==="inc"?"ok":""}">${u.tp==="inc"?"+":""}${kr(u.a)}</b></div>`).join("");
+  renderPays();
   renderYear();
 }
 let HY=NOW.getFullYear(),SG="";

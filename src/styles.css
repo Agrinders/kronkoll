@@ -373,3 +373,7 @@ html.enter main section:not(.hide)>*{animation:introRise .62s cubic-bezier(.2,.9
 html.still #intro img{animation:none}html.still.reveal #intro{animation:introOut .2s forwards}
 /* Bottom menu on phones: every button is exactly the same size, with the label centred. */
 @media (max-width:1023px){nav{gap:3px;padding:5px}nav button:not(.more){flex:1 1 0;padding-inline:2px}nav button em{display:block;white-space:nowrap;letter-spacing:-.01em;font-size:11px}}
+/* Recurring payments: each row a little smaller and quieter than the one above. */
+.phead{display:flex;align-items:center;justify-content:space-between;gap:10px}.phead .lnk{padding:6px 0;font-size:14.5px}
+.pay{--s:calc(1 - var(--k) * .07);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:baseline;padding-block:calc(12px * var(--s));border-bottom:1px solid var(--rule);opacity:calc(1 - var(--k) * .09);font-size:calc(17px * var(--s))}
+.pay:last-child{border-bottom:0}.pay .pn{font-weight:600;overflow-wrap:anywhere}.pay small{display:block;font-weight:500;font-size:calc(13px * var(--s));color:var(--soft);margin-top:1px}.pay b{font-weight:700;white-space:nowrap}
