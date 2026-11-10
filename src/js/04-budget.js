@@ -80,17 +80,17 @@ function advise(md){
 function spendOf(y,m){const p=planCalc(monthData(y,m));return{p,used:0,left:p.life}}
 
 /* Recurring payments on Översikt: budget lines that repeat plus subscriptions, the soonest and largest first. */
-let PAYALL=false;
+
 function payList(){const t0=new Date(NOW.getFullYear(),NOW.getMonth(),NOW.getDate()).getTime(),out=[];
   RULES.filter(r=>(r.t==="items"||r.t==="vars")).forEach(r=>{for(let o=0;o<=13;o++){const d=new Date(NOW.getFullYear(),NOW.getMonth()+o,1),y=d.getFullYear(),m=d.getMonth(),k=mk(y,m);if(!due(r,y,m)||(r.skip||[]).includes(k))continue;const dated=r.ds||r.freq!=="m",day=Math.min(+r.date.split("-")[2]||1,new Date(y,m+1,0).getDate()),at=new Date(y,m,day).getTime();if(dated&&at<t0)continue;out.push({n:r.n,a:amtOf(r,k),f:r.freq,at:dated?at:null,sub:false});break}});
   SL.filter(x=>!x.off&&!out.some(o=>normN(o.n)===normN(x.n))).forEach(x=>{const nx=subNext(x);out.push({n:x.n,a:x.a,f:x.f,at:nx?nx.getTime():null,sub:true})});
   return out.filter(o=>o.a>0).sort((a,b)=>(a.at??9e15)-(b.at??9e15)||b.a-a.a)}
-function renderPays(){const L=payList(),mon=L.reduce((s,o)=>s+o.a/(o.f==="q"?3:o.f==="y"?12:1),0),show=PAYALL?L:L.slice(0,3);
-  $("hp_t").textContent=tx("Återkommande betalningar","Recurring payments");$("hp_all").textContent=PAYALL?tx("Visa färre","Show fewer"):tx("Se alla","See all");$("hp_all").classList.toggle("hide",L.length<=3);
+function renderPays(){const L=payList(),mon=L.reduce((s,o)=>s+o.a/(o.f==="q"?3:o.f==="y"?12:1),0),show=L.slice(0,3);
+  $("hp_t").textContent=tx("Återkommande betalningar","Recurring payments");$("hp_all").textContent=tx("Se alla","See all");
   $("hp_sum").textContent=L.length?tx(`${L.length} st · ca ${kr(mon)} i månaden`,`${L.length} · about ${kr(mon)} a month`):"";
   const per=o=>o.f==="q"?tx("Varje kvartal","Every quarter"):o.f==="y"?tx("Varje år","Every year"):tx("Varje månad","Every month");
-  $("hp_list").innerHTML=L.length?show.map((o,i)=>{const k=PAYALL?0:i;return`<div class="pay" style="--k:${k}"><span class="pn">${esc(o.n||"–")}<small>${o.at?new Date(o.at).toLocaleDateString(loc(),{day:"numeric",month:"short"})+" · ":""}${per(o)}${o.sub?" · "+tx("abonnemang","subscription"):""}</small></span><b>${kr(o.a)}</b></div>`}).join(""):`<p class="note">${tx("Inga återkommande betalningar än. Gör en utgift i Budget återkommande, så syns den här.","No recurring payments yet. Make an expense in Budget repeat and it shows here.")}</p>`}
-document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#hp_all")){PAYALL=!PAYALL;renderPays()}});
+  $("hp_list").innerHTML=L.length?show.map((o,i)=>{const k=i;return`<div class="pay" style="--k:${k}"><span class="pn">${esc(o.n||"–")}<small>${o.at?new Date(o.at).toLocaleDateString(loc(),{day:"numeric",month:"short"})+" · ":""}${per(o)}${o.sub?" · "+tx("abonnemang","subscription"):""}</small></span><b>${kr(o.a)}</b></div>`}).join(""):`<p class="note">${tx("Inga återkommande betalningar än. Gör en utgift i Budget återkommande, så syns den här.","No recurring payments yet. Make an expense in Budget repeat and it shows here.")}</p>`}
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#hp_all"))go("a")});
 function renderHome(){
   const y=NOW.getFullYear(),m=NOW.getMonth(),s=spendOf(y,m),p=s.p,mName=mn(m).toLowerCase(),dim=new Date(y,m+1,0).getDate(),dl=Math.max(1,dim-NOW.getDate()+1),a=advise(monthData(y,m));
   $("h_lbl").textContent=t("leftIn",mName);$("h_big").textContent=kr(s.left);$("h_big").className="big"+(s.left<0?" er":"");

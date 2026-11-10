@@ -39,7 +39,7 @@ $("rs_ok").onclick=()=>{if(!RS)return;const{rw,rid,ix,f}=RS,d=f==="o"?"":$("rs_d
   closeRS();buildSheet();render()};
 let depBusy=false;
 async function addDep(sign,row){if(depBusy)return;
-  const a=Math.abs(row?row.amount:+$("s_amt").value);if(!a){toast(t("tNeedAmt"));return}
+  const a=Math.abs(row?row.amount:parseA($("s_amt").value));if(!a){toast(t("tNeedAmt"));return}
   const k=row?row.k:$("s_pot").value,line=planCalc(cur()).lines.find(l=>l.k===k);depBusy=true;
   try{const before=total(),d={amount:sign*a,note:"",at:depTs(),pot:k||"",potN:line?potName(line):""},after=before+d.amount,n=planCalc(nowMd()).needs;
     if(sign<0&&n>0){if(after<n){if(!await ask(t("pWd1T"),t("pWd1",kr(after),kr(n))))return}else if(after<S.buf*n&&before>=S.buf*n){if(!await ask(t("pWd2T"),t("pWd2",kr(S.buf*n))))return}}
