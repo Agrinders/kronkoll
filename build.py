@@ -19,9 +19,13 @@ if __name__=='__main__':
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
 '''
+    # A build id from the code only (not tax.json), so an open app can tell when a newer version is published.
+    bid=hashlib.sha256((src+(d/'app-shell.js').read_text(encoding='utf8')).encode()).hexdigest()[:12]
+    extra+='<meta name="kk-build" content="'+bid+'">\n'
+    (d/'version.json').write_text('{"b":"'+bid+'"}\n',encoding='utf8')
     html='<!doctype html>\n<html lang="sv">\n<head>\n'+extra+head+'\n<script src="app-shell.js"></script>\n</head>\n<body>\n'+body+'\n<script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")</script>\n</body>\n</html>\n'
     (d/'index.html').write_text(html,encoding='utf8')
-    files=['index.html','app-shell.js','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png','icons/icon-maskable-512.png','icons/apple-touch-icon.png','tax.json']
+    files=['index.html','version.json','app-shell.js','manifest.webmanifest','icons/icon-192.png','icons/icon-512.png','icons/icon-maskable-512.png','icons/apple-touch-icon.png','tax.json']
     ver=hashlib.sha256(b''.join((d/f).read_bytes() for f in files)).hexdigest()[:12]
     sw=(d/'sw.template.js').read_text(encoding='utf8').replace('__VERSION__',ver).replace('__FILES__',repr(['./']+files))
     (d/'sw.js').write_text(sw,encoding='utf8');print('built',ver)

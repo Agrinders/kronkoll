@@ -66,6 +66,7 @@ function advise(md){
   const lifeTo=p.inc-needsTo-saveTo,gap=Math.max(0,S.buf*needsTo-p.buf),bufTo=Math.min(saveTo,Math.ceil(gap)),fundTo=saveTo-bufTo,bufNow=sum(p.lines.filter(l=>l.k==="buf"));
   const F=[],credit=all.some(i=>CREDIT.test(i.n)&&!MORT.test(i.n)),mort=all.some(i=>MORT.test(i.n));
   const extra=Math.round(p.bal*(R.saveGood-R.saveBig));
+  if(p.inc>0&&!all.some(i=>i.a>0))return{p,food,foodTo,subs,subsTo,other,needsTo,saveTo:p.save,lifeTo:p.inc-p.save,bufTo:0,fundTo:p.save,bufNow,F:[[t("fCostT"),t("fCost")]]};
   if(p.inc>0&&p.buf<p.target)F.push([t("fBufT"),t("fBuf",kr(p.buf),kr(p.target),S.buf)]);
   if(credit)F.push([t("fCredT"),t("fCred",MK.eco.policy)]);
   if(foodTo<food)F.push([t("fFoodT",kr(foodTo)),t("fFood",kr(food),kr(foodRef),S.adults)]);

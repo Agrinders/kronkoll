@@ -17,7 +17,7 @@ jobs:
       - run: |
           git config user.name kronkoll-bot
           git config user.email kronkoll-bot@users.noreply.github.com
-          git add tax.json index.html sw.js
+          git add tax.json index.html sw.js version.json
           git diff --cached --quiet && exit 0
           git commit -m "Update tax tables from Skatteverket"
           git pull --rebase origin main

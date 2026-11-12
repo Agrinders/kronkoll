@@ -41,4 +41,9 @@ await q.click('#h_exe');await q.waitForTimeout(300);check('empty from example no
 await q.evaluate(()=>localStorage.clear());await q.reload();await q.waitForSelector('#wl.on',{timeout:8000});await q.click('#wl_empty');await q.waitForTimeout(300);
 check('empty from welcome',await q.evaluate(()=>[exampleMode,RULES.length,tab,d_inc.open]),[false,0,'b',true]);
 await q.reload();await q.waitForTimeout(2600);check('empty start survives reload',await q.evaluate(()=>[exampleMode,wl.classList.contains('on')]),[false,false]);await c2.close()}
+// A newer published version shows an update button, which reloads and then cleans the address
+await p.route('**/version.json*',r=>r.fulfill({contentType:'application/json',body:'{"b":"newer123"}'}));await ev(()=>checkUpdate());await p.waitForTimeout(300);
+check('update button shows',await ev(()=>[!upd.classList.contains('hide'),upd.innerText]),[true,'En ny version finns. Tryck för att uppdatera.']);
+await p.unroute('**/version.json*');await Promise.all([p.waitForNavigation(),p.click('#upd')]);await p.waitForTimeout(2600);
+check('after update the address is clean',await ev(()=>[location.search,upd.classList.contains('hide')]),['',true]);
 check('no page errors',errs,[]);await b.close();srv.close();if(fails){console.log('FAILED:',fails);process.exit(1)}console.log('All checks passed')})().catch(e=>{console.error(e);process.exit(1)});
