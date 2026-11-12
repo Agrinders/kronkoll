@@ -75,6 +75,7 @@ function advise(md){
   if(p.inc>0&&saveTo>0&&p.buf>=p.target)F.push([t("fIskT"),t("fIsk")]);
   if(saveTo>0)F.push([t("fSaveT"),t("fSave",kr(saveTo))]);
   if(S.adults>1)F.push([t("fTalkT"),t("fTalk")]);
+  if(!F.length)F.push(p.inc>0?[t("fCheckT"),t("fCheck")]:[t("fStartT"),t("fStart")]);
   return{p,food,foodTo,subs,subsTo,other,needsTo,saveTo,lifeTo,bufTo,fundTo,bufNow,F};
 }
 function spendOf(y,m){const p=planCalc(monthData(y,m));return{p,used:0,left:p.life}}

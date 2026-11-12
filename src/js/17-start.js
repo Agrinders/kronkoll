@@ -46,7 +46,7 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     if(!exampleMode&&real&&!snap.docs.some(d=>d.id==="started"))col.doc("started").set({kind:"started"}).catch(()=>{});
     applyTheme();
     if(S.lang!==old){applyLang();go(tab);return}
-    {const ae=document.activeElement;if(!ae||!ae.closest("#b,#s_goals")){buildSheet();buildGoals()}}render()},()=>{col=null;render()});
+    {const ae=document.activeElement;if(!ae||!ae.closest("#b,#s_goals")){buildSheet();buildGoals()}}render();maybeWelcome()},()=>{col=null;render()});
 }catch(e){}})();
 /* On narrow phones the longest menu word is shortened, so all menu buttons can stay the same size. */
 function fitNav(){const b=document.querySelector('nav [data-go="a"]'),e=b&&b.querySelector("em");if(!e||getComputedStyle(b).flexGrow==="0")return;e.textContent=t("nA");if(e.scrollWidth>b.clientWidth-4)e.textContent=t("nAs")}
@@ -62,7 +62,7 @@ $("empty").onclick=async()=>{if(!await ask(tx("Börja med en tom budget?","Start
 (()=>{const NAV=[];let backing=false;const _go=go;
   go=function(x){if(!backing&&x!==tab){NAV.push(tab);if(NAV.length>30)NAV.shift()}return _go(x)};
   const on=id=>{const e=$(id);return !!(e&&e.classList.contains("on"))};
-  function closeTop(){if(on("modal")){$("m_no").click();return true}
+  function closeTop(){if(on("wl")){wlPick("ex");return true}if(on("modal")){$("m_no").click();return true}
     for(const [id,f] of [["dp",closeDP],["pk",closePK],["lo",closeLO],["as",closeAS],["hs",closeHS],["rs",closeRS],["rd",closeRD]])if(on(id)){f();return true}
     if(on("ps")){$("ps").classList.remove("on");return true}
     if(yrOpen()){closeYears();return true}

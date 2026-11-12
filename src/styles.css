@@ -409,3 +409,15 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 .vold ul{margin:4px 0 0;padding-left:18px;font-size:14.5px}.vold li{margin-top:2px}
 #ver_more{margin-top:6px}
 #c_emh{margin-bottom:16px!important}
+
+/* First start: choose empty budget or example. */
+#wl{position:fixed;inset:0;z-index:55;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,10,20,.6);opacity:0;pointer-events:none;transition:opacity .25s}#wl.on{opacity:1;pointer-events:auto}
+#wl .mbox{max-height:calc(100dvh / var(--z,1) - 24px);overflow-y:auto}#wl .mbox b{display:block;font-size:24px}#wl #wl_p{margin:4px 0 14px}
+.wopt{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;padding:14px;margin-top:10px;border:1px solid var(--rule);border-radius:16px;background:var(--glass2);color:var(--ink);font:inherit;cursor:pointer}
+.wopt:first-of-type{border-color:var(--pen);box-shadow:inset 0 0 0 1px var(--pen)}
+.wopt svg{flex:none;width:26px;height:26px;margin-top:1px;fill:none;stroke:var(--pen);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wopt strong{display:block;font-size:16px;font-weight:650}.wopt small{display:block;margin-top:3px;font-size:14px;line-height:1.4;color:var(--soft)}
+#wl .help{margin-top:14px;text-align:center}
+/* Example notice on Översikt: small and to the point. */
+#h_ex{max-width:640px}.exb{display:inline-block;padding:3px 10px;border-radius:99px;background:var(--pen);color:var(--paper);font-size:13px;font-weight:700;letter-spacing:.04em}
+#h_ex .note{margin:8px 0 12px;font-size:15px}.exa{display:flex;flex-wrap:wrap;gap:8px}.exa .btn{flex:1 1 180px}

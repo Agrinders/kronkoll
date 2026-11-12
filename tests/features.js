@@ -4,7 +4,7 @@ const A=path.resolve(__dirname,'..');const T={'.html':'text/html','.js':'text/ja
 const srv=http.createServer((q,r)=>{let u=decodeURIComponent(q.url.split('?')[0]);if(u.endsWith('/'))u+='index.html';fs.readFile(path.join(A,u),(e,d)=>{if(e){r.writeHead(404);return r.end()}r.writeHead(200,{'content-type':T[path.extname(u)]||'application/octet-stream'});r.end(d)})}).listen(0);
 let fails=0;const norm=v=>JSON.stringify(v).replace(/[\u00a0\u202f]/g,' ');const check=(name,got,want)=>{const ok=norm(got)===norm(want);if(!ok)fails++;console.log(ok?'ok  ':'FAIL',name,ok?'':`got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`)};
 (async()=>{await new Promise(r=>srv.listening?r():srv.on('listening',r));
-const b=await chromium.launch({args:['--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--enable-unsafe-swiftshader']});const c=await b.newContext({viewport:{width:384,height:832},colorScheme:'dark',serviceWorkers:'block'});const p=await c.newPage();const errs=[];p.on('pageerror',e=>errs.push(e.message));p.setDefaultTimeout(8000);
+const b=await chromium.launch({args:['--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--enable-unsafe-swiftshader']});const c=await b.newContext({viewport:{width:384,height:832},colorScheme:'dark',serviceWorkers:'block'});const p=await c.newPage();await p.addInitScript(()=>{if(!sessionStorage.getItem('wlTest'))try{localStorage.setItem('kronkoll.welcome','1')}catch(e){}});const errs=[];p.on('pageerror',e=>errs.push(e.message));p.setDefaultTimeout(8000);
 await p.goto('http://localhost:'+srv.address().port+'/');await p.waitForTimeout(900);const ev=(f,a)=>p.evaluate(f,a);
 // Tax: Skatteverket 2026, table 32 column 1, 30 001–30 200 kr gives 5 751 kr
 await ev(()=>go('l'));await p.waitForFunction(()=>!!TAXD);await p.fill('#x_pay','30100');await p.waitForTimeout(150);
@@ -32,4 +32,13 @@ check('ISK tax one person',await ev(()=>{S.iskV=420000;S.iskIn=0;S.iskP=1;render
 check('ISK tax two people',await ev(()=>{S.iskP=2;renderIsk();return isk_big.innerText}),'0 kr');
 // Larger text never makes the page scroll sideways
 await ev(()=>{S.zoom=1.3;applyRead()});const over=[];for(const t of ['h','b','s','a','v','m','l','u','c']){await ev(x=>go(x),t);await p.waitForTimeout(150);if(await ev(()=>document.documentElement.scrollWidth-innerWidth>0))over.push(t)}check('no sideways scroll at largest text',over,[]);
+// First start asks how to begin, back keeps the example, and the choice is remembered
+{const c2=await b.newContext({viewport:{width:384,height:832},serviceWorkers:'block'});const q=await c2.newPage();q.on('pageerror',e=>errs.push(e.message));const url='http://localhost:'+srv.address().port+'/';
+await q.goto(url);await q.waitForSelector('#wl.on',{timeout:8000});check('welcome shows on first start',await q.evaluate(()=>[exampleMode,wl_e1.textContent]),[true,'Börja med en tom budget']);
+await q.goBack();await q.waitForTimeout(300);check('back keeps the example',await q.evaluate(()=>[wl.classList.contains('on'),exampleMode,localStorage.getItem('kronkoll.welcome'),!h_ex.classList.contains('hide')]),[false,true,'1',true]);
+await q.reload();await q.waitForTimeout(2600);check('not asked again',await q.evaluate(()=>wl.classList.contains('on')),false);
+await q.click('#h_exe');await q.waitForTimeout(300);check('empty from example notice',await q.evaluate(()=>[exampleMode,RULES.length,tab]),[false,0,'b']);
+await q.evaluate(()=>localStorage.clear());await q.reload();await q.waitForSelector('#wl.on',{timeout:8000});await q.click('#wl_empty');await q.waitForTimeout(300);
+check('empty from welcome',await q.evaluate(()=>[exampleMode,RULES.length,tab,d_inc.open]),[false,0,'b',true]);
+await q.reload();await q.waitForTimeout(2600);check('empty start survives reload',await q.evaluate(()=>[exampleMode,wl.classList.contains('on')]),[false,false]);await c2.close()}
 check('no page errors',errs,[]);await b.close();srv.close();if(fails){console.log('FAILED:',fails);process.exit(1)}console.log('All checks passed')})().catch(e=>{console.error(e);process.exit(1)});

@@ -421,6 +421,18 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 .vold ul{margin:4px 0 0;padding-left:18px;font-size:14.5px}.vold li{margin-top:2px}
 #ver_more{margin-top:6px}
 #c_emh{margin-bottom:16px!important}
+
+/* First start: choose empty budget or example. */
+#wl{position:fixed;inset:0;z-index:55;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,10,20,.6);opacity:0;pointer-events:none;transition:opacity .25s}#wl.on{opacity:1;pointer-events:auto}
+#wl .mbox{max-height:calc(100dvh / var(--z,1) - 24px);overflow-y:auto}#wl .mbox b{display:block;font-size:24px}#wl #wl_p{margin:4px 0 14px}
+.wopt{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;padding:14px;margin-top:10px;border:1px solid var(--rule);border-radius:16px;background:var(--glass2);color:var(--ink);font:inherit;cursor:pointer}
+.wopt:first-of-type{border-color:var(--pen);box-shadow:inset 0 0 0 1px var(--pen)}
+.wopt svg{flex:none;width:26px;height:26px;margin-top:1px;fill:none;stroke:var(--pen);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wopt strong{display:block;font-size:16px;font-weight:650}.wopt small{display:block;margin-top:3px;font-size:14px;line-height:1.4;color:var(--soft)}
+#wl .help{margin-top:14px;text-align:center}
+/* Example notice on Översikt: small and to the point. */
+#h_ex{max-width:640px}.exb{display:inline-block;padding:3px 10px;border-radius:99px;background:var(--pen);color:var(--paper);font-size:13px;font-weight:700;letter-spacing:.04em}
+#h_ex .note{margin:8px 0 12px;font-size:15px}.exa{display:flex;flex-wrap:wrap;gap:8px}.exa .btn{flex:1 1 180px}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -428,6 +440,7 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 <div id="intro" aria-hidden="true"><img src="icons/icon-192.png" alt="" width="104" height="104"></div>
 <canvas id="fx" aria-hidden="true"></canvas>
 <div id="toasts"></div><div id="scrim"></div>
+<div id="wl" role="dialog" aria-modal="true" aria-labelledby="wl_t"><div class="mbox"><b id="wl_t"></b><p id="wl_p"></p><button class="wopt" id="wl_empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span><strong id="wl_e1"></strong><small id="wl_e2"></small></span></button><button class="wopt" id="wl_ex"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/></svg><span><strong id="wl_x1"></strong><small id="wl_x2"></small></span></button><p class="help" id="wl_n"></p></div></div>
 <div id="modal"><div class="mbox"><b id="m_t"></b><p id="m_p"></p><div class="mact"><button class="btn out" id="m_no"></button><button class="btn" id="m_yes"></button></div></div></div>
 <aside id="drawer">
 <h2>Kronkoll</h2>
@@ -452,7 +465,7 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 
 <section id="h">
 <div class="sheet hide" id="h_bk"></div>
-<div class="sheet hide" id="h_ex"><span class="lbl" data-i="exNote"></span><br><button class="lnk" data-go="b" data-i="exGo"></button></div>
+<div class="sheet hide" id="h_ex"><span class="exb" data-i="exBadge"></span><p class="note" data-i="exNote"></p><div class="exa"><button class="btn" id="h_exe" data-i="exEmpty"></button><button class="btn out" data-go="b" data-i="exGo"></button></div></div>
 <div class="sheet">
 <p class="hello" id="h_hi"></p><div class="lbl" id="h_lbl"></div><div class="big" id="h_big"></div><div class="lbl" id="h_day"></div>
 </div>
@@ -585,7 +598,7 @@ disc:["Uppskattningar. Ingen finansiell rådgivning.","Estimates only. Not finan
 leftIn:[m=>`Kvar att leva på i ${m}`,m=>`Left to live on in ${m}`],perDay:[(d,n)=>`Ca ${d} per dag i ${n} dagar`,(d,n)=>`About ${d} per day for ${n} days`],overBy:[n=>`Över med ${n}`,n=>`Over by ${n}`],
 needs:["Räkningar","Bills"],fixedL:["Fasta","Fixed"],varL:["Rörliga","Variable"],saving:["Sparande","Saving"],life:["Kvar att leva på","Left to live on"],
 in:["Inkomster","Income"],out:["Fasta utgifter","Fixed expenses"],varOut:["Rörliga utgifter","Variable expenses"],rem:["Kvar att leva på","Left to live on"],totOut:["Summa utgifter","Total expenses"],sRate:["Sparkvot","Savings rate"],totSave:["Totalt sparat","Total saved"],yearT:[y=>`Hela ${y}`,y=>`All of ${y}`],total:["Totalt","Total"],savedIn:[m=>`Sparat i ${m}`,m=>`Saved in ${m}`],ofP:[(s,p)=>`${s} av ${p}`,(s,p)=>`${s} of ${p}`],
-topNow:["Viktigast just nu","Most important right now"],seeAll:["Öppna guiden →","Open the guide →"],exNote:["Det här är exempelsiffror. Skriv över dem med dina egna.","These are example figures. Replace them with your own."],exGo:["Öppna budgeten →","Open the budget →"],addBuy:["＋ Lägg till ett köp","＋ Add a purchase"],
+topNow:["Viktigast just nu","Most important right now"],seeAll:["Öppna guiden →","Open the guide →"],exBadge:["Exempel","Example"],exNote:["Siffrorna är påhittade. Ändrar du en av dem blir exemplet din egen budget.","These figures are made up. If you change one, the example becomes your own budget."],exEmpty:["Börja med en tom budget","Start with an empty budget"],exGo:["Öppna budgeten →","Open the budget →"],addBuy:["＋ Lägg till ett köp","＋ Add a purchase"],
 incHead:["Inkomster","Income"],outHead:["Fasta utgifter","Fixed expenses"],restHead:["Sparande","Saving"],goalsHead:["Sparmål","Savings goals"],goalsNote:["Skapa och namnge dina mål här. Pengarna lägger du in under Budget.","Create and name your goals here. You add the money under Budget."],noGoals:["Du har inga sparmål ännu.","You have no savings goals yet."],toGoals:["Skapa ett under Sparande →","Create one under Savings →"],restSub:["Fördela resten","Split the rest"],varHead:["Rörliga utgifter","Variable expenses"],newLine:["Ny rad","New line"],newGoal:["Nytt mål","New goal"],goalPh:["Namn på målet, t.ex. Resa","Goal name, e.g. Trip"],linePh:["Skriv här","Write here"],del:["Ta bort","Remove"],
 restIntro:[v=>`Efter utgifterna har du ${v} kvar. Bestäm vad som ska sparas, resten är ditt att leva på.`,v=>`After expenses you have ${v} left. Decide what to save, the rest is yours to live on.`],lifeRow:["Kvar att leva på","Left to live on"],
 overAlloc:[v=>`Du har fördelat ${v} mer än du har kvar. Sänk en rad.`,v=>`You have split ${v} more than you have left. Lower one line.`],useRec:["Återställ till förslaget","Reset to the suggestion"],
@@ -605,7 +618,7 @@ fLoanT:["Testa ditt bolån mot högre ränta","Stress-test your mortgage"],fLoan
 fRateT:[v=>`Byt sparkonto: ca ${v} mer per år`,v=>`Switch savings account: about ${v} more a year`],fRate:["Stora aktörer ger runt 1,3 %, flera mindre banker runt 2,35 % med fria uttag. Beloppet är före 30 % skatt. Kontrollera insättningsgarantin innan du flyttar.","Big names pay around 1.3%, several smaller banks around 2.35% with free withdrawals. The amount is before 30% tax. Check the deposit guarantee before moving."],
 fSaveT:["Spara först, inte det som blir över","Save first, not what is left over"],fSave:[v=>`För över ${v} till sparkontot på lönedagen. En fast summa direkt på lönedagen gör att sparandet inte hamnar sist.`,v=>`Move ${v} to savings on payday. A fixed sum straight on payday keeps saving from coming last.`],
 fIskT:["Bufferten är klar: börja långsiktigt","Buffer done: start long-term"],fIsk:["Pengar du inte behöver på minst 5 år kan gå till en bred indexfond på ISK. Se fliken Marknad. Du har 300 000 kr skattefritt 2026.","Money you will not need for at least 5 years can go into a broad index fund in an ISK. See the Market tab. You have 300,000 kr tax-free in 2026."],
-fTalkT:["Ta en budgetstund i månaden","Hold one budget talk a month"],fTalk:["Sätt dig ner med din partner när ni båda är på bra humör och skriv ner ett gemensamt mål. Gemensamma beslut minskar bråken om pengar.","Sit down together when you are both in a good mood and write down one shared goal. Deciding together reduces arguments about money."],
+fStartT:["Lägg in din lön","Add your pay"],fStart:["Börja med vad du får in varje månad, efter skatt. Sedan dina räkningar. Då kan jag räkna ut vad du har kvar att leva på.","Start with what you get each month, after tax. Then your bills. Then I can work out what you have left to live on."],fCheckT:["Kolla läget en gång i veckan","Check in once a week"],fCheck:["Fem minuter i veckan räcker för att se om du håller budgeten.","Five minutes a week is enough to see if you are keeping to the budget."],fTalkT:["Ta en budgetstund i månaden","Hold one budget talk a month"],fTalk:["Sätt dig ner med din partner när ni båda är på bra humör och skriv ner ett gemensamt mål. Gemensamma beslut minskar bråken om pengar.","Sit down together when you are both in a good mood and write down one shared goal. Deciding together reduces arguments about money."],
 eRate:["Styrräntan","Policy rate"],eInf:["Inflation, KPIF oktober (preliminär)","Inflation, CPIF October (flash)"],eSav:["Sparränta med fria uttag","Savings rate, free withdrawals"],eSavN:["Mindre banker betalar nästan dubbelt mot de stora namnen.","Smaller banks pay almost double the big names."],eIsk:["ISK-skatt 2026","ISK tax 2026"],eIskN:["Gäller över 300 000 kr per person. 2027 pekar på ca 1,24 %, och den slutliga nivån bestäms i slutet av november.","Applies above 300,000 kr per person. 2027 points to about 1.24%, and the final level is set in late November."],
 how1:["Mat jämförs med Konsumentverkets 3 960 kr per vuxen (18–30 år, allt lagat hemma, 2025), plus 10 %. Tabellerna för 2026 gick inte att läsa, och Konsumentverket sänkte dem främst på grund av en ny metod.","Food is compared with Konsumentverket's 3,960 kr per adult (age 18–30, all meals at home, 2025), plus 10%. The 2026 tables could not be read, and Konsumentverket lowered them mainly because of a new method."],how2:["Sparmålet 20 % av inkomsten är en vanlig tumregel, inte en officiell siffra. Jag låter alltid minst din valda andel av inkomsten vara kvar att leva på.","The 20% saving target is a common rule of thumb, not an official figure. I always leave at least your chosen share of income to live on."],how3:["Raderna känns igen på namnet: skriv till exempel Mat, Netflix, Bolån eller Klarna.","Lines are recognised by name: write for example Food, Netflix, Mortgage or Klarna."],src:["Källor","Sources"],
 ageAt:[d=>"Uppdaterad "+d,d=>"Updated "+d],ageOld:[n=>` · ${n} dagar gammalt`,n=>` · ${n} days old`],notLive:["Siffrorna är en ögonblicksbild och uppdateras inte av sig själva än. Det är inte kurser i realtid.","These figures are a snapshot and do not update by themselves yet. They are not real-time prices."],liveAt:["Vill du se exakt läge just nu:","For the exact price right now:"],mktHead:["Börsen","Markets"],
@@ -729,6 +742,7 @@ function advise(md){
   if(p.inc>0&&saveTo>0&&p.buf>=p.target)F.push([t("fIskT"),t("fIsk")]);
   if(saveTo>0)F.push([t("fSaveT"),t("fSave",kr(saveTo))]);
   if(S.adults>1)F.push([t("fTalkT"),t("fTalk")]);
+  if(!F.length)F.push(p.inc>0?[t("fCheckT"),t("fCheck")]:[t("fStartT"),t("fStart")]);
   return{p,food,foodTo,subs,subsTo,other,needsTo,saveTo,lifeTo,bufTo,fundTo,bufNow,F};
 }
 function spendOf(y,m){const p=planCalc(monthData(y,m));return{p,used:0,left:p.life}}
@@ -893,6 +907,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
+{v:"3.1",d:"12 nov 2026",i:[["h","#h_ex",["Välj hur du börjar","Choose how to start"],["Första gången du öppnar appen väljer du tom budget eller exempel. Exemplet säger tydligt att siffrorna är påhittade.","The first time you open the app you choose an empty budget or the example. The example clearly says the figures are made up."]]]},
 {v:"3.0",d:"12 nov 2026",i:[["c","#set_in",["Tydligare inställningar","Clearer settings"],["Inställningarna är grupperade och varje val förklarar vad det gör.","Settings are grouped and each one explains what it does."]],["s","#s_chips",["Välj mål med namn","Pick a goal by name"],["Överst i Sparande trycker du på ett mål i stället för att bläddra med pilar.","At the top of Savings you tap a goal instead of using arrows."]],["h","#h_lbl",["Samma ord överallt","The same words everywhere"],["Pengarna som blir över heter nu Kvar att leva på i hela appen.","The money left over is now called Left to live on throughout the app."]],["c","#f_adults",["För en eller flera","For one or more"],["Appen utgår inte längre från att du är två. Ange antal vuxna under Inställningar.","The app no longer assumes you are two. Set the number of adults under Settings."]]]},
 {v:"2.9",d:"12 nov 2026",i:[["c","#empty",["Tom budget","Empty budget"],["Under Inställningar kan du börja om med en tom budget.","Under Settings you can start over with an empty budget."]],["c","#c_th",["Språk i sidomenyn","Language in the side menu"],["Byt språk med flaggorna längst ner i sidomenyn.","Switch language with the flags at the bottom of the side menu."]],["h","#h_hi",["Tillbaka-knappen","The back button"],["Telefonens tillbaka-knapp stänger nu menyer och går till förra sidan i stället för att stänga appen.","The phone's back button now closes menus and goes to the previous page instead of closing the app."]]]},
 {v:"2.8",d:"10 nov 2026",i:[["c","#c_bg",["Ny bakgrund: dimma","New background: mist"],["Mjuka moln och dimma driver nu bakom appen. Vill du ha linjerna tillbaka väljer du det under Inställningar, Läsbarhet.","Soft clouds and mist now drift behind the app. To get the lines back, choose them under Settings, Readability."]]]},
@@ -1378,7 +1393,7 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     if(!exampleMode&&real&&!snap.docs.some(d=>d.id==="started"))col.doc("started").set({kind:"started"}).catch(()=>{});
     applyTheme();
     if(S.lang!==old){applyLang();go(tab);return}
-    {const ae=document.activeElement;if(!ae||!ae.closest("#b,#s_goals")){buildSheet();buildGoals()}}render()},()=>{col=null;render()});
+    {const ae=document.activeElement;if(!ae||!ae.closest("#b,#s_goals")){buildSheet();buildGoals()}}render();maybeWelcome()},()=>{col=null;render()});
 }catch(e){}})();
 /* On narrow phones the longest menu word is shortened, so all menu buttons can stay the same size. */
 function fitNav(){const b=document.querySelector('nav [data-go="a"]'),e=b&&b.querySelector("em");if(!e||getComputedStyle(b).flexGrow==="0")return;e.textContent=t("nA");if(e.scrollWidth>b.clientWidth-4)e.textContent=t("nAs")}
@@ -1394,7 +1409,7 @@ $("empty").onclick=async()=>{if(!await ask(tx("Börja med en tom budget?","Start
 (()=>{const NAV=[];let backing=false;const _go=go;
   go=function(x){if(!backing&&x!==tab){NAV.push(tab);if(NAV.length>30)NAV.shift()}return _go(x)};
   const on=id=>{const e=$(id);return !!(e&&e.classList.contains("on"))};
-  function closeTop(){if(on("modal")){$("m_no").click();return true}
+  function closeTop(){if(on("wl")){wlPick("ex");return true}if(on("modal")){$("m_no").click();return true}
     for(const [id,f] of [["dp",closeDP],["pk",closePK],["lo",closeLO],["as",closeAS],["hs",closeHS],["rs",closeRS],["rd",closeRD]])if(on(id)){f();return true}
     if(on("ps")){$("ps").classList.remove("on");return true}
     if(yrOpen()){closeYears();return true}
@@ -1407,6 +1422,23 @@ $("empty").onclick=async()=>{if(!await ask(tx("Börja med en tom budget?","Start
     if(to===null&&tab!=="h")to="h";
     if(to!==null){backing=true;go(to);backing=false;return guard()}
     history.back()})})();
+/* First start: ask whether to begin from an empty budget or look at the example first, so example figures never quietly become your budget. */
+let wlAsked=false;
+function startEmpty(){exampleMode=false;RULES=[];PM={};if(col)col.doc("started").set({kind:"started"}).catch(()=>{});
+  render();go("b");if(!WIDE.matches){$("d_inc").open=true}toast(tx("Klart. Börja med att lägga in din lön.","Done. Start by adding your pay."),"ok")}
+function maybeWelcome(){if(wlAsked)return;if(!document.documentElement.classList.contains("reveal")||$("intro")){setTimeout(maybeWelcome,300);return}
+  wlAsked=true;if(!exampleMode||lsN("kronkoll.welcome"))return;
+  $("wl_t").textContent=tx("Välkommen till Kronkoll","Welcome to Kronkoll");
+  $("wl_p").textContent=tx("Hur vill du börja?","How do you want to start?");
+  $("wl_e1").textContent=tx("Börja med en tom budget","Start with an empty budget");
+  $("wl_e2").textContent=tx("Du fyller i din lön och dina utgifter själv.","You add your own pay and expenses.");
+  $("wl_x1").textContent=tx("Titta på ett exempel först","Look at an example first");
+  $("wl_x2").textContent=tx("Påhittade siffror som visar hur appen fungerar. Du kan tömma budgeten när du vill.","Made-up figures that show how the app works. You can empty the budget whenever you like.");
+  $("wl_n").textContent=tx("Allt sparas bara på den här telefonen.","Everything is saved on this phone only.");
+  $("wl").classList.add("on");setTimeout(()=>$("wl_empty").focus(),50)}
+function wlPick(k){lsSet("kronkoll.welcome",1);$("wl").classList.remove("on");if(k==="empty")startEmpty();else{go("h");render()}}
+$("wl_empty").onclick=()=>wlPick("empty");$("wl_ex").onclick=()=>wlPick("ex");
+$("h_exe").onclick=startEmpty;
 </script>
 
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")</script>

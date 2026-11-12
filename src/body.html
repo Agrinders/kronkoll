@@ -2,6 +2,7 @@
 <div id="intro" aria-hidden="true"><img src="icons/icon-192.png" alt="" width="104" height="104"></div>
 <canvas id="fx" aria-hidden="true"></canvas>
 <div id="toasts"></div><div id="scrim"></div>
+<div id="wl" role="dialog" aria-modal="true" aria-labelledby="wl_t"><div class="mbox"><b id="wl_t"></b><p id="wl_p"></p><button class="wopt" id="wl_empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span><strong id="wl_e1"></strong><small id="wl_e2"></small></span></button><button class="wopt" id="wl_ex"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/></svg><span><strong id="wl_x1"></strong><small id="wl_x2"></small></span></button><p class="help" id="wl_n"></p></div></div>
 <div id="modal"><div class="mbox"><b id="m_t"></b><p id="m_p"></p><div class="mact"><button class="btn out" id="m_no"></button><button class="btn" id="m_yes"></button></div></div></div>
 <aside id="drawer">
 <h2>Kronkoll</h2>
@@ -26,7 +27,7 @@
 
 <section id="h">
 <div class="sheet hide" id="h_bk"></div>
-<div class="sheet hide" id="h_ex"><span class="lbl" data-i="exNote"></span><br><button class="lnk" data-go="b" data-i="exGo"></button></div>
+<div class="sheet hide" id="h_ex"><span class="exb" data-i="exBadge"></span><p class="note" data-i="exNote"></p><div class="exa"><button class="btn" id="h_exe" data-i="exEmpty"></button><button class="btn out" data-go="b" data-i="exGo"></button></div></div>
 <div class="sheet">
 <p class="hello" id="h_hi"></p><div class="lbl" id="h_lbl"></div><div class="big" id="h_big"></div><div class="lbl" id="h_day"></div>
 </div>
