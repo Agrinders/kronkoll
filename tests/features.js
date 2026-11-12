@@ -19,7 +19,7 @@ const needs=await ev(()=>planCalc(nowMd()).needs);
 check('no subscription hints for now',await ev(()=>document.querySelectorAll('.subhint').length),0);check('budget unchanged',await ev(()=>planCalc(nowMd()).needs),needs);
 // History: remove a line, then undo brings it back
 const first=await ev(()=>RULES.filter(r=>r.t==='items').map(r=>r.n)[0]);await p.waitForTimeout(800);
-await p.click('#l_items [data-delrw] >> nth=0');await p.click('#l_items [data-delrw] >> nth=0');await p.waitForTimeout(300);if(await p.locator('#rd.on').count())await p.click('#rd .opt >> nth=-1');await p.waitForTimeout(1400);
+await p.click('#l_items [data-delrw] >> nth=0');await p.click('#l_items [data-delrw] >> nth=0');await p.waitForTimeout(300);if(await p.locator('#rd.on').count())await p.click('#rd .opt >> nth=-1');await p.waitForFunction(n=>!RULES.some(r=>r.n===n&&!r.end&&!r.skip.length),first,{timeout:4000}).catch(()=>{});
 check('removed line is gone',await ev(n=>RULES.some(r=>r.n===n&&!r.end&&!r.skip.length),first),false);
 await ev(()=>go('u'));await p.click('[data-hu] >> nth=0');await p.waitForTimeout(400);if(await p.locator('#modal.on').count())await p.click('#m_yes');await p.waitForTimeout(500);
 check('undo brings it back',await ev(n=>RULES.some(r=>r.n===n&&!r.end&&!r.skip.length),first),true);
@@ -59,7 +59,7 @@ await ev(()=>document.querySelectorAll('#toasts .toast').forEach(t=>t.remove()))
 await ev(()=>{go('b');d_out.open=true});await p.waitForTimeout(200);{const n0=await ev(()=>document.querySelectorAll('#l_items .lnw').length);
 await ev(()=>{editMonth(md=>{md.items.push({n:'Engång',a:99})});buildSheet();render()});await p.waitForTimeout(300);const n1=await ev(()=>document.querySelectorAll('#l_items .lnw').length);
 await p.click('#l_items .lnw:last-child .x');await p.click('#l_items .lnw:last-child .x');await p.waitForTimeout(120);check('row is animating out',await ev(()=>[document.querySelectorAll('#l_items .lnw').length,!!document.querySelector('#l_items .lnw:last-child')._going]),[n1,true]);
-await p.waitForTimeout(700);check('row removed after the animation',await ev(()=>document.querySelectorAll('#l_items .lnw').length),n1-1)}
+await p.waitForFunction(n=>document.querySelectorAll('#l_items .lnw').length===n,n1-1,{timeout:4000}).catch(()=>{});check('row removed after the animation',await ev(()=>document.querySelectorAll('#l_items .lnw').length),n1-1)}
 // A newer published version shows an update button, which reloads and then cleans the address
 await p.route('**/version.json*',r=>r.fulfill({contentType:'application/json',body:'{"b":"newer123"}'}));await ev(()=>checkUpdate());await p.waitForTimeout(300);
 check('update button shows',await ev(()=>[!upd.classList.contains('hide'),upd_t.textContent,upd_go.textContent]),[true,'Ny version finns','Uppdatera']);
