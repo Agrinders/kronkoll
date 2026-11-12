@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="917fee61ad4e">
+<meta name="kk-build" content="42f82c637c8e">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -107,8 +107,8 @@ nav button.on{background:var(--ink);color:var(--paper)}
 #drawer h2{font:700 24px var(--hand);letter-spacing:-.02em;margin:0 12px 10px}#drawer small{margin-top:auto;padding:0 12px;color:var(--soft)}
 #modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,10,20,.55);opacity:0;pointer-events:none;transition:opacity .2s}#modal.on{opacity:1;pointer-events:auto}
 .mbox{width:min(100%,400px);background:var(--paper);border:1px solid var(--rule);border-radius:22px;padding:22px}.mbox b{font:650 21px var(--hand)}.mbox p{color:var(--soft);font-size:15px;margin:8px 0 16px}.mact{display:flex;gap:10px}.mact .btn{flex:1}
-#toasts{position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));width:min(calc(100% - 32px),420px);z-index:60;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-.toast{padding:12px 16px;border-radius:14px;background:var(--ink);color:var(--paper);font-size:15px;font-weight:600;animation:tin .25s ease,tout .3s 3s forwards}
+#toasts{position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));width:min(calc(100% - 32px),480px);z-index:60;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{padding:12px 16px;border-radius:14px;background:var(--ink);color:var(--paper);font-size:15px;font-weight:600;animation:tin .25s ease}
 @keyframes tin{from{transform:translateY(-16px);opacity:0}}@keyframes tout{to{opacity:0}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
@@ -162,7 +162,7 @@ nav .more{display:none}
 .ln input:focus{box-shadow:none}
 .amw{display:flex;align-items:baseline;gap:5px}.ln .am{width:5.4em;font-size:17px}.amw span{font-size:14px;color:var(--soft)}
 .x{width:32px;height:32px;border:0;border-radius:11px;background:transparent;color:var(--soft);display:grid;place-items:center;padding:0;transition:background .15s,color .15s}
-.x:active{background:var(--rule)}
+.x{transition:background .15s,color .15s,transform .12s}.x:active{background:var(--rule);transform:scale(.86)}.x.arm:active{background:var(--bad);transform:scale(.86)}
 .x.arm{background:var(--bad);color:#fff;animation:arm .22s ease-out}.x.arm svg{stroke-width:2.4}
 @keyframes arm{40%{transform:scale(1.12)}}
 .x svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
@@ -241,7 +241,7 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 .toast svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .toast.save i,.toast.ok i{--c:var(--good)}.toast.win i{--c:var(--c3)}.toast.warn i,.toast.out i{--c:var(--warn)}.toast.bad i,.toast.del i{--c:var(--bad)}
 .toast b{display:block;font:650 15.5px/1.25 var(--ui)}.toast small{display:block;font-size:13.5px;line-height:1.3;color:var(--soft);margin-top:1px}
-.toast.win{animation:tin .34s cubic-bezier(.2,1.25,.35,1),glow 1s .1s,tout .3s 3.1s forwards}
+.toast.win{animation:tin .34s cubic-bezier(.2,1.25,.35,1),glow 1s .1s}
 @keyframes tin{from{transform:translateY(-22px) scale(.95);opacity:0}}@keyframes glow{40%{box-shadow:0 0 0 3px color-mix(in srgb,var(--c3) 45%,transparent),var(--shadow)}}
 
 .mnav b{cursor:pointer}.mnav b::after{content:"";display:inline-block;width:7px;height:7px;margin-left:9px;vertical-align:4px;border-right:2px solid var(--soft);border-bottom:2px solid var(--soft);transform:rotate(45deg)}
@@ -439,7 +439,7 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 #h_ex .note{margin:8px 0 12px;font-size:15px}.exa{display:flex;flex-wrap:wrap;gap:8px}.exa .btn{flex:1 1 180px}
 
 /* "New version" button, top centre, above everything except dialogs. */
-#upd{position:fixed;z-index:45;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translateX(-50%);display:flex;align-items:center;gap:12px;width:min(520px,calc(100vw - 32px));min-height:60px;padding:10px 10px 10px 16px;border:1px solid var(--pen);border-radius:18px;background:var(--paper);color:var(--ink);font:600 15px/1.3 inherit;box-shadow:0 10px 30px rgba(5,10,20,.3);cursor:pointer;text-align:left}
+#upd{position:relative;display:flex;align-items:center;gap:12px;width:100%;pointer-events:auto;animation:tin .25s ease;min-height:60px;padding:10px 10px 10px 16px;border:1px solid var(--pen);border-radius:18px;background:var(--paper);color:var(--ink);font:600 15px/1.3 inherit;box-shadow:0 10px 30px rgba(5,10,20,.3);cursor:pointer;text-align:left}
 #upd.hide{display:none}#upd>span{flex:1;min-width:0}#upd b{display:block;font-size:15.5px;font-weight:650}#upd small{display:block;margin-top:1px;font-size:14px;font-weight:500;color:var(--soft)}#upd em{flex:none;font-style:normal;font-weight:650;font-size:15px;padding:10px 16px;border-radius:12px;background:var(--pen);color:var(--paper)}#upd svg{flex:none;width:22px;height:22px;fill:none;stroke:var(--pen);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 <script src="app-shell.js"></script>
@@ -447,8 +447,7 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 <body>
 <div id="intro" aria-hidden="true"><img src="icons/icon-192.png" alt="" width="104" height="104"></div>
 <canvas id="fx" aria-hidden="true"></canvas>
-<div id="toasts"></div><div id="scrim"></div>
-<button id="upd" class="hide" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v4.5h-4.5"/></svg><span><b id="upd_t"></b><small id="upd_s"></small></span><em id="upd_go"></em></button>
+<div id="toasts"><button id="upd" class="hide" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v4.5h-4.5"/></svg><span><b id="upd_t"></b><small id="upd_s"></small></span><em id="upd_go"></em></button></div><div id="scrim"></div>
 <div id="wl" role="dialog" aria-modal="true" aria-labelledby="wl_t"><div class="mbox"><b id="wl_t"></b><p id="wl_p"></p><button class="wopt" id="wl_empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span><strong id="wl_e1"></strong><small id="wl_e2"></small></span></button><button class="wopt" id="wl_ex"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/></svg><span><strong id="wl_x1"></strong><small id="wl_x2"></small></span></button><p class="help" id="wl_n"></p></div></div>
 <div id="modal"><div class="mbox"><b id="m_t"></b><p id="m_p"></p><div class="mact"><button class="btn out" id="m_no"></button><button class="btn" id="m_yes"></button></div></div></div>
 <aside id="drawer">
@@ -671,7 +670,18 @@ function tick(el){if(!S.click)return;try{navigator.vibrate&&navigator.vibrate(8)
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest(TAPSEL);if(b)tick(b)},true);
 document.addEventListener("pointerdown",e=>{const b=e.target.closest&&e.target.closest(".btn,.chip,nav button,.opt,.mini,.x,.mnav button,.gnav button,.ynav button,.seg button,.pick,.lnk[data-add],#g_add,#yr_list button,#drawer>button");if(!b)return;const r=b.getBoundingClientRect(),s=Math.max(r.width,r.height)*2.2,x=document.createElement("span");x.className="rp";x.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;b.appendChild(x);setTimeout(()=>x.remove(),520)},{passive:true});
 let lastKey="";
-function toast(msg,kind){if(!S.toasts)return;kind=kind||KIND[lastKey]||"info";const box=$("toasts");while(box.children.length>=3)box.firstChild.remove();const[a,...b]=String(msg).split(" · "),e=document.createElement("div");e.className="toast "+kind;e.setAttribute("role","status");e.innerHTML=`<i><svg viewBox="0 0 24 24" aria-hidden="true">${TICON[kind]||TICON.info}</svg></i><span><b>${esc(a)}</b>${b.length?`<small>${esc(b.join(" · "))}</small>`:""}</span>`;e.onclick=()=>e.remove();box.appendChild(e);chime(kind);e._t=setTimeout(()=>e.remove(),3500)}
+/* Notifications form a list at the top. A new one goes below the others; the same message again replaces the old one and moves to the top. The rest slide into place instead of jumping. */
+let lastToast=null;
+function flip(box,change){const els=[...box.children],r0=new Map(els.map(e=>[e,e.getBoundingClientRect().top]));change();if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+  for(const e of box.children){const t0=r0.get(e);if(t0==null)continue;const d=t0-e.getBoundingClientRect().top;if(Math.abs(d)>1)e.animate([{transform:`translateY(${d}px)`},{transform:"none"}],{duration:260,easing:"cubic-bezier(.2,.8,.2,1)"})}}
+function dropToast(e){if(!e.isConnected||e._going)return;e._going=1;clearTimeout(e._t);const box=e.parentNode;
+  const done=()=>{if(e.isConnected)flip(box,()=>e.remove())};if(matchMedia("(prefers-reduced-motion:reduce)").matches)return done();
+  e.style.animation="none";e.animate([{opacity:1,transform:"none"},{opacity:0,transform:"translateY(-8px) scale(.97)"}],{duration:200,easing:"ease-in",fill:"forwards"}).onfinish=done}
+function toast(msg,kind){if(!S.toasts)return;kind=kind||KIND[lastKey]||"info";const box=$("toasts"),key=kind+"|"+msg;const[a,...b]=String(msg).split(" · "),e=document.createElement("div");
+  e.className="toast "+kind;e.dataset.k=key;e.setAttribute("role","status");e.innerHTML=`<i><svg viewBox="0 0 24 24" aria-hidden="true">${TICON[kind]||TICON.info}</svg></i><span><b>${esc(a)}</b>${b.length?`<small>${esc(b.join(" · "))}</small>`:""}</span>`;e.onclick=()=>dropToast(e);
+  const same=[...box.querySelectorAll(".toast")].find(x=>x.dataset.k===key&&!x._going);
+  flip(box,()=>{if(same){clearTimeout(same._t);same.remove();box.insertBefore(e,box.querySelector(".toast"))}else{const live=[...box.querySelectorAll(".toast")].filter(x=>!x._going);if(live.length>=3){clearTimeout(live[0]._t);live[0].remove()}box.appendChild(e)}});
+  lastToast=e;chime(kind);e._t=setTimeout(()=>dropToast(e),3500);return e}
 function ask(title,text){return new Promise(res=>{$("m_t").textContent=title;$("m_p").textContent=text;$("m_yes").textContent=t("pYes");$("m_no").textContent=t("pNo");$("modal").classList.add("on");const done=v=>{$("modal").classList.remove("on");$("m_yes").onclick=$("m_no").onclick=null;res(v)};$("m_yes").onclick=()=>done(true);$("m_no").onclick=()=>done(false)})}
 
 /* each month keeps its own lines; an empty month inherits the latest earlier one */
@@ -917,6 +927,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
+{v:"3.4",d:"12 nov 2026",i:[["b","#l_items",["Mjukare borttagning","Smoother delete"],["Krysset trycks in när du trycker. Raden blinkar rött, glider ut åt vänster och resten flyttar mjukt upp.","The cross presses in when you tap. The row flashes red, slides out to the left and the rest moves up smoothly."]],["n","",["Notiser i en lista","Notifications in a list"],["Nya notiser hamnar under varandra i stället för ovanpå. Samma notis två gånger visas bara en gång, högst upp.","New notifications line up under each other instead of on top. The same one twice shows only once, at the top."]]]},
 {v:"3.3",d:"12 nov 2026",i:[["b","#l_items",["Ta bort med två tryck","Delete with two taps"],["Krysset är grått. Första trycket gör det rött, andra trycket tar bort raden. Trycker du någon annanstans händer inget.","The cross is grey. The first tap turns it red, the second removes the row. Tap anywhere else and nothing happens."]],["n","",["Tydligare uppdatering","Clearer update notice"],["Rutan om ny version är bredare och har en egen Uppdatera-knapp.","The new-version notice is wider and has its own Update button."]]]},
 {v:"3.2",d:"12 nov 2026",i:[["n","",["Säg till om ny version","Tells you about new versions"],["Har du appen öppen när en ny version kommer visas en knapp högst upp. Tryck så uppdateras den.","If the app is open when a new version comes out, a button shows at the top. Tap it to update."]],["n","",["Tömma exemplet fungerar","Emptying the example works"],["Att börja med en tom budget kunde låsa Översikt. Nu nollställs allt direkt.","Starting with an empty budget could freeze Översikt. Now everything resets right away."]]]},
 {v:"3.1",d:"12 nov 2026",i:[["h","#h_ex",["Välj hur du börjar","Choose how to start"],["Första gången du öppnar appen väljer du tom budget eller exempel. Exemplet säger tydligt att siffrorna är påhittade.","The first time you open the app you choose an empty budget or the example. The example clearly says the figures are made up."]]]},
@@ -1052,7 +1063,7 @@ function histClose(){if(!HG)return;const g=HG;HG=null;clearTimeout(g.t);const do
   if(last&&!last.u&&now-last.at<20000&&ids.length===1&&Object.keys(last.docs).length===1&&last.docs[ids[0]]&&docs[ids[0]][0]&&docs[ids[0]][1]&&last.docs[ids[0]][0]){last.docs[ids[0]][1]=docs[ids[0]][1];last.at=now}
   else H.unshift({i:now.toString(36)+Math.random().toString(36).slice(2,6),at:now,docs,u:false});
   histSave();if(tab==="u")renderHist();
-  const e=H[0],d=hdesc(e);if(d.k==="del"){const tb=[...document.querySelectorAll("#toasts .toast")].pop();if(tb&&!tb.querySelector(".tundo")){clearTimeout(tb._t);tb._t=setTimeout(()=>tb.remove(),6500);tb.style.animation="tout .3s 6.2s forwards";const b=document.createElement("button");b.className="tundo";b.textContent=tx("Ångra","Undo");b.onclick=ev=>{ev.stopPropagation();tb.remove();histUndo(e.i)};tb.appendChild(b)}}}
+  const e=H[0],d=hdesc(e);if(d.k==="del"){const tb=lastToast;if(tb&&tb.isConnected&&!tb._going&&!tb.querySelector(".tundo")){clearTimeout(tb._t);tb._t=setTimeout(()=>dropToast(tb),6500);const b=document.createElement("button");b.className="tundo";b.textContent=tx("Ångra","Undo");b.onclick=ev=>{ev.stopPropagation();dropToast(tb);histUndo(e.i)};tb.appendChild(b)}}}
 const hmon=id=>{const[y,m]=id.slice(3).split("_").map(Number);return mn(m-1).toLowerCase()+(y!==new Date().getFullYear()?" "+y:"")};
 const hname=n=>n&&n.trim()?n.trim():tx("en rad","a line");
 function hone(id,b,a){
@@ -1280,12 +1291,12 @@ document.addEventListener("click",e=>{
   const rf=e.target.closest("[data-rf]");if(rf){RS.f=rf.dataset.rf;paintRS();return}
   const sc=e.target.closest("[data-sc]");if(sc){RS.sc=sc.dataset.sc;paintRS();return}
   const dr=e.target.closest("[data-delrw]");
-  if(dr){const rw=dr.dataset.delrw;if(dr.dataset.rid){openRD(dr.dataset.rid);return}const i=+dr.dataset.ix;editMonth(md=>{md[rw].splice(i,1)});buildSheet();render();return}
+  if(dr){const rw=dr.dataset.delrw;if(dr.dataset.rid){openRD(dr.dataset.rid);return}const i=+dr.dataset.ix;animOut(dr.closest(".lnw"),()=>{editMonth(md=>{md[rw].splice(i,1)});buildSheet();render()});return}
   const rdl=e.target.closest("[data-rdel]");if(rdl){openRD(rdl.dataset.rdel);return}
-  const rdo=e.target.closest("[data-rdo]");if(rdo){doRD(rdo.dataset.rdo);return}
-  const gd=e.target.closest("[data-gdel]");if(gd){G=G.filter(z=>z.k!==gd.dataset.gdel);saveGoals();buildGoals();buildSheet();render();toast(t("tKill"));return}
+  const rdo=e.target.closest("[data-rdo]");if(rdo){const a=rdo.dataset.rdo,row=(a==="kill"||a==="skip")&&RD?document.querySelector(`[data-delrw][data-rid="${CSS.escape(RD)}"]`):null;if(row){const el=row.closest(".lnw");$("rd").classList.remove("on");el._going=1;setTimeout(()=>{el._going=0;animOut(el,()=>doRD(a))},matchMedia("(prefers-reduced-motion:reduce)").matches?0:240)}else doRD(a);return}
+  const gd=e.target.closest("[data-gdel]");if(gd){const k=gd.dataset.gdel;animOut(gd.closest(".lnw,.gcard,.sheet")||gd.parentElement,()=>{G=G.filter(z=>z.k!==k);saveGoals();buildGoals();buildSheet();render();toast(t("tKill"))});return}
   const del=e.target.closest("[data-del]");
-  if(del){const id=del.dataset.del;if(col)col.doc(id).delete().catch(()=>{});else{deps=deps.filter(d=>d.id!==id);render()}toast(t("tRem"));return}
+  if(del){const id=del.dataset.del;animOut(del.closest(".row")||del.parentElement,()=>{if(col)col.doc(id).delete().catch(()=>{});else{deps=deps.filter(d=>d.id!==id);render()}toast(t("tRem"))});return}
   const lg=e.target.closest("[data-lang]");if(lg){S.lang=lg.dataset.lang;persist();applyLang();return}
   const th=e.target.closest("[data-th]");if(th){S.theme=th.dataset.th;applyTheme();persist();render();return}
   const ck=e.target.closest("[data-ck]");if(ck){S.click=ck.dataset.ck==="1";persist();render();return}
@@ -1454,7 +1465,7 @@ $("h_exe").onclick=startEmpty;
 /* New version check: when the app comes back into view (and every 15 minutes) it asks GitHub for the newest build id. If it differs, a button offers to update. The reload adds ?v= so GitHub's cache serves the new files right away. */
 const BUILD=(document.querySelector('meta[name="kk-build"]')||{}).content||"";
 async function checkUpdate(){if(!BUILD||!navigator.onLine)return;try{const r=await fetch("version.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;const j=await r.json();
-  if(j&&j.b&&j.b!==BUILD){const u=$("upd");u.dataset.v=j.b;$("upd_t").textContent=tx("Ny version finns","New version ready");$("upd_s").textContent=tx("Dina siffror finns kvar.","Your figures stay as they are.");$("upd_go").textContent=tx("Uppdatera","Update");u.setAttribute("aria-label",tx("Uppdatera till den nya versionen","Update to the new version"));u.classList.remove("hide")}}catch(e){}}
+  if(j&&j.b&&j.b!==BUILD){const u=$("upd");u.dataset.v=j.b;$("upd_t").textContent=tx("Ny version finns","New version ready");$("upd_s").textContent=tx("Dina siffror finns kvar.","Your figures stay as they are.");$("upd_go").textContent=tx("Uppdatera","Update");u.setAttribute("aria-label",tx("Uppdatera till den nya versionen","Update to the new version"));if(u.classList.contains("hide"))flip($("toasts"),()=>u.classList.remove("hide"))}}catch(e){}}
 $("upd").onclick=()=>{location.replace(location.pathname+"?v="+($("upd").dataset.v||Date.now()))};
 if(/[?&]v=/.test(location.search))history.replaceState(history.state,"",location.pathname+location.hash);
 setTimeout(checkUpdate,4000);setInterval(checkUpdate,15*6e4);document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkUpdate()});
@@ -1466,6 +1477,12 @@ document.addEventListener("click",e=>{const x=e.target.closest&&e.target.closest
   e.stopImmediatePropagation();e.preventDefault();disarm();x.classList.add("arm");x.setAttribute("aria-label",tx("Tryck igen för att ta bort","Tap again to delete"));
   const n=lsN("kronkoll.armTips");if(n<3){lsSet("kronkoll.armTips",n+1);toast(tx("Tryck på krysset igen för att ta bort","Tap the cross again to delete"),"info")}
   armT=setTimeout(disarm,3000)},true);
+/* The second tap: the row flashes red, slides left and folds away, then it is removed. */
+function animOut(el,fn){if(!el||el._going){fn();return}el._going=1;
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches||!el.animate){fn();return}
+  const h=el.offsetHeight,cs=getComputedStyle(el);el.style.overflow="hidden";el.style.pointerEvents="none";
+  const slide=el.animate([{transform:"none",opacity:1,background:cs.backgroundColor},{transform:"none",opacity:1,background:"color-mix(in srgb,var(--bad) 16%,var(--glass2))",offset:.25},{transform:"translateX(-36px)",opacity:0,background:"color-mix(in srgb,var(--bad) 16%,var(--glass2))"}],{duration:230,easing:"cubic-bezier(.4,0,.6,1)",fill:"forwards"});
+  slide.onfinish=()=>{el.animate([{height:h+"px",marginTop:cs.marginTop,paddingTop:cs.paddingTop,paddingBottom:cs.paddingBottom,borderTopWidth:cs.borderTopWidth,borderBottomWidth:cs.borderBottomWidth},{height:"0px",marginTop:"0px",paddingTop:"0px",paddingBottom:"0px",borderTopWidth:"0px",borderBottomWidth:"0px"}],{duration:200,easing:"cubic-bezier(.2,.8,.2,1)",fill:"forwards"}).onfinish=fn}}
 </script>
 
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")</script>

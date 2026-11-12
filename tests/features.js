@@ -46,6 +46,18 @@ await ev(()=>{go('b');d_out.open=true});await p.waitForTimeout(200);{const n0=aw
 await p.click('#l_items .x >> nth=0');await p.waitForTimeout(150);check('first tap only arms',await ev(()=>[document.querySelectorAll('#l_items .lnw').length,document.querySelector('#l_items .x').classList.contains('arm'),rd.classList.contains('on')]),[n0,true,false]);
 await p.click('#b_life');await p.waitForTimeout(150);check('tap elsewhere resets',await ev(()=>document.querySelectorAll('.x.arm').length),0);
 await p.click('#l_items .x >> nth=0');await p.waitForTimeout(3300);check('resets after 3 s',await ev(()=>document.querySelectorAll('.x.arm').length),0)}
+// Notifications: new ones go below, a repeat moves to the top instead of showing twice
+await ev(()=>{document.querySelectorAll('#toasts .toast').forEach(t=>t.remove());toast('Första','info');toast('Andra','info');toast('Första','info')});await p.waitForTimeout(350);
+check('repeat moves to top, no duplicate',await ev(()=>[...document.querySelectorAll('#toasts .toast b')].map(b=>b.textContent)),['Första','Andra']);
+await ev(()=>{toast('Tredje','info');toast('Fjärde','info')});await p.waitForTimeout(350);
+check('at most three, newest at the bottom',await ev(()=>[...document.querySelectorAll('#toasts .toast')].filter(t=>!t._going).map(t=>t.querySelector('b').textContent)),['Andra','Tredje','Fjärde']);
+{const tops=await ev(()=>[...document.querySelectorAll('#toasts .toast')].map(t=>t.getBoundingClientRect()));check('notifications do not overlap',tops.every((r,i)=>i===0||r.top>=tops[i-1].bottom-1),true)}
+await ev(()=>document.querySelectorAll('#toasts .toast').forEach(t=>t.remove()));
+// Second tap slides the row out, then it is gone
+await ev(()=>{go('b');d_out.open=true});await p.waitForTimeout(200);{const n0=await ev(()=>document.querySelectorAll('#l_items .lnw').length);
+await ev(()=>{editMonth(md=>{md.items.push({n:'Engång',a:99})});buildSheet();render()});await p.waitForTimeout(300);const n1=await ev(()=>document.querySelectorAll('#l_items .lnw').length);
+await p.click('#l_items .lnw:last-child .x');await p.click('#l_items .lnw:last-child .x');await p.waitForTimeout(120);check('row is animating out',await ev(()=>[document.querySelectorAll('#l_items .lnw').length,!!document.querySelector('#l_items .lnw:last-child')._going]),[n1,true]);
+await p.waitForTimeout(700);check('row removed after the animation',await ev(()=>document.querySelectorAll('#l_items .lnw').length),n1-1)}
 // A newer published version shows an update button, which reloads and then cleans the address
 await p.route('**/version.json*',r=>r.fulfill({contentType:'application/json',body:'{"b":"newer123"}'}));await ev(()=>checkUpdate());await p.waitForTimeout(300);
 check('update button shows',await ev(()=>[!upd.classList.contains('hide'),upd_t.textContent,upd_go.textContent]),[true,'Ny version finns','Uppdatera']);

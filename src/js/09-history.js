@@ -11,7 +11,7 @@ function histClose(){if(!HG)return;const g=HG;HG=null;clearTimeout(g.t);const do
   if(last&&!last.u&&now-last.at<20000&&ids.length===1&&Object.keys(last.docs).length===1&&last.docs[ids[0]]&&docs[ids[0]][0]&&docs[ids[0]][1]&&last.docs[ids[0]][0]){last.docs[ids[0]][1]=docs[ids[0]][1];last.at=now}
   else H.unshift({i:now.toString(36)+Math.random().toString(36).slice(2,6),at:now,docs,u:false});
   histSave();if(tab==="u")renderHist();
-  const e=H[0],d=hdesc(e);if(d.k==="del"){const tb=[...document.querySelectorAll("#toasts .toast")].pop();if(tb&&!tb.querySelector(".tundo")){clearTimeout(tb._t);tb._t=setTimeout(()=>tb.remove(),6500);tb.style.animation="tout .3s 6.2s forwards";const b=document.createElement("button");b.className="tundo";b.textContent=tx("Ångra","Undo");b.onclick=ev=>{ev.stopPropagation();tb.remove();histUndo(e.i)};tb.appendChild(b)}}}
+  const e=H[0],d=hdesc(e);if(d.k==="del"){const tb=lastToast;if(tb&&tb.isConnected&&!tb._going&&!tb.querySelector(".tundo")){clearTimeout(tb._t);tb._t=setTimeout(()=>dropToast(tb),6500);const b=document.createElement("button");b.className="tundo";b.textContent=tx("Ångra","Undo");b.onclick=ev=>{ev.stopPropagation();dropToast(tb);histUndo(e.i)};tb.appendChild(b)}}}
 const hmon=id=>{const[y,m]=id.slice(3).split("_").map(Number);return mn(m-1).toLowerCase()+(y!==new Date().getFullYear()?" "+y:"")};
 const hname=n=>n&&n.trim()?n.trim():tx("en rad","a line");
 function hone(id,b,a){

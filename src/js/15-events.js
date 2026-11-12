@@ -77,12 +77,12 @@ document.addEventListener("click",e=>{
   const rf=e.target.closest("[data-rf]");if(rf){RS.f=rf.dataset.rf;paintRS();return}
   const sc=e.target.closest("[data-sc]");if(sc){RS.sc=sc.dataset.sc;paintRS();return}
   const dr=e.target.closest("[data-delrw]");
-  if(dr){const rw=dr.dataset.delrw;if(dr.dataset.rid){openRD(dr.dataset.rid);return}const i=+dr.dataset.ix;editMonth(md=>{md[rw].splice(i,1)});buildSheet();render();return}
+  if(dr){const rw=dr.dataset.delrw;if(dr.dataset.rid){openRD(dr.dataset.rid);return}const i=+dr.dataset.ix;animOut(dr.closest(".lnw"),()=>{editMonth(md=>{md[rw].splice(i,1)});buildSheet();render()});return}
   const rdl=e.target.closest("[data-rdel]");if(rdl){openRD(rdl.dataset.rdel);return}
-  const rdo=e.target.closest("[data-rdo]");if(rdo){doRD(rdo.dataset.rdo);return}
-  const gd=e.target.closest("[data-gdel]");if(gd){G=G.filter(z=>z.k!==gd.dataset.gdel);saveGoals();buildGoals();buildSheet();render();toast(t("tKill"));return}
+  const rdo=e.target.closest("[data-rdo]");if(rdo){const a=rdo.dataset.rdo,row=(a==="kill"||a==="skip")&&RD?document.querySelector(`[data-delrw][data-rid="${CSS.escape(RD)}"]`):null;if(row){const el=row.closest(".lnw");$("rd").classList.remove("on");el._going=1;setTimeout(()=>{el._going=0;animOut(el,()=>doRD(a))},matchMedia("(prefers-reduced-motion:reduce)").matches?0:240)}else doRD(a);return}
+  const gd=e.target.closest("[data-gdel]");if(gd){const k=gd.dataset.gdel;animOut(gd.closest(".lnw,.gcard,.sheet")||gd.parentElement,()=>{G=G.filter(z=>z.k!==k);saveGoals();buildGoals();buildSheet();render();toast(t("tKill"))});return}
   const del=e.target.closest("[data-del]");
-  if(del){const id=del.dataset.del;if(col)col.doc(id).delete().catch(()=>{});else{deps=deps.filter(d=>d.id!==id);render()}toast(t("tRem"));return}
+  if(del){const id=del.dataset.del;animOut(del.closest(".row")||del.parentElement,()=>{if(col)col.doc(id).delete().catch(()=>{});else{deps=deps.filter(d=>d.id!==id);render()}toast(t("tRem"))});return}
   const lg=e.target.closest("[data-lang]");if(lg){S.lang=lg.dataset.lang;persist();applyLang();return}
   const th=e.target.closest("[data-th]");if(th){S.theme=th.dataset.th;applyTheme();persist();render();return}
   const ck=e.target.closest("[data-ck]");if(ck){S.click=ck.dataset.ck==="1";persist();render();return}
