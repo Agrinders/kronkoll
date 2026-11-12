@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="c7b19931d9a8">
+<meta name="kk-build" content="7b7390e403a6">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -161,12 +161,13 @@ nav .more{display:none}
 .ln{grid-template-columns:minmax(0,1fr) auto 36px;gap:8px;border-bottom:0}
 .ln input:focus{box-shadow:none}
 .amw{display:flex;align-items:baseline;gap:5px}.ln .am{width:5.4em;font-size:17px}.amw span{font-size:14px;color:var(--soft)}
-.x{width:32px;height:32px;border-radius:50%;background:color-mix(in srgb,var(--bad) 12%,transparent);color:var(--bad);display:grid;place-items:center;padding:0}
-.x svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;fill:none}
+.x{width:32px;height:32px;border:0;border-radius:11px;background:transparent;color:var(--soft);display:grid;place-items:center;padding:0;transition:background .15s,color .15s}
+.x:active,.x:focus-visible{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+.x svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
 .spst{border-bottom:0;border-top:1px solid var(--rule);min-height:46px;padding-right:2px}
 #l_inc,#l_items,#l_vars,#l_split{margin-top:2px}
 .sub2{display:block;font-size:13px;color:var(--soft);font-weight:500}
-@media (hover:hover){.x:hover{background:color-mix(in srgb,var(--bad) 22%,transparent)}}
+@media (hover:hover){.x:hover{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}}
 /* The year summary on Overview. */
 .yhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .ynav{display:flex;gap:4px}.ynav button{width:40px;height:40px;border:0;border-radius:12px;background:var(--rule);font-size:20px;padding:0}
