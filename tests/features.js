@@ -13,10 +13,10 @@ await p.click('#x_kom');await p.fill('#pk_q','malm');await p.click('[data-pko="M
 await p.click('[data-xky="1"]');check('Malmö with church',await ev(()=>S.taxT),34);
 check('percent rows above 80 000',await ev(()=>exactTax(95000,32,1)),Math.floor(95000*36/100));
 await p.click('[data-xky="0"]');
-// Subscription hint adds to Abonnemang without changing the budget
+// Subscription hints are switched off for now
 await ev(()=>{go('b');d_out.open=true});await p.waitForTimeout(200);await p.fill('#l_items .am >> nth=0','9 600');await p.locator('#l_items .am >> nth=0').blur();await p.waitForTimeout(900);
 const needs=await ev(()=>planCalc(nowMd()).needs);
-await p.click('#l_items .subhint [data-subadd] >> nth=0');await p.waitForTimeout(300);check('hint adds a subscription',await ev(()=>SL.length),1);check('budget unchanged',await ev(()=>planCalc(nowMd()).needs),needs);
+check('no subscription hints for now',await ev(()=>document.querySelectorAll('.subhint').length),0);check('budget unchanged',await ev(()=>planCalc(nowMd()).needs),needs);
 // History: remove a line, then undo brings it back
 const first=await ev(()=>RULES.filter(r=>r.t==='items').map(r=>r.n)[0]);await p.waitForTimeout(800);
 await p.click('#l_items [data-delrw] >> nth=0');await p.waitForTimeout(300);if(await p.locator('#rd.on').count())await p.click('#rd .opt >> nth=-1');await p.waitForTimeout(900);

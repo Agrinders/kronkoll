@@ -385,3 +385,11 @@ input,select,textarea,.pick{font-family:var(--ui);font-weight:500}input::placeho
 /* Greeting at the top of Översikt, and the savings goal. */
 .hello{margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid var(--rule);display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}.hello b{font:700 22px/1.15 var(--hand);letter-spacing:-.01em}.hello span{font-size:14px;color:var(--soft)}
 .sgoal{font-size:13px;font-weight:600;color:var(--soft);text-align:right;margin-top:2px}.sbar.hit i{background:var(--good)}
+/* Language flags at the bottom of the side menu. */
+.langs{display:flex;gap:10px;padding:10px 12px 4px}.langs button{width:52px;height:44px;display:grid;place-items:center;border:1.5px solid transparent;border-radius:12px;background:none;padding:0;cursor:pointer;opacity:.55}.langs button svg{width:30px;height:20px;border-radius:4px;box-shadow:0 0 0 1px rgba(0,0,0,.18)}.langs button.sel{opacity:1;border-color:var(--pen);background:color-mix(in srgb,var(--pen) 12%,transparent)}nav .langs button,nav .langs button.sel{color:inherit;box-shadow:none}nav .langs svg{fill:revert;stroke:none}
+nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;padding:8px 6px 0}}
+/* Touch targets: at least 44 px to hit, even where the visible button is smaller. */
+.x{width:36px;height:36px;position:relative}.x::after{content:"";position:absolute;inset:-4px}
+.freq{position:relative;padding:6px 0 10px;margin-top:-8px;min-height:32px}.freq::after{content:"";position:absolute;inset:-4px -6px}
+#hp_all{padding:10px 4px;margin:-6px -4px}
+.lnk{min-height:44px}

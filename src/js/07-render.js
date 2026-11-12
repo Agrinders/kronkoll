@@ -4,7 +4,6 @@ function renderSettings(){
   $("c_th").innerHTML=["auto","light","dark"].map(v=>`<button class="chip ${S.theme===v?"on":""}" data-th="${v}">${t(v)}</button>`).join("");
   $("c_tm").innerHTML=THEMES.map(x=>`<button class="opt tm ${S.theme===x[0]?"on":""}" data-th="${x[0]}"><u style="background:linear-gradient(135deg,${TCOL[x[0]].join(",")})"></u><span>${x[1+li()]}<small>${x[3+li()]}</small></span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"/></svg></i></button>`).join("");
   $("c_tg").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.toasts?"1":"0")===v?"on":""}" data-tg="${v}">${t(k)}</button>`).join("");
-  $("c_lg").innerHTML=[["sv","Svenska"],["en","English"]].map(([v,l])=>`<button class="chip ${S.lang===v?"on":""}" data-lang="${v}">${l}</button>`).join("");
   $("c_ck").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.click?"1":"0")===v?"on":""}" data-ck="${v}">${t(k)}</button>`).join("");
   $("c_sn").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.sound?"1":"0")===v?"on":""}" data-sn="${v}">${t(k)}</button>`).join("");
   $("c_mo").innerHTML=[["1","on"],["0","off"]].map(([v,k])=>`<button class="chip ${(S.motion?"1":"0")===v?"on":""}" data-mo="${v}">${t(k)}</button>`).join("");
@@ -17,7 +16,7 @@ function build(){
   $("set_in").innerHTML=setF("adults","fAdults")+setF("buf","bufF")+setF("lifePct","lifeF")+setF("rateGoal","rateF");
   buildSheet();buildGoals();
 }
-function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render();if(typeof fitNav==="function")fitNav()}
+function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll(".langs [data-lang]").forEach(b=>{b.classList.toggle("sel",b.dataset.lang===S.lang);b.setAttribute("aria-pressed",b.dataset.lang===S.lang)});if($("empty"))$("empty").textContent=tx("Börja med en tom budget","Start with an empty budget");document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render();if(typeof fitNav==="function")fitNav()}
 function render(){guideDot();$("ttl").textContent=t("ttl"+tab.toUpperCase());renderHome();renderBudget();renderSaving();renderTax();renderResults();renderSubs();renderLoans();renderIsk();renderHist();renderBk();renderMarket();renderSettings();renderPay();renderVersion();renderHold();FX.sync(planCalc(nowMd()))}
 function persist(){if(!col)return;later("plan",()=>col.doc("plan").set({bg2:S.bgPick?S.bg:null,rateGoal:S.rateGoal,iskV:S.iskV,iskIn:S.iskIn,iskP:S.iskP,taxKom:S.taxKom,taxKy:S.taxKy,taxFors:S.taxFors,taxCol:S.taxCol,zoom:S.zoom,hc:S.hc,lang:S.lang,saved:S.saved,buf:S.buf,lifePct:S.lifePct,adults:S.adults,taxT:S.taxT,taxPay:S.taxPay,taxPct:S.taxPct,taxMode:S.taxMode,payH:S.payH,payR:S.payR,theme:S.theme,toasts:S.toasts,motion:S.motion,sound:S.sound,click:S.click,recV:S.recV||0}).catch(()=>{}),150)}
 const yrOpen=()=>$("yrs").classList.contains("on");

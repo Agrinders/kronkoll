@@ -35,7 +35,7 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     Object.assign(PM,keep);
     /* Subscriptions that were first saved as budget lines move out of the budget, once. */
     if(MIG.length){histMute++;setTimeout(()=>histMute--,500)}MIG.forEach(v=>{const a=amtOf({amts:v.amts||[{f:"0",a:0}],over:v.over||{},skip:[]},mk(NOW.getFullYear(),NOW.getMonth()));col.doc("sub_"+v.id).set({kind:"sub",id:String(v.id),n:String(v.n||""),a,f:v.freq,d:v.ds||v.freq!=="m"?String(v.date):"",off:!!v.end}).then(()=>col.doc("rec_"+v.id).delete()).catch(()=>{})});
-    /* Older budgets kept goals inside each month: gather their custom goals into the shared list once. */
+    /* Olddin budgets kept goals inside each month: gather their custom goals into the shared list once. */
     if(!exampleMode&&!sawGoals&&!goalsDirty){Object.keys(PM).sort().forEach(k=>(PM[k].split||[]).forEach(l=>{const g=G.find(z=>z.k===l.k);if(g){if(l.n)g.n=l.n}else G.push({k:l.k,n:l.n})}));saveGoals()}
     /* The old single "already saved" amount moves onto the first goal, once. */
     if(!exampleMode&&S.saved>0&&G.length){G[0].s=(G[0].s||0)+S.saved;S.saved=0;persist();saveGoals();flushSaves()}
@@ -51,3 +51,27 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
 /* On narrow phones the longest menu word is shortened, so all menu buttons can stay the same size. */
 function fitNav(){const b=document.querySelector('nav [data-go="a"]'),e=b&&b.querySelector("em");if(!e||getComputedStyle(b).flexGrow==="0")return;e.textContent=t("nA");if(e.scrollWidth>b.clientWidth-4)e.textContent=t("nAs")}
 fitNav();addEventListener("resize",fitNav);document.fonts&&document.fonts.ready.then(fitNav);
+
+/* Start with an empty budget: removes every income and expense line in all months. Savings, goals, subscriptions and loans stay, and History can undo it. */
+$("empty").onclick=async()=>{if(!await ask(tx("Börja med en tom budget?","Start with an empty budget?"),tx("Alla inkomster och utgifter tas bort, i alla månader. Sparande, sparmål, abonnemang och lån finns kvar. Du kan ångra det under Historik.","All income and expense lines are removed, in every month. Savings, goals, subscriptions and loans stay. You can undo it under History.")))return;
+  if(exampleMode){exampleMode=false;RULES=[];PM={};if(col)col.doc("started").set({kind:"started"}).catch(()=>{})}
+  else{const ids=RULES.map(r=>"rec_"+r.id);RULES=[];ids.forEach(id=>col&&col.doc(id).delete().catch(()=>{}));Object.keys(PM).forEach(k=>{const w=PM[k];w.inc=[];w.items=[];w.vars=[];if(col)col.doc("pm_"+k).set(pmDoc(k)).catch(()=>{})})}
+  render();go("b");toast(tx("Budgeten är tom. Lägg in dina inkomster först.","The budget is empty. Add your income first."),"ok")};
+
+/* Android back button: close what is open, then go to the previous page, and only leave the app from Översikt. */
+(()=>{const NAV=[];let backing=false;const _go=go;
+  go=function(x){if(!backing&&x!==tab){NAV.push(tab);if(NAV.length>30)NAV.shift()}return _go(x)};
+  const on=id=>{const e=$(id);return !!(e&&e.classList.contains("on"))};
+  function closeTop(){if(on("modal")){$("m_no").click();return true}
+    for(const [id,f] of [["dp",closeDP],["pk",closePK],["lo",closeLO],["as",closeAS],["hs",closeHS],["rs",closeRS],["rd",closeRD]])if(on(id)){f();return true}
+    if(on("ps")){$("ps").classList.remove("on");return true}
+    if(yrOpen()){closeYears();return true}
+    if(on("drawer")){$("scrim").click();return true}
+    return false}
+  const guard=()=>history.pushState({kk:1},"");
+  try{history.replaceState({kk:0},"");guard()}catch(e){return}
+  addEventListener("popstate",()=>{if(closeTop())return guard();
+    let to=null;while(NAV.length&&to===null){const p=NAV.pop();if(p!==tab)to=p}
+    if(to===null&&tab!=="h")to="h";
+    if(to!==null){backing=true;go(to);backing=false;return guard()}
+    history.back()})})();

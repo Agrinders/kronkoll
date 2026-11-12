@@ -1,7 +1,9 @@
 /* Keeps all data on this device (browser storage), with a backup file the user can save and load. */
 (function(){
-  const KEY="kronkoll.data.v1",sv=(navigator.language||"sv").toLowerCase().startsWith("sv");
-  const L=sv?{save:"Spara säkerhetskopia",load:"Läs in säkerhetskopia",why:"Allt sparas bara på den här enheten. Spara en säkerhetskopia ibland, annars försvinner det om du byter telefon eller rensar webbläsaren.",askT:"Ersätt allt på den här enheten?",ask:"Säkerhetskopian ersätter det som finns sparat nu.",bad:"Filen kunde inte läsas. Välj en säkerhetskopia från Kronkoll.",saved:"Säkerhetskopian är sparad"}:{save:"Save a backup",load:"Load a backup",why:"Everything is saved on this device only. Save a backup now and then, or it is lost if you change phone or clear the browser.",askT:"Replace everything on this device?",ask:"The backup replaces what is saved now.",bad:"The file could not be read. Choose a Kronkoll backup.",saved:"Backup saved"};
+  const KEY="kronkoll.data.v1";
+  const LS={save:"Spara säkerhetskopia",load:"Läs in säkerhetskopia",why:"Allt sparas bara på den här enheten. Spara en säkerhetskopia ibland, annars försvinner det om du byter telefon eller rensar webbläsaren.",askT:"Ersätt allt på den här enheten?",ask:"Säkerhetskopian ersätter det som finns sparat nu.",bad:"Filen kunde inte läsas. Välj en säkerhetskopia från Kronkoll.",saved:"Säkerhetskopian är sparad"},LE={save:"Save a backup",load:"Load a backup",why:"Everything is saved on this device only. Save a backup now and then, or it is lost if you change phone or clear the browser.",askT:"Replace everything on this device?",ask:"The backup replaces what is saved now.",bad:"The file could not be read. Choose a Kronkoll backup.",saved:"Backup saved"};
+  /* Texts follow the language chosen in the app, not the phone. */
+  const L=new Proxy({},{get:(_,k)=>((document.documentElement.lang||"sv").startsWith("en")?LE:LS)[k]});
   const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){return {}}};
   /* Always starts from what is saved right now, so a second open copy of the app can never overwrite newer changes. */
   let data=read();const fresh=()=>{data=read()};
@@ -23,6 +25,7 @@
     const f=document.getElementById("bk_file");document.getElementById("bk_load").onclick=()=>f.click();
     f.onchange=async()=>{const x=f.files[0];f.value="";if(!x)return;try{const v=JSON.parse(await x.text());if(v.app!=="kronkoll"||!v.data||typeof v.data!=="object")throw 0;if(!await ask(L.askT,L.ask))return;data=v.data;write();try{localStorage.setItem("kronkoll.backupAt",Date.now())}catch(e){}location.reload()}catch(e){toast(L.bad,"bad")}};
     const st=setInterval(()=>{const c=document.getElementById("c_st");if(c){c.textContent=L.why;clearInterval(st)}},200);
+    new MutationObserver(()=>{document.getElementById("bk_save").textContent=L.save;document.getElementById("bk_load").textContent=L.load;const c=document.getElementById("c_st");if(c)c.textContent=L.why}).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
     new MutationObserver(()=>{const c=document.getElementById("c_st");if(c&&c.textContent!==L.why)c.textContent=L.why}).observe(document.getElementById("c_st"),{childList:true,characterData:true,subtree:true});
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",backup);else backup();
