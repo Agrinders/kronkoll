@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="7b7390e403a6">
+<meta name="kk-build" content="917fee61ad4e">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -162,12 +162,14 @@ nav .more{display:none}
 .ln input:focus{box-shadow:none}
 .amw{display:flex;align-items:baseline;gap:5px}.ln .am{width:5.4em;font-size:17px}.amw span{font-size:14px;color:var(--soft)}
 .x{width:32px;height:32px;border:0;border-radius:11px;background:transparent;color:var(--soft);display:grid;place-items:center;padding:0;transition:background .15s,color .15s}
-.x:active,.x:focus-visible{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}
+.x:active{background:var(--rule)}
+.x.arm{background:var(--bad);color:#fff;animation:arm .22s ease-out}.x.arm svg{stroke-width:2.4}
+@keyframes arm{40%{transform:scale(1.12)}}
 .x svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
 .spst{border-bottom:0;border-top:1px solid var(--rule);min-height:46px;padding-right:2px}
 #l_inc,#l_items,#l_vars,#l_split{margin-top:2px}
 .sub2{display:block;font-size:13px;color:var(--soft);font-weight:500}
-@media (hover:hover){.x:hover{background:color-mix(in srgb,var(--bad) 14%,transparent);color:var(--bad)}}
+@media (hover:hover){.x:not(.arm):hover{background:var(--rule);color:var(--ink)}}
 /* The year summary on Overview. */
 .yhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .ynav{display:flex;gap:4px}.ynav button{width:40px;height:40px;border:0;border-radius:12px;background:var(--rule);font-size:20px;padding:0}
@@ -437,8 +439,8 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 #h_ex .note{margin:8px 0 12px;font-size:15px}.exa{display:flex;flex-wrap:wrap;gap:8px}.exa .btn{flex:1 1 180px}
 
 /* "New version" button, top centre, above everything except dialogs. */
-#upd{position:fixed;z-index:45;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translateX(-50%);display:flex;align-items:center;gap:10px;max-width:calc(100% - 32px);min-height:48px;padding:10px 18px 10px 14px;border:1px solid var(--pen);border-radius:99px;background:var(--paper);color:var(--ink);font:600 15px/1.3 inherit;box-shadow:0 10px 30px rgba(5,10,20,.3);cursor:pointer;text-align:left}
-#upd.hide{display:none}#upd svg{flex:none;width:22px;height:22px;fill:none;stroke:var(--pen);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#upd{position:fixed;z-index:45;left:50%;top:calc(env(safe-area-inset-top,0px) + 12px);transform:translateX(-50%);display:flex;align-items:center;gap:12px;width:min(520px,calc(100vw - 32px));min-height:60px;padding:10px 10px 10px 16px;border:1px solid var(--pen);border-radius:18px;background:var(--paper);color:var(--ink);font:600 15px/1.3 inherit;box-shadow:0 10px 30px rgba(5,10,20,.3);cursor:pointer;text-align:left}
+#upd.hide{display:none}#upd>span{flex:1;min-width:0}#upd b{display:block;font-size:15.5px;font-weight:650}#upd small{display:block;margin-top:1px;font-size:14px;font-weight:500;color:var(--soft)}#upd em{flex:none;font-style:normal;font-weight:650;font-size:15px;padding:10px 16px;border-radius:12px;background:var(--pen);color:var(--paper)}#upd svg{flex:none;width:22px;height:22px;fill:none;stroke:var(--pen);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -446,7 +448,7 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 <div id="intro" aria-hidden="true"><img src="icons/icon-192.png" alt="" width="104" height="104"></div>
 <canvas id="fx" aria-hidden="true"></canvas>
 <div id="toasts"></div><div id="scrim"></div>
-<button id="upd" class="hide" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v4.5h-4.5"/></svg><span></span></button>
+<button id="upd" class="hide" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v4.5h-4.5"/></svg><span><b id="upd_t"></b><small id="upd_s"></small></span><em id="upd_go"></em></button>
 <div id="wl" role="dialog" aria-modal="true" aria-labelledby="wl_t"><div class="mbox"><b id="wl_t"></b><p id="wl_p"></p><button class="wopt" id="wl_empty"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span><strong id="wl_e1"></strong><small id="wl_e2"></small></span></button><button class="wopt" id="wl_ex"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="2.8"/></svg><span><strong id="wl_x1"></strong><small id="wl_x2"></small></span></button><p class="help" id="wl_n"></p></div></div>
 <div id="modal"><div class="mbox"><b id="m_t"></b><p id="m_p"></p><div class="mact"><button class="btn out" id="m_no"></button><button class="btn" id="m_yes"></button></div></div></div>
 <aside id="drawer">
@@ -915,6 +917,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
+{v:"3.3",d:"12 nov 2026",i:[["b","#l_items",["Ta bort med två tryck","Delete with two taps"],["Krysset är grått. Första trycket gör det rött, andra trycket tar bort raden. Trycker du någon annanstans händer inget.","The cross is grey. The first tap turns it red, the second removes the row. Tap anywhere else and nothing happens."]],["n","",["Tydligare uppdatering","Clearer update notice"],["Rutan om ny version är bredare och har en egen Uppdatera-knapp.","The new-version notice is wider and has its own Update button."]]]},
 {v:"3.2",d:"12 nov 2026",i:[["n","",["Säg till om ny version","Tells you about new versions"],["Har du appen öppen när en ny version kommer visas en knapp högst upp. Tryck så uppdateras den.","If the app is open when a new version comes out, a button shows at the top. Tap it to update."]],["n","",["Tömma exemplet fungerar","Emptying the example works"],["Att börja med en tom budget kunde låsa Översikt. Nu nollställs allt direkt.","Starting with an empty budget could freeze Översikt. Now everything resets right away."]]]},
 {v:"3.1",d:"12 nov 2026",i:[["h","#h_ex",["Välj hur du börjar","Choose how to start"],["Första gången du öppnar appen väljer du tom budget eller exempel. Exemplet säger tydligt att siffrorna är påhittade.","The first time you open the app you choose an empty budget or the example. The example clearly says the figures are made up."]]]},
 {v:"3.0",d:"12 nov 2026",i:[["c","#set_in",["Tydligare inställningar","Clearer settings"],["Inställningarna är grupperade och varje val förklarar vad det gör.","Settings are grouped and each one explains what it does."]],["s","#s_chips",["Välj mål med namn","Pick a goal by name"],["Överst i Sparande trycker du på ett mål i stället för att bläddra med pilar.","At the top of Savings you tap a goal instead of using arrows."]],["h","#h_lbl",["Samma ord överallt","The same words everywhere"],["Pengarna som blir över heter nu Kvar att leva på i hela appen.","The money left over is now called Left to live on throughout the app."]],["c","#f_adults",["För en eller flera","For one or more"],["Appen utgår inte längre från att du är två. Ange antal vuxna under Inställningar.","The app no longer assumes you are two. Set the number of adults under Settings."]]]},
@@ -1451,10 +1454,18 @@ $("h_exe").onclick=startEmpty;
 /* New version check: when the app comes back into view (and every 15 minutes) it asks GitHub for the newest build id. If it differs, a button offers to update. The reload adds ?v= so GitHub's cache serves the new files right away. */
 const BUILD=(document.querySelector('meta[name="kk-build"]')||{}).content||"";
 async function checkUpdate(){if(!BUILD||!navigator.onLine)return;try{const r=await fetch("version.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;const j=await r.json();
-  if(j&&j.b&&j.b!==BUILD){const u=$("upd");u.dataset.v=j.b;u.querySelector("span").textContent=tx("En ny version finns. Tryck för att uppdatera.","A new version is available. Tap to update.");u.classList.remove("hide")}}catch(e){}}
+  if(j&&j.b&&j.b!==BUILD){const u=$("upd");u.dataset.v=j.b;$("upd_t").textContent=tx("Ny version finns","New version ready");$("upd_s").textContent=tx("Dina siffror finns kvar.","Your figures stay as they are.");$("upd_go").textContent=tx("Uppdatera","Update");u.setAttribute("aria-label",tx("Uppdatera till den nya versionen","Update to the new version"));u.classList.remove("hide")}}catch(e){}}
 $("upd").onclick=()=>{location.replace(location.pathname+"?v="+($("upd").dataset.v||Date.now()))};
 if(/[?&]v=/.test(location.search))history.replaceState(history.state,"",location.pathname+location.hash);
 setTimeout(checkUpdate,4000);setInterval(checkUpdate,15*6e4);document.addEventListener("visibilitychange",()=>{if(!document.hidden)checkUpdate()});
+/* Delete in two taps: the first tap turns the grey cross red, the second deletes. It turns grey again after 3 seconds or a tap anywhere else. */
+let armT=0;
+function disarm(){clearTimeout(armT);document.querySelectorAll(".x.arm").forEach(x=>{x.classList.remove("arm");x.setAttribute("aria-label",t("del"))})}
+document.addEventListener("click",e=>{const x=e.target.closest&&e.target.closest(".x:not([data-subno])");
+  if(!x){disarm();return}if(x.classList.contains("arm")){clearTimeout(armT);x.classList.remove("arm");return}
+  e.stopImmediatePropagation();e.preventDefault();disarm();x.classList.add("arm");x.setAttribute("aria-label",tx("Tryck igen för att ta bort","Tap again to delete"));
+  const n=lsN("kronkoll.armTips");if(n<3){lsSet("kronkoll.armTips",n+1);toast(tx("Tryck på krysset igen för att ta bort","Tap the cross again to delete"),"info")}
+  armT=setTimeout(disarm,3000)},true);
 </script>
 
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")</script>

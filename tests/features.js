@@ -4,7 +4,7 @@ const A=path.resolve(__dirname,'..');const T={'.html':'text/html','.js':'text/ja
 const srv=http.createServer((q,r)=>{let u=decodeURIComponent(q.url.split('?')[0]);if(u.endsWith('/'))u+='index.html';fs.readFile(path.join(A,u),(e,d)=>{if(e){r.writeHead(404);return r.end()}r.writeHead(200,{'content-type':T[path.extname(u)]||'application/octet-stream'});r.end(d)})}).listen(0);
 let fails=0;const norm=v=>JSON.stringify(v).replace(/[\u00a0\u202f]/g,' ');const check=(name,got,want)=>{const ok=norm(got)===norm(want);if(!ok)fails++;console.log(ok?'ok  ':'FAIL',name,ok?'':`got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`)};
 (async()=>{await new Promise(r=>srv.listening?r():srv.on('listening',r));
-const b=await chromium.launch({args:['--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--enable-unsafe-swiftshader']});const c=await b.newContext({viewport:{width:384,height:832},colorScheme:'dark',serviceWorkers:'block'});const p=await c.newPage();await p.addInitScript(()=>{if(!sessionStorage.getItem('wlTest'))try{localStorage.setItem('kronkoll.welcome','1')}catch(e){}});const errs=[];p.on('pageerror',e=>errs.push(e.message));p.setDefaultTimeout(8000);
+const b=await chromium.launch({args:['--use-angle=swiftshader','--enable-webgl','--ignore-gpu-blocklist','--enable-unsafe-swiftshader']});const c=await b.newContext({viewport:{width:384,height:832},colorScheme:'dark',serviceWorkers:'block'});const p=await c.newPage();await p.addInitScript(()=>{if(!sessionStorage.getItem('wlTest'))try{localStorage.setItem('kronkoll.welcome','1');localStorage.setItem('kronkoll.armTips','3')}catch(e){}});const errs=[];p.on('pageerror',e=>errs.push(e.message));p.setDefaultTimeout(8000);
 await p.goto('http://localhost:'+srv.address().port+'/');await p.waitForTimeout(900);const ev=(f,a)=>p.evaluate(f,a);
 // Tax: Skatteverket 2026, table 32 column 1, 30 001–30 200 kr gives 5 751 kr
 await ev(()=>go('l'));await p.waitForFunction(()=>!!TAXD);await p.fill('#x_pay','30100');await p.waitForTimeout(150);
@@ -19,7 +19,7 @@ const needs=await ev(()=>planCalc(nowMd()).needs);
 check('no subscription hints for now',await ev(()=>document.querySelectorAll('.subhint').length),0);check('budget unchanged',await ev(()=>planCalc(nowMd()).needs),needs);
 // History: remove a line, then undo brings it back
 const first=await ev(()=>RULES.filter(r=>r.t==='items').map(r=>r.n)[0]);await p.waitForTimeout(800);
-await p.click('#l_items [data-delrw] >> nth=0');await p.waitForTimeout(300);if(await p.locator('#rd.on').count())await p.click('#rd .opt >> nth=-1');await p.waitForTimeout(900);
+await p.click('#l_items [data-delrw] >> nth=0');await p.click('#l_items [data-delrw] >> nth=0');await p.waitForTimeout(300);if(await p.locator('#rd.on').count())await p.click('#rd .opt >> nth=-1');await p.waitForTimeout(900);
 check('removed line is gone',await ev(n=>RULES.some(r=>r.n===n&&!r.end&&!r.skip.length),first),false);
 await ev(()=>go('u'));await p.click('[data-hu] >> nth=0');await p.waitForTimeout(400);if(await p.locator('#modal.on').count())await p.click('#m_yes');await p.waitForTimeout(500);
 check('undo brings it back',await ev(n=>RULES.some(r=>r.n===n&&!r.end&&!r.skip.length),first),true);
@@ -41,9 +41,14 @@ await q.click('#h_exe');await q.waitForTimeout(300);check('empty from example no
 await q.evaluate(()=>localStorage.clear());await q.reload();await q.waitForSelector('#wl.on',{timeout:8000});await q.click('#wl_empty');await q.waitForTimeout(300);
 check('empty from welcome',await q.evaluate(()=>[exampleMode,RULES.length,tab,d_inc.open]),[false,0,'b',true]);
 await q.reload();await q.waitForTimeout(2600);check('empty start survives reload',await q.evaluate(()=>[exampleMode,wl.classList.contains('on')]),[false,false]);await c2.close()}
+// Delete needs two taps: the first only turns the cross red, a tap elsewhere or 3 s resets it
+await ev(()=>{go('b');d_out.open=true});await p.waitForTimeout(200);{const n0=await ev(()=>document.querySelectorAll('#l_items .lnw').length);
+await p.click('#l_items .x >> nth=0');await p.waitForTimeout(150);check('first tap only arms',await ev(()=>[document.querySelectorAll('#l_items .lnw').length,document.querySelector('#l_items .x').classList.contains('arm'),rd.classList.contains('on')]),[n0,true,false]);
+await p.click('#b_life');await p.waitForTimeout(150);check('tap elsewhere resets',await ev(()=>document.querySelectorAll('.x.arm').length),0);
+await p.click('#l_items .x >> nth=0');await p.waitForTimeout(3300);check('resets after 3 s',await ev(()=>document.querySelectorAll('.x.arm').length),0)}
 // A newer published version shows an update button, which reloads and then cleans the address
 await p.route('**/version.json*',r=>r.fulfill({contentType:'application/json',body:'{"b":"newer123"}'}));await ev(()=>checkUpdate());await p.waitForTimeout(300);
-check('update button shows',await ev(()=>[!upd.classList.contains('hide'),upd.innerText]),[true,'En ny version finns. Tryck för att uppdatera.']);
+check('update button shows',await ev(()=>[!upd.classList.contains('hide'),upd_t.textContent,upd_go.textContent]),[true,'Ny version finns','Uppdatera']);
 await p.unroute('**/version.json*');await Promise.all([p.waitForNavigation(),p.click('#upd')]);await p.waitForTimeout(2600);
 check('after update the address is clean',await ev(()=>[location.search,upd.classList.contains('hide')]),['',true]);
 check('no page errors',errs,[]);await b.close();srv.close();if(fails){console.log('FAILED:',fails);process.exit(1)}console.log('All checks passed')})().catch(e=>{console.error(e);process.exit(1)});
