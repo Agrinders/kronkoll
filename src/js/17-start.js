@@ -35,7 +35,7 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     Object.assign(PM,keep);
     /* Subscriptions that were first saved as budget lines move out of the budget, once. */
     if(MIG.length){histMute++;setTimeout(()=>histMute--,500)}MIG.forEach(v=>{const a=amtOf({amts:v.amts||[{f:"0",a:0}],over:v.over||{},skip:[]},mk(NOW.getFullYear(),NOW.getMonth()));col.doc("sub_"+v.id).set({kind:"sub",id:String(v.id),n:String(v.n||""),a,f:v.freq,d:v.ds||v.freq!=="m"?String(v.date):"",off:!!v.end}).then(()=>col.doc("rec_"+v.id).delete()).catch(()=>{})});
-    /* Olddin budgets kept goals inside each month: gather their custom goals into the shared list once. */
+    /* Older budgets kept goals inside each month: gather their custom goals into the shared list once. */
     if(!exampleMode&&!sawGoals&&!goalsDirty){Object.keys(PM).sort().forEach(k=>(PM[k].split||[]).forEach(l=>{const g=G.find(z=>z.k===l.k);if(g){if(l.n)g.n=l.n}else G.push({k:l.k,n:l.n})}));saveGoals()}
     /* The old single "already saved" amount moves onto the first goal, once. */
     if(!exampleMode&&S.saved>0&&G.length){G[0].s=(G[0].s||0)+S.saved;S.saved=0;persist();saveGoals();flushSaves()}

@@ -65,6 +65,7 @@ document.addEventListener("click",e=>{
   const xm=e.target.closest("[data-xm]");if(xm){S.taxMode=xm.dataset.xm;persist();renderTax();return}
   const hp=e.target.closest("[data-hp]");if(hp){const x=PRICES.items.find(z=>z.id===hp.dataset.hp);if(x&&HS){HS.ref=x.id;HS.name=x.name;$("hs_nm").textContent=x.name;hsShow("pick");$("hs_qty").focus()}return}
   const hd=e.target.closest("[data-hold]");if(hd){openHS(hd.dataset.hold);return}
+  const sg=e.target.closest("[data-sg]");if(sg){SG=sg.dataset.sg;renderSaving();return}
   const gv=e.target.closest("[data-gv]");if(gv){const v=["",...G.map(z=>z.k)],i=v.indexOf(SG);SG=v[(i+ +gv.dataset.gv+v.length)%v.length];renderSaving();return}
   const hy=e.target.closest("[data-hy]");if(hy){HY+=+hy.dataset.hy;renderYear();yearScroll();return}
   const jm=e.target.closest("[data-jump]");if(jm){P={y:HY,m:+jm.dataset.jump};refreshMonth();go("b");return}

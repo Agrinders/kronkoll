@@ -1,5 +1,5 @@
 /* each month keeps its own lines; an empty month inherits the latest earlier one */
-const defaults=()=>S.lang==="sv"?{inc:[["Lön 1",24000],["Lön 2",24000]],items:[["Hyra",9500],["El & internet",1100],["Telefon",500],["Försäkring",400],["Netflix & Spotify",400]],vars:[["Mat",8500],["Transport",1600],["Nöjen",1500]]}:{inc:[["Salary 1",24000],["Salary 2",24000]],items:[["Rent",9500],["Power & internet",1100],["Phone",500],["Insurance",400],["Netflix & Spotify",400]],vars:[["Food",8500],["Transport",1600],["Fun",1500]]};
+const defaults=()=>S.lang==="sv"?{inc:[["Lön",32000]],items:[["Hyra",8500],["El & internet",700],["Telefon",300],["Försäkring",250],["Netflix & Spotify",300]],vars:[["Mat",4000],["Transport",1000],["Nöjen",1200]]}:{inc:[["Salary",32000]],items:[["Rent",8500],["Power & internet",700],["Phone",300],["Insurance",250],["Netflix & Spotify",300]],vars:[["Food",4000],["Transport",1000],["Fun",1200]]};
 const pair=a=>a.map(([n,x])=>({n,a:x}));
 const mk=(y,m)=>y+"_"+String(m+1).padStart(2,"0");
 const pmSel=()=>({y:P.y,m:P.m});
@@ -74,7 +74,7 @@ function advise(md){
   if(extra>=100)F.push([t("fRateT",kr(extra)),t("fRate")]);
   if(p.inc>0&&saveTo>0&&p.buf>=p.target)F.push([t("fIskT"),t("fIsk")]);
   if(saveTo>0)F.push([t("fSaveT"),t("fSave",kr(saveTo))]);
-  F.push([t("fTalkT"),t("fTalk")]);
+  if(S.adults>1)F.push([t("fTalkT"),t("fTalk")]);
   return{p,food,foodTo,subs,subsTo,other,needsTo,saveTo,lifeTo,bufTo,fundTo,bufNow,F};
 }
 function spendOf(y,m){const p=planCalc(monthData(y,m));return{p,used:0,left:p.life}}
@@ -133,7 +133,7 @@ function renderSaving(){
   const g=SG?G.find(z=>z.k===SG):null;if(!g)SG="";
   const got=g?(g.s||0)+deps.filter(d=>(d.pot||"")===g.k).reduce((s,d)=>s+d.amount,0):bal,tg=g?(g.t||(g.k==="buf"?goal:0)):goal;
   $("s_lbl").textContent=g?potName(g):t("totSaved");$("s_big").textContent=kr(got);
-  $("s_dots").innerHTML=[null,...G].map(x=>`<i class="${(x?x.k:"")===SG?"on":""}"></i>`).join("");
+  $("s_chips").setAttribute("aria-label",tx("Visa sparande för","Show savings for"));$("s_chips").innerHTML=[null,...G].map(x=>{const k=x?x.k:"",on=k===SG;return`<button class="chip ${on?"on":""}" data-sg="${esc(k)}" aria-pressed="${on}">${esc(x?potName(x):tx("Allt","All"))}</button>`}).join("");{const c=$("s_chips").querySelector(".on");if(c&&$("s_chips").scrollWidth>$("s_chips").clientWidth)$("s_chips").scrollLeft=Math.max(0,c.offsetLeft-$("s_chips").offsetLeft-40)}
   $("s_bar").style.width=Math.max(0,Math.min(100,tg?got/tg*100:0))+"%";$("s_goal").textContent=!tg?(g?t("gNoT"):""):!g?t("ofBuf",pc(Math.max(0,got)/tg),kr(tg)):got>=tg?t("gDone",kr(tg)):t("gProg",pc(Math.max(0,got)/tg),kr(tg),kr(tg-got));
   $("s_month").textContent=mn(P.m)+": "+kr(mSum);
   const perM=MNS[0].map((_,i)=>deps.filter(d=>{const x=new Date(d.at);return x.getFullYear()===P.y&&x.getMonth()===i}).reduce((s,d)=>s+d.amount,0)),mx=Math.max(1,...perM);

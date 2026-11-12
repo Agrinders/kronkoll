@@ -15,7 +15,8 @@ await step('picker cancel',async()=>{await p.click('#s_pot_b');await w();await p
 await step('picker -> new goal link',async()=>{await p.click('#s_pot_b');await w();await p.click('#ps .lnk');await w();return p.evaluate(()=>[tab,ps.classList.contains('on')])});
 await step('create goal',async()=>{await p.click('#g_add');await w(120);await p.keyboard.type('Bil');await w();return p.evaluate(()=>[G.map(g=>g.n).join(),document.activeElement.value])});
 await step('goal target',async()=>{const k=await p.evaluate(()=>G[G.length-1].k);await p.fill('#gt_'+k,'5 000');await p.press('#gt_'+k,'Tab');await w();return p.evaluate(()=>G[G.length-1].t)});
-await step('goal carousel',async()=>{await p.click('[data-gv="1"]');await w(60);return p.evaluate(()=>s_lbl.textContent)});
+await step('goal chips',async()=>{await p.click('#s_chips [data-sg="buf"]');await w(60);const l=await p.evaluate(()=>s_lbl.textContent);if(!/Buffert/.test(l))throw new Error('chip did not pick goal: '+l);await p.click('#s_chips [data-sg=""]');await w(60);return p.evaluate(()=>[s_lbl.textContent,document.querySelectorAll('#s [data-gv]').length])});
+await step('version page',async()=>{await p.evaluate(()=>go('n'));await w(60);const n0=await p.evaluate(()=>document.querySelectorAll('.vold').length);await p.click('#ver_more');await w(60);const n1=await p.evaluate(()=>document.querySelectorAll('.vold').length);if(!(n0===3&&n1>3))throw new Error(n0+' '+n1);await p.evaluate(()=>go('s'));await w(60);return [n0,n1]});
 await step('goal delete',async()=>{const k=await p.evaluate(()=>G[G.length-1].k);await p.click(`[data-gdel="${k}"]`);await w();return p.evaluate(()=>G.length)});
 await p.evaluate(()=>{go('b');d_inc.open=true});await w(150);
 await step('new line',async()=>{await p.click('[data-add="inc"]');await w(120);await p.keyboard.type('Bonus');return p.evaluate(()=>document.activeElement.value)});

@@ -1,5 +1,9 @@
-function renderVersion(){const q=li(),c=CHANGELOG[0],arrow='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
-  $("n").innerHTML=`<div class="sheet"><div class="lbl">${t("verNow")}</div><div class="big">${c.v}</div><div class="lbl">${c.d}</div></div>`+CHANGELOG.map(r=>`<div class="sheet"><p class="head">${r===c?t("verNew"):t("ttlN")+" "+r.v}</p>${r===c?`<div class="lbl" style="margin-top:-6px">${t("ttlN")} ${r.v}</div>`:""}${r.i.map(x=>`<div class="vn"><b>${x[2][q]}</b><p>${x[3][q]}</p>${x[0]==="n"?"":`<button class="take" data-go="${x[0]}" data-to="${x[1]}">${t("takeMe")}${arrow}</button>`}</div>`).join("")}</div>`).join("")}
+let verAll=false;
+function renderVersion(){const q=li(),c=CHANGELOG[0],arrow='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',old=CHANGELOG.slice(1),show=verAll?old:old.slice(0,3);
+  $("n").innerHTML=`<div class="sheet"><div class="lbl">${t("verNow")}</div><div class="big">${c.v}</div><div class="lbl">${c.d}</div></div>`
+  +`<div class="sheet"><p class="head">${t("verNew")}</p>${c.i.map(x=>`<div class="vn"><b>${x[2][q]}</b><p>${x[3][q]}</p>${x[0]==="n"?"":`<button class="take" data-go="${x[0]}" data-to="${x[1]}">${t("takeMe")}${arrow}</button>`}</div>`).join("")}</div>`
+  +`<div class="sheet"><p class="head">${tx("Tidigare versioner","Earlier versions")}</p>${show.map(r=>`<div class="vold"><div class="vh"><b>${r.v}</b><span>${r.d}</span></div><ul>${r.i.map(x=>`<li>${x[2][q]}</li>`).join("")}</ul></div>`).join("")}${old.length>3?`<button class="lnk" id="ver_more">${verAll?tx("Visa färre","Show fewer"):tx(`Visa alla ${old.length} tidigare versioner`,`Show all ${old.length} earlier versions`)}</button>`:""}</div>`}
+document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("#ver_more")){verAll=!verAll;renderVersion()}});
 function renderSettings(){
   $("c_th").innerHTML=["auto","light","dark"].map(v=>`<button class="chip ${S.theme===v?"on":""}" data-th="${v}">${t(v)}</button>`).join("");
   $("c_tm").innerHTML=THEMES.map(x=>`<button class="opt tm ${S.theme===x[0]?"on":""}" data-th="${x[0]}"><u style="background:linear-gradient(135deg,${TCOL[x[0]].join(",")})"></u><span>${x[1+li()]}<small>${x[3+li()]}</small></span><i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7"/></svg></i></button>`).join("");
@@ -11,9 +15,9 @@ function renderSettings(){
   $("h_c").innerHTML=(S.buf<2?`<div class="hint w">${t("hBufSet")}</div>`:"")+(S.lifePct<10?`<div class="hint w">${t("hLifeSet")}</div>`:"");
 }
 function applyTheme(){S.theme==="auto"?document.documentElement.removeAttribute("data-theme"):document.documentElement.setAttribute("data-theme",S.theme)}
-const setF=(k,l)=>`<div class="set"><label for="f_${k}">${t(l)}</label><input id="f_${k}" type="number" inputmode="decimal" data-s="${k}" value="${S[k]}"></div>`;
+const setF=(k,l,h)=>`<div class="set"><label for="f_${k}">${t(l)}<small id="fh_${k}">${t(h)}</small></label><input id="f_${k}" type="number" inputmode="decimal" data-s="${k}" value="${S[k]}" aria-describedby="fh_${k}"></div>`;
 function build(){
-  $("set_in").innerHTML=setF("adults","fAdults")+setF("buf","bufF")+setF("lifePct","lifeF")+setF("rateGoal","rateF");
+  $("set_in").innerHTML=setF("adults","fAdults","hAdults")+setF("buf","bufF","hBuf")+setF("lifePct","lifeF","hLife")+setF("rateGoal","rateF","hRate");
   buildSheet();buildGoals();
 }
 function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll(".langs [data-lang]").forEach(b=>{b.classList.toggle("sel",b.dataset.lang===S.lang);b.setAttribute("aria-pressed",b.dataset.lang===S.lang)});if($("empty"))$("empty").textContent=tx("Börja med en tom budget","Start with an empty budget");document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i)});document.querySelectorAll("[data-p]").forEach(e=>{e.placeholder=t(e.dataset.p)});$("reset").textContent=t("reset");build();render();if(typeof fitNav==="function")fitNav()}
