@@ -10,17 +10,18 @@ function tick(el){if(!S.click)return;try{navigator.vibrate&&navigator.vibrate(8)
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest(TAPSEL);if(b)tick(b)},true);
 document.addEventListener("pointerdown",e=>{const b=e.target.closest&&e.target.closest(".btn,.chip,nav button,.opt,.mini,.x,.mnav button,.gnav button,.ynav button,.seg button,.pick,.lnk[data-add],#g_add,#yr_list button,#drawer>button");if(!b)return;const r=b.getBoundingClientRect(),s=Math.max(r.width,r.height)*2.2,x=document.createElement("span");x.className="rp";x.style.cssText=`width:${s}px;height:${s}px;left:${e.clientX-r.left-s/2}px;top:${e.clientY-r.top-s/2}px`;b.appendChild(x);setTimeout(()=>x.remove(),520)},{passive:true});
 let lastKey="";
-/* Notifications form a list at the top. A new one goes below the others; the same message again replaces the old one and moves to the top. The rest slide into place instead of jumping. */
-let lastToast=null;
-function flip(box,change){const els=[...box.children],r0=new Map(els.map(e=>[e,e.getBoundingClientRect().top]));change();if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
-  for(const e of box.children){const t0=r0.get(e);if(t0==null)continue;const d=t0-e.getBoundingClientRect().top;if(Math.abs(d)>1)e.animate([{transform:`translateY(${d}px)`},{transform:"none"}],{duration:260,easing:"cubic-bezier(.2,.8,.2,1)"})}}
-function dropToast(e){if(!e.isConnected||e._going)return;e._going=1;clearTimeout(e._t);const box=e.parentNode;
-  const done=()=>{if(e.isConnected)flip(box,()=>e.remove())};if(matchMedia("(prefers-reduced-motion:reduce)").matches)return done();
-  e.style.animation="none";e.animate([{opacity:1,transform:"none"},{opacity:0,transform:"translateY(-8px) scale(.97)"}],{duration:200,easing:"ease-in",fill:"forwards"}).onfinish=done}
-function toast(msg,kind){if(!S.toasts)return;kind=kind||KIND[lastKey]||"info";const box=$("toasts"),key=kind+"|"+msg;const[a,...b]=String(msg).split(" · "),e=document.createElement("div");
+/* Notifications form a list at the top. A new one goes below the others; the same message again replaces the old one and shows at the top.
+   Leaving, a notification fades and then folds its own height to zero, so the ones below always slide up. */
+let lastToast=null;const RM=()=>matchMedia("(prefers-reduced-motion:reduce)").matches;
+function growIn(e){if(RM()||!e.animate)return;const h=e.offsetHeight;e.animate([{height:"0px",marginBottom:"0px",opacity:0,transform:"translateY(-6px)"},{height:h+"px",marginBottom:"8px",opacity:1,transform:"none"}],{duration:240,easing:"cubic-bezier(.2,.8,.2,1)"})}
+function dropToast(e){if(!e||e._going)return;e._going=1;clearTimeout(e._t);const done=()=>{if(e.isConnected)e.remove()};
+  if(RM()||!e.animate||!e.isConnected)return done();e.style.pointerEvents="none";const h=e.offsetHeight;
+  e.animate([{height:h+"px",marginBottom:"8px",opacity:1,transform:"none"},{height:h+"px",marginBottom:"8px",opacity:0,transform:"translateY(-6px) scale(.97)",offset:.45},{height:"0px",marginBottom:"0px",opacity:0,transform:"translateY(-6px) scale(.97)"}],{duration:380,easing:"ease-in-out",fill:"forwards"});
+  setTimeout(done,400)}
+function toast(msg,kind){if(!S.toasts)return null;kind=kind||KIND[lastKey]||"info";const box=$("toasts"),key=kind+"|"+msg;const[a,...b]=String(msg).split(" · "),e=document.createElement("div");
   e.className="toast "+kind;e.dataset.k=key;e.setAttribute("role","status");e.innerHTML=`<i><svg viewBox="0 0 24 24" aria-hidden="true">${TICON[kind]||TICON.info}</svg></i><span><b>${esc(a)}</b>${b.length?`<small>${esc(b.join(" · "))}</small>`:""}</span>`;e.onclick=()=>dropToast(e);
-  const same=[...box.querySelectorAll(".toast")].find(x=>x.dataset.k===key&&!x._going);
-  flip(box,()=>{if(same){clearTimeout(same._t);same.remove();box.insertBefore(e,box.querySelector(".toast"))}else{const live=[...box.querySelectorAll(".toast")].filter(x=>!x._going);if(live.length>=3){clearTimeout(live[0]._t);live[0].remove()}box.appendChild(e)}});
-  lastToast=e;chime(kind);e._t=setTimeout(()=>dropToast(e),3500);return e}
+  const live=()=>[...box.querySelectorAll(".toast")].filter(x=>!x._going),same=live().find(x=>x.dataset.k===key);
+  if(same){dropToast(same);box.insertBefore(e,box.querySelector(".toast"))}else{const L=live();if(L.length>=3)dropToast(L[0]);box.appendChild(e)}
+  growIn(e);lastToast=e;chime(kind);e._t=setTimeout(()=>dropToast(e),3500);return e}
 function ask(title,text){return new Promise(res=>{$("m_t").textContent=title;$("m_p").textContent=text;$("m_yes").textContent=t("pYes");$("m_no").textContent=t("pNo");$("modal").classList.add("on");const done=v=>{$("modal").classList.remove("on");$("m_yes").onclick=$("m_no").onclick=null;res(v)};$("m_yes").onclick=()=>done(true);$("m_no").onclick=()=>done(false)})}
 

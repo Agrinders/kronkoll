@@ -1,5 +1,5 @@
 /* Always tries the network first, so a published change shows up the next time the app opens. Falls back to the saved copy offline. */
-const V="kronkoll-65d7b7bd9270",FILES=['./', 'index.html', 'version.json', 'app-shell.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png', 'tax.json'];
+const V="kronkoll-34fcdeba7f4a",FILES=['./', 'index.html', 'version.json', 'app-shell.js', 'manifest.webmanifest', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png', 'tax.json'];
 self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)))});
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V&&x!=="kronkoll-fonts").map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
 self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);

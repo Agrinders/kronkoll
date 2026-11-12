@@ -94,8 +94,8 @@ nav button.on{background:var(--ink);color:var(--paper)}
 #drawer h2{font:700 24px var(--hand);letter-spacing:-.02em;margin:0 12px 10px}#drawer small{margin-top:auto;padding:0 12px;color:var(--soft)}
 #modal{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,10,20,.55);opacity:0;pointer-events:none;transition:opacity .2s}#modal.on{opacity:1;pointer-events:auto}
 .mbox{width:min(100%,400px);background:var(--paper);border:1px solid var(--rule);border-radius:22px;padding:22px}.mbox b{font:650 21px var(--hand)}.mbox p{color:var(--soft);font-size:15px;margin:8px 0 16px}.mact{display:flex;gap:10px}.mact .btn{flex:1}
-#toasts{position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));width:min(calc(100% - 32px),480px);z-index:60;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-.toast{padding:12px 16px;border-radius:14px;background:var(--ink);color:var(--paper);font-size:15px;font-weight:600;animation:tin .25s ease}
+#toasts{position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top,0px));width:min(calc(100% - 32px),480px);z-index:60;display:flex;flex-direction:column;pointer-events:none}
+.toast{padding:12px 16px;border-radius:14px;background:var(--ink);color:var(--paper);font-size:15px;font-weight:600}
 @keyframes tin{from{transform:translateY(-16px);opacity:0}}@keyframes tout{to{opacity:0}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
@@ -222,13 +222,13 @@ table.ymini tr.cur td{font-weight:750}table.ymini tr.tot td{font-weight:750;bord
 #rs_amt{margin-top:12px}#rs_amt .seg{margin:8px 0 0}
 
 /* Notifications: the same glass panels as the rest of the app, with a tinted icon. */
-#toasts{gap:8px}
+#toasts>*{margin-bottom:8px;flex:none}#toasts .toast{overflow:hidden}
 .toast{display:grid;grid-template-columns:38px minmax(0,1fr);align-items:center;gap:11px;padding:10px 14px 10px 10px;border-radius:18px;border:1px solid var(--rule);background:var(--glass);color:var(--ink);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);box-shadow:var(--shadow);pointer-events:auto;cursor:pointer;animation:tin .34s cubic-bezier(.2,1.25,.35,1),tout .3s 3.1s forwards}
 .toast i{--c:var(--pen);display:grid;place-items:center;width:38px;height:38px;border-radius:13px;color:var(--c);background:color-mix(in srgb,var(--c) 17%,transparent)}
 .toast svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .toast.save i,.toast.ok i{--c:var(--good)}.toast.win i{--c:var(--c3)}.toast.warn i,.toast.out i{--c:var(--warn)}.toast.bad i,.toast.del i{--c:var(--bad)}
 .toast b{display:block;font:650 15.5px/1.25 var(--ui)}.toast small{display:block;font-size:13.5px;line-height:1.3;color:var(--soft);margin-top:1px}
-.toast.win{animation:tin .34s cubic-bezier(.2,1.25,.35,1),glow 1s .1s}
+.toast.win{animation:glow 1s .1s}
 @keyframes tin{from{transform:translateY(-22px) scale(.95);opacity:0}}@keyframes glow{40%{box-shadow:0 0 0 3px color-mix(in srgb,var(--c3) 45%,transparent),var(--shadow)}}
 
 .mnav b{cursor:pointer}.mnav b::after{content:"";display:inline-block;width:7px;height:7px;margin-left:9px;vertical-align:4px;border-right:2px solid var(--soft);border-bottom:2px solid var(--soft);transform:rotate(45deg)}

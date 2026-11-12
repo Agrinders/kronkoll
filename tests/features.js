@@ -19,7 +19,7 @@ const needs=await ev(()=>planCalc(nowMd()).needs);
 check('no subscription hints for now',await ev(()=>document.querySelectorAll('.subhint').length),0);check('budget unchanged',await ev(()=>planCalc(nowMd()).needs),needs);
 // History: remove a line, then undo brings it back
 const first=await ev(()=>RULES.filter(r=>r.t==='items').map(r=>r.n)[0]);await p.waitForTimeout(800);
-await p.click('#l_items [data-delrw] >> nth=0');await p.click('#l_items [data-delrw] >> nth=0');await p.waitForTimeout(300);if(await p.locator('#rd.on').count())await p.click('#rd .opt >> nth=-1');await p.waitForTimeout(900);
+await p.click('#l_items [data-delrw] >> nth=0');await p.click('#l_items [data-delrw] >> nth=0');await p.waitForTimeout(300);if(await p.locator('#rd.on').count())await p.click('#rd .opt >> nth=-1');await p.waitForTimeout(1400);
 check('removed line is gone',await ev(n=>RULES.some(r=>r.n===n&&!r.end&&!r.skip.length),first),false);
 await ev(()=>go('u'));await p.click('[data-hu] >> nth=0');await p.waitForTimeout(400);if(await p.locator('#modal.on').count())await p.click('#m_yes');await p.waitForTimeout(500);
 check('undo brings it back',await ev(n=>RULES.some(r=>r.n===n&&!r.end&&!r.skip.length),first),true);
@@ -45,13 +45,15 @@ await q.reload();await q.waitForTimeout(2600);check('empty start survives reload
 await ev(()=>{go('b');d_out.open=true});await p.waitForTimeout(200);{const n0=await ev(()=>document.querySelectorAll('#l_items .lnw').length);
 await p.click('#l_items .x >> nth=0');await p.waitForTimeout(150);check('first tap only arms',await ev(()=>[document.querySelectorAll('#l_items .lnw').length,document.querySelector('#l_items .x').classList.contains('arm'),rd.classList.contains('on')]),[n0,true,false]);
 await p.click('#b_life');await p.waitForTimeout(150);check('tap elsewhere resets',await ev(()=>document.querySelectorAll('.x.arm').length),0);
-await p.click('#l_items .x >> nth=0');await p.waitForTimeout(3300);check('resets after 3 s',await ev(()=>document.querySelectorAll('.x.arm').length),0)}
+await p.click('#l_items .x >> nth=0');await ev(()=>{buildSheet();render()});await p.waitForTimeout(100);check('red survives a redraw',await ev(()=>document.querySelector('#l_items .x').classList.contains('arm')),true);
+await p.waitForTimeout(5300);check('resets after 5 s',await ev(()=>document.querySelectorAll('.x.arm').length),0)}
 // Notifications: new ones go below, a repeat moves to the top instead of showing twice
 await ev(()=>{document.querySelectorAll('#toasts .toast').forEach(t=>t.remove());toast('Första','info');toast('Andra','info');toast('Första','info')});await p.waitForTimeout(350);
-check('repeat moves to top, no duplicate',await ev(()=>[...document.querySelectorAll('#toasts .toast b')].map(b=>b.textContent)),['Första','Andra']);
+check('repeat moves to top, no duplicate',await ev(()=>[...document.querySelectorAll('#toasts .toast')].filter(t=>!t._going).map(t=>t.querySelector('b').textContent)),['Första','Andra']);
 await ev(()=>{toast('Tredje','info');toast('Fjärde','info')});await p.waitForTimeout(350);
-check('at most three, newest at the bottom',await ev(()=>[...document.querySelectorAll('#toasts .toast')].filter(t=>!t._going).map(t=>t.querySelector('b').textContent)),['Andra','Tredje','Fjärde']);
-{const tops=await ev(()=>[...document.querySelectorAll('#toasts .toast')].map(t=>t.getBoundingClientRect()));check('notifications do not overlap',tops.every((r,i)=>i===0||r.top>=tops[i-1].bottom-1),true)}
+check('at most three, newest at the bottom',await ev(()=>[...document.querySelectorAll('#toasts .toast')].filter(t=>!t._going).map(t=>t.querySelector('b').textContent)),['Andra','Tredje','Fjärde']);await p.waitForTimeout(500);
+{const tops=await ev(()=>[...document.querySelectorAll('#toasts .toast')].map(t=>t.getBoundingClientRect()));{await ev(()=>dropToast(document.querySelector('#toasts .toast')));await p.waitForTimeout(550);const r=await ev(()=>[document.querySelectorAll('#toasts .toast').length,Math.round(document.querySelector('#toasts .toast').getBoundingClientRect().top-toasts.getBoundingClientRect().top)]);check('the rest move up when one leaves',r,[2,0])}
+check('notifications do not overlap',tops.every((r,i)=>i===0||r.top>=tops[i-1].bottom-1),true)}
 await ev(()=>document.querySelectorAll('#toasts .toast').forEach(t=>t.remove()));
 // Second tap slides the row out, then it is gone
 await ev(()=>{go('b');d_out.open=true});await p.waitForTimeout(200);{const n0=await ev(()=>document.querySelectorAll('#l_items .lnw').length);
