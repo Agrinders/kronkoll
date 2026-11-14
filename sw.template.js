@@ -1,7 +1,7 @@
 /* Always tries the network first, so a published change shows up the next time the app opens. Falls back to the saved copy offline. */
 const V="kronkoll-__VERSION__",FILES=__FILES__;
 self.addEventListener("install",e=>{self.skipWaiting();e.waitUntil(caches.open(V).then(c=>c.addAll(FILES)))});
-self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V&&x!=="kronkoll-fonts").map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
+self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x.startsWith("kronkoll-")&&x!==V&&x!=="kronkoll-fonts").map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
 self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET")return;const u=new URL(r.url);
   if(u.hostname==="fonts.googleapis.com"||u.hostname==="fonts.gstatic.com"){e.respondWith(caches.open("kronkoll-fonts").then(c=>c.match(r).then(m=>m||fetch(r).then(x=>{c.put(r,x.clone());return x}))));return}
   if(u.origin!==location.origin)return;
