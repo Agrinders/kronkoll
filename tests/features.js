@@ -65,4 +65,11 @@ await p.route('**/version.json*',r=>r.fulfill({contentType:'application/json',bo
 check('update button shows',await ev(()=>[!upd.classList.contains('hide'),upd_t.textContent,upd_go.textContent]),[true,'Ny version finns','Uppdatera']);
 await p.unroute('**/version.json*');await Promise.all([p.waitForNavigation(),p.click('#upd')]);await p.waitForTimeout(2600);
 check('after update the address is clean',await ev(()=>[location.search,upd.classList.contains('hide')]),['',true]);
+// Touch: while typing, a tap elsewhere only closes the keyboard; the next tap acts. Buttons in the same form work at once.
+{const c3=await b.newContext({viewport:{width:384,height:760},hasTouch:true,isMobile:true,serviceWorkers:'block'});await c3.addInitScript(()=>{try{localStorage.setItem('kronkoll.welcome','1');localStorage.setItem('kronkoll.armTips','3')}catch(e){}});const q=await c3.newPage();q.on('pageerror',e=>errs.push(e.message));
+await q.goto('http://localhost:'+srv.address().port+'/');await q.waitForTimeout(2600);await q.evaluate(()=>{go('b');d_out.open=true});await q.waitForTimeout(300);const fe=()=>q.evaluate(()=>document.activeElement.id||document.activeElement.tagName);
+await q.locator('#l_items .nm').nth(0).tap();await q.locator('#l_items .nm').nth(2).tap();await q.waitForTimeout(150);check('tap on another field only unfocuses',await fe(),'BODY');
+await q.locator('#l_items .nm').nth(2).tap();await q.waitForTimeout(150);check('next tap focuses it',await fe(),'items_n2');
+await q.locator('nav [data-go="h"]').tap();await q.waitForTimeout(150);check('tab tap while typing does nothing',await q.evaluate(()=>[tab,document.activeElement.tagName]),['b','BODY']);
+await q.locator('#s_amt').tap();await q.keyboard.type('250');const d0=await q.evaluate(()=>deps.length);await q.locator('#s_add').tap();await q.waitForTimeout(400);check('button in the same form works in one tap',await q.evaluate(()=>deps.length),d0+1);await c3.close()}
 check('no page errors',errs,[]);await b.close();srv.close();if(fails){console.log('FAILED:',fails);process.exit(1)}console.log('All checks passed')})().catch(e=>{console.error(e);process.exit(1)});

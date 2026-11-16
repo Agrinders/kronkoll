@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="af1b4d990e6e">
+<meta name="kk-build" content="ac3624179e50">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -928,6 +928,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
+{v:"3.6",d:"16 nov 2026",i:[["b","#l_items",["Tryck bredvid stänger tangentbordet","Tap outside closes the keyboard"],["När du skriver och trycker någon annanstans försvinner bara tangentbordet. Inget annat händer förrän du trycker igen.","When you are typing and tap somewhere else, only the keyboard goes away. Nothing else happens until you tap again."]]]},
 {v:"3.5",d:"12 nov 2026",i:[["b","#l_items",["Krysset tappar inte greppet","The cross keeps its place"],["Det röda krysset står kvar i 5 sekunder och även om raderna ritas om, så två tryck alltid räcker.","The red cross stays for 5 seconds, even if the rows are redrawn, so two taps are always enough."]],["n","",["Notiserna flyttar upp","Notifications move up"],["När en notis försvinner glider de under upp och fyller platsen.","When a notification leaves, the ones below slide up to fill its place."]]]},
 {v:"3.4",d:"12 nov 2026",i:[["b","#l_items",["Mjukare borttagning","Smoother delete"],["Krysset trycks in när du trycker. Raden blinkar rött, glider ut åt vänster och resten flyttar mjukt upp.","The cross presses in when you tap. The row flashes red, slides out to the left and the rest moves up smoothly."]],["n","",["Notiser i en lista","Notifications in a list"],["Nya notiser hamnar under varandra i stället för ovanpå. Samma notis två gånger visas bara en gång, högst upp.","New notifications line up under each other instead of on top. The same one twice shows only once, at the top."]]]},
 {v:"3.3",d:"12 nov 2026",i:[["b","#l_items",["Ta bort med två tryck","Delete with two taps"],["Krysset är grått. Första trycket gör det rött, andra trycket tar bort raden. Trycker du någon annanstans händer inget.","The cross is grey. The first tap turns it red, the second removes the row. Tap anywhere else and nothing happens."]],["n","",["Tydligare uppdatering","Clearer update notice"],["Rutan om ny version är bredare och har en egen Uppdatera-knapp.","The new-version notice is wider and has its own Update button."]]]},
@@ -1490,6 +1491,19 @@ function animOut(el,fn){if(!el||el._going){fn();return}el._going=1;
   const h=el.offsetHeight,cs=getComputedStyle(el);el.style.overflow="hidden";el.style.pointerEvents="none";
   const slide=el.animate([{transform:"none",opacity:1,background:cs.backgroundColor},{transform:"none",opacity:1,background:"color-mix(in srgb,var(--bad) 16%,var(--glass2))",offset:.25},{transform:"translateX(-36px)",opacity:0,background:"color-mix(in srgb,var(--bad) 16%,var(--glass2))"}],{duration:230,easing:"cubic-bezier(.4,0,.6,1)",fill:"forwards"});
   slide.onfinish=()=>{el.animate([{height:h+"px",marginTop:cs.marginTop,paddingTop:cs.paddingTop,paddingBottom:cs.paddingBottom,borderTopWidth:cs.borderTopWidth,borderBottomWidth:cs.borderBottomWidth},{height:"0px",marginTop:"0px",paddingTop:"0px",paddingBottom:"0px",borderTopWidth:"0px",borderBottomWidth:"0px"}],{duration:200,easing:"cubic-bezier(.2,.8,.2,1)",fill:"forwards"}).onfinish=fn}}
+/* While typing on a touch screen, a tap somewhere else only closes the keyboard. It does not press a button, open another field
+   or do anything else; the next tap works as usual. Buttons in the same pop-up or form as the field still work in one tap
+   (Spara, Lägg till, picking from a list), and scrolling while typing keeps the keyboard up. Mouse use is unchanged. */
+let tapGuard=null;
+const isEdit=a=>!!a&&a!==document.body&&(a.isContentEditable||a.tagName==="TEXTAREA"||(a.tagName==="INPUT"&&!/^(checkbox|radio|range|button|submit|color|file)$/.test(a.type)));
+function tapAllowed(a,t){if(a.contains(t))return true;const b=t.closest&&t.closest("button,[role=button],.opt,label,a");if(!b||b.matches("input,textarea"))return false;
+  const scope=a.closest(".mbox,.form");return !!scope&&scope.contains(b)}
+window.addEventListener("pointerdown",e=>{if(e.pointerType!=="touch")return;const a=document.activeElement;if(!isEdit(a)||tapAllowed(a,e.target))return;
+  tapGuard={a,at:Date.now()};e.stopImmediatePropagation()},true);
+window.addEventListener("pointercancel",()=>{if(tapGuard&&!tapGuard.done)tapGuard=null},true);
+window.addEventListener("touchend",e=>{if(!tapGuard||tapGuard.done)return;if(Date.now()-tapGuard.at>1500){tapGuard=null;return}
+  e.preventDefault();const a=tapGuard.a;tapGuard={done:Date.now()};a.blur()},{capture:true,passive:false});
+window.addEventListener("click",e=>{if(!tapGuard||!tapGuard.done)return;const fresh=Date.now()-tapGuard.done<700;tapGuard=null;if(fresh){e.preventDefault();e.stopImmediatePropagation()}},true);
 </script>
 
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")</script>
