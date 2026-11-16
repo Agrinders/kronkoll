@@ -122,7 +122,16 @@ function rowHtml(rw,name,amt,i,extra,key){const k=key||`data-ix="${i}"`,ph=t("li
 function buildSheet(){const md=cur();
   RW.forEach(rw=>{$("l_"+rw).innerHTML=md[rw].map((r,i)=>{const key=r.rid?`data-rid="${r.rid}"`:`data-ix="${r.ix}"`;return rowHtml(rw,r.n,r.a,i,`<button class="freq ${r.skip?"skip":r.rid?"on":""}" ${r.skip?`data-rdel="${r.rid}"`:`data-rs="${rw}"`} ${key}>${esc(chip(r))}</button>`,key)}).join("");md[rw].forEach((r,i)=>{if(r.skip)$(rw+"_a"+i).readOnly=true})});document.querySelectorAll("#b .lnw").forEach(subHintFor)}
 function buildGoals(){$("s_goals").innerHTML=G.map(g=>`<div class="lnw"><div class="ln g"><input class="nm" type="text" id="goal_${g.k}" data-goal="${g.k}" value="${esc(rowName(g))}" maxlength="40" placeholder="${t("goalPh")}" aria-label="${t("goalPh")}"><button class="x" data-gdel="${g.k}" aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div><div class="gs"><label for="gs_${g.k}">${t("fSaved")}</label><span class="amw"><input class="am" type="text" inputmode="decimal" id="gs_${g.k}" data-gs="${g.k}" value="${fmtA(g.s||0)}" placeholder="0"><span>kr</span></span></div><div class="gs"><label for="gt_${g.k}">${t("gTarget")}</label><span class="amw"><input class="am" type="text" inputmode="decimal" id="gt_${g.k}" data-gt="${g.k}" value="${fmtA(g.t||0)}" placeholder="${g.k==="buf"?fmtA(planCalc(nowMd()).target)||"0":"0"}"><span>kr</span></span></div></div>`).join("")}
+/* One deposit or withdrawal as a row with a delete cross (used in Budget and Savings). */
+const depRow=d=>`<div class="dep${d.id===depNew?" new":""}"><span>${d.amount<0?"−":"＋"} ${kr(Math.abs(d.amount))} <span class="lbl">${fmtD(d.at)} ${esc([d.potN,d.note].filter(Boolean).join(" · "))}</span></span><button class="x" data-del="${d.id}" aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>`;
+let depNew=null;
+/* Under the save buttons in Budget: this month's deposits and withdrawals, folded by default, opened after you save. */
+function renderBudgetDeps(){const[a,b]=range(),list=deps.filter(d=>d.at>=a&&d.at<b).sort((x,y)=>y.at-x.at),net=list.reduce((s,d)=>s+d.amount,0);
+  $("b_deps_t").textContent=tx("Insättningar och uttag","Deposits and withdrawals")+(list.length?` (${list.length})`:"");
+  $("b_deps_n").textContent=list.length?(net<0?"−":"＋")+" "+kr(Math.abs(net)):"";
+  $("b_deps_l").innerHTML=list.map(depRow).join("")||`<p class="note">${tx("Inget sparat eller uttaget den här månaden än.","Nothing saved or withdrawn this month yet.")}</p>`}
 function renderBudget(){
+  renderBudgetDeps();
   const p=planCalc(cur()),ae=document.activeElement;
   $("b_per").innerHTML=mnavHtml();$("sum_inc").textContent=kr(p.inc);$("sum_out").textContent=kr(p.fixed);$("sum_var").textContent=kr(p.vars);
   const sp=spendOf(P.y,P.m);$("b_spent").textContent=kr(p.needs+sp.used);{const r=p.inc>0?p.save/p.inc*100:null;$("b_rl").textContent=tx("Sparkvot","Savings rate");$("b_rate").textContent=r==null?"–":r.toLocaleString(loc(),{maximumFractionDigits:r<10&&r>-10?1:0})+" %";$("b_rate").className=r!=null&&r<0?"er":"";const goal=Math.min(100,Math.max(1,S.rateGoal||30)),hit=r!=null&&r>=goal;$("b_rbar").style.width=Math.max(0,Math.min(100,(r||0)/goal*100))+"%";$("b_rbar").parentElement.classList.toggle("hit",hit);$("b_rgoal").textContent=tx(`Mål ${goal} %`,`Goal ${goal}%`);$("b_rsub").textContent=p.inc>0?(hit?tx(`Målet är nått. ${kr(p.save)} sparat av ${kr(p.inc)} i inkomster.`,`Goal reached. ${kr(p.save)} saved of ${kr(p.inc)} income.`):tx(`${kr(p.save)} sparat · ${kr(p.inc*goal/100-p.save)} kvar till målet`,`${kr(p.save)} saved · ${kr(p.inc*goal/100-p.save)} left to the goal`)):tx("Lägg in inkomster för att se sparkvoten","Add income to see the savings rate")}$("b_life").textContent=kr(sp.left);$("b_life").className=sp.left<0?"er":"";
@@ -145,5 +154,5 @@ function renderSaving(){
   if(S.saved)html+=`<div class="row"><span>${t("fSaved")}</span><b>${kr(S.saved)}</b></div>`;
   $("s_pots").innerHTML=html||`<p class="note">${t("none")}</p>`;
   $("s_cnt").textContent=list.length||"";
-  $("s_list").innerHTML=list.slice(0,60).map(d=>`<div class="dep"><span>${d.amount<0?"−":"＋"} ${kr(Math.abs(d.amount))} <span class="lbl">${fmtD(d.at)} ${esc([d.potN,d.note].filter(Boolean).join(" · "))}</span></span><button class="x" data-del="${d.id}" aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>`).join("")||`<p class="note">${t("none")}</p>`;
+  $("s_list").innerHTML=list.slice(0,60).map(depRow).join("")||`<p class="note">${t("none")}</p>`;
 }

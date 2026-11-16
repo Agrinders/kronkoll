@@ -116,7 +116,7 @@ nav .more{display:none}
   .cols{height:156px}
   #h>:nth-child(2){grid-column:span 7}#h>:nth-child(3){grid-column:span 5;align-content:center}#h>.btn{justify-self:start;min-width:260px}
   #b>:nth-child(2),#b>:nth-child(3),#b>:nth-child(4),#b>:nth-child(5){grid-column:span 6}
-  #b details>summary{cursor:default}#b details>summary::after{display:none}
+  #b details:not(#b_deps)>summary{cursor:default}#b details:not(#b_deps)>summary::after{display:none}
   #s_per{order:-1}#s>:nth-child(1){grid-column:span 5}#s>:nth-child(3){grid-column:span 7}#s>:nth-child(5){grid-column:span 7}#s>:nth-child(6){grid-column:span 5}
   #r>:nth-child(4),#r>:nth-child(5){align-self:start}#r>:nth-child(6),#r>:nth-child(7){grid-column:span 6;align-self:start}
   #m>:nth-child(2),#m>:nth-child(3){grid-column:span 6}#m>:nth-child(4),#m>:nth-child(5){grid-column:span 6}
@@ -428,3 +428,9 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 /* "New version" button, top centre, above everything except dialogs. */
 #upd{position:relative;display:flex;align-items:center;gap:12px;width:100%;pointer-events:auto;animation:tin .25s ease;min-height:60px;padding:10px 10px 10px 16px;border:1px solid var(--pen);border-radius:18px;background:var(--paper);color:var(--ink);font:600 15px/1.3 inherit;box-shadow:0 10px 30px rgba(5,10,20,.3);cursor:pointer;text-align:left}
 #upd.hide{display:none}#upd>span{flex:1;min-width:0}#upd b{display:block;font-size:15.5px;font-weight:650}#upd small{display:block;margin-top:1px;font-size:14px;font-weight:500;color:var(--soft)}#upd em{flex:none;font-style:normal;font-weight:650;font-size:15px;padding:10px 16px;border-radius:12px;background:var(--pen);color:var(--paper)}#upd svg{flex:none;width:22px;height:22px;fill:none;stroke:var(--pen);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Budget: this month's deposits and withdrawals under the save buttons. */
+#b_deps{margin-top:12px;border-top:1px solid var(--rule)}#b_deps>summary{font-weight:650;font-size:15.5px}#b_deps>summary>span:first-child{min-width:0}
+#b_deps .sumv{font-size:16px}#b_deps_l{padding-bottom:2px}#b_deps .note{margin:4px 0 6px}
+.dep.new{animation:depnew 2.2s ease-out}@keyframes depnew{0%,30%{background:color-mix(in srgb,var(--good) 18%,transparent)}100%{background:transparent}}
+.dep{border-radius:10px;padding-inline:6px;margin-inline:-6px}

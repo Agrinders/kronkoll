@@ -44,7 +44,8 @@ async function addDep(sign,row){if(depBusy)return;
   try{const before=total(),d={amount:sign*a,note:"",at:depTs(),pot:k||"",potN:line?potName(line):""},after=before+d.amount,n=planCalc(nowMd()).needs;
     if(sign<0&&n>0){if(after<n){if(!await ask(t("pWd1T"),t("pWd1",kr(after),kr(n))))return}else if(after<S.buf*n&&before>=S.buf*n){if(!await ask(t("pWd2T"),t("pWd2",kr(S.buf*n))))return}}
     if(!row)$("s_amt").value="";
-    if(col){try{await col.doc("dep_"+Date.now()).set(d)}catch(e){toast(t("tFail"));return}}else{deps.unshift({id:"l"+Date.now(),...d});render()}
+    const id=col?"dep_"+Date.now():"l"+Date.now();depNew=id;if(!row&&tab==="b")$("b_deps").open=true;setTimeout(()=>{if(depNew===id){depNew=null;document.querySelectorAll(".dep.new").forEach(e=>e.classList.remove("new"))}},2500);
+    if(col){try{await col.doc(id).set(d)}catch(e){toast(t("tFail"));return}}else{deps.unshift({id,...d});render()}
     if(sign>0){FX.pulse(1);toast(t("tSaved",kr(a),kr(after)));if(n>0&&before<S.buf*n&&after>=S.buf*n)setTimeout(()=>toast(t("tBuf")),700);else if(n>0&&before<n&&after>=n)setTimeout(()=>toast(t("tStart")),700)}else toast(t("tWd",kr(a),kr(after)))
   }finally{depBusy=false}}
 $("s_add").onclick=()=>addDep(1);$("s_out").onclick=()=>addDep(-1);

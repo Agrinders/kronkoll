@@ -1,7 +1,7 @@
 /* Wider screens show all budget sections at once; phones keep one open at a time. */
 function layout(){const D=["d_inc","d_out","d_var"].map(x=>$(x));if(WIDE.matches)D.forEach(d=>{d.removeAttribute("name");d.open=true});else{D.forEach(d=>{d.open=false;d.setAttribute("name","bud")});if(!hasData())D[0].open=true}}
 [WIDE,RAIL].forEach(m=>m.addEventListener("change",()=>{closeYears();layout();render()}));
-$("b").addEventListener("click",e=>{if(WIDE.matches&&e.target.closest("summary"))e.preventDefault()});
+$("b").addEventListener("click",e=>{if(WIDE.matches&&e.target.closest("summary")&&!e.target.closest("#b_deps"))e.preventDefault()});
 seedExample();applyTheme();applyLang();let startTab="h";try{const s=sessionStorage.getItem("kronkoll.tab");if(s&&$(s)&&"hbsarmvlunc".includes(s))startTab=s}catch(e){}go(startTab);layout();
 /* Opening transition: wait until the first screen is drawn and the fonts are in, then reveal it. */
 (()=>{const H=document.documentElement,still=!S.motion||matchMedia("(prefers-reduced-motion:reduce)").matches;if(still)H.classList.add("still");
