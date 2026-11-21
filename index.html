@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="c17226b53af4">
+<meta name="kk-build" content="62dfc6ef548b">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -498,6 +498,15 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 .gbody{display:grid;grid-template-rows:1fr;transition:grid-template-rows .26s cubic-bezier(.2,.8,.2,1),opacity .2s}
 .gbody>div{min-height:0;overflow:hidden}
 .lnw.folded .gbody{grid-template-rows:0fr;opacity:0}
+
+/* "Sparar… / Sparat" at the right of the title bar. */
+.top h1{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.savest{flex:none;display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:var(--soft);opacity:0;transform:translateY(-2px);transition:opacity .35s,transform .35s;pointer-events:none;white-space:nowrap}
+.savest.on{opacity:1;transform:none}.savest.fail{color:var(--warn)}
+.savest svg{width:15px;height:15px;fill:none;stroke:var(--good);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.savest i{width:11px;height:11px;border-radius:50%;border:2px solid var(--rule);border-top-color:var(--soft);animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.savest i{animation:none}}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -526,7 +535,7 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 <div id="yrs"><p data-i="pickYear"></p><div id="yr_list"></div></div>
 
 <main>
-<div class="top"><button class="menu" id="menu" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h11M4 17h16"/></svg></button><h1 id="ttl"></h1></div>
+<div class="top"><button class="menu" id="menu" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h11M4 17h16"/></svg></button><h1 id="ttl"></h1><span class="savest" id="savest" role="status" aria-live="polite"></span></div>
 
 <section id="h">
 <div class="sheet hide" id="h_bk"></div>
@@ -994,6 +1003,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
+{v:"4.0",d:"21 nov 2026",i:[["b","",["Sparat-besked","Saved indicator"],["När du ändrar något står det Sparar… och sedan Sparat i titelraden, så du vet att det är sparat.","When you change something the title bar shows Saving… then Saved, so you know it is stored."]]]},
 {v:"3.9",d:"21 nov 2026",i:[["s","#s_goals",["Fäll ihop sparmål","Fold savings goals"],["Tryck på pilen vid ett mål för att bara se namnet. Appen kommer ihåg vilka du fällt ihop.","Tap the arrow next to a goal to see just its name. The app remembers which ones you folded."]],["s","#s_chips",["Sparande utan dubbletter","Savings without duplicates"],["Rutan Sparat per mål är borta. Samma sak ser du överst, där du väljer mål.","The Saved per goal box is gone. You see the same at the top, where you pick a goal."]],["h","",["Rakare hörn","Squarer corners"],["Rutor och knappar är lite fyrkantigare, och det som ligger inuti en ruta har hörn som följer rutans.","Boxes and buttons are a little squarer, and anything inside a box has corners that follow the box."]],["h","",["Titelraden på plats","Title bar in place"],["Titelraden ligger högst upp igen, med samma avstånd ner till första rutan som mellan rutorna.","The title bar sits at the top again, with the same gap to the first box as between boxes."]]]},
 {v:"3.8",d:"21 nov 2026",i:[["b","#d_inc",["Färgat glas i Budget","Tinted glass in Budget"],["Inkomster är gröna, fasta utgifter röda, rörliga orange och sparande turkosa, så det går snabbt att hitta rätt.","Income is green, fixed expenses red, variable orange and saving turquoise, so the right section is quick to find."]],["h","",["Glaskanter","Glass edges"],["Rutor, knappar och fält har fått en ljus glaskant som fångar ljuset upptill.","Panels, buttons and fields have a light glass rim that catches the light at the top."]]]},
 {v:"3.7",d:"16 nov 2026",i:[["b","#b_deps",["Se vad du sparat i Budget","See your savings in Budget"],["Under Lägg till och Ta ut finns en lista med månadens insättningar och uttag. Den öppnas när du sparar, och du kan ta bort en rad där.","Under Add and Withdraw there is a list of the month's deposits and withdrawals. It opens when you save, and you can remove a row there."]]]},
@@ -1575,6 +1585,17 @@ window.addEventListener("pointercancel",()=>{if(tapGuard&&!tapGuard.done)tapGuar
 window.addEventListener("touchend",e=>{if(!tapGuard||tapGuard.done)return;if(Date.now()-tapGuard.at>1500){tapGuard=null;return}
   e.preventDefault();const a=tapGuard.a;tapGuard={done:Date.now()};a.blur()},{capture:true,passive:false});
 window.addEventListener("click",e=>{if(!tapGuard||!tapGuard.done)return;const fresh=Date.now()-tapGuard.done<700;tapGuard=null;if(fresh){e.preventDefault();e.stopImmediatePropagation()}},true);
+/* Save status in the title bar: small grey "Sparar…" then "Sparat ✓" after something you did, fading after a few seconds.
+   Saves the app makes by itself (at start, for example) are not shown. */
+let lastAct=0,saveT=0,saveShownAt=0;
+["pointerdown","keydown","change","input"].forEach(ev=>addEventListener(ev,()=>{lastAct=Date.now()},true));
+function saveState(s){const el=$("savest");clearTimeout(saveT);
+  if(s==="start"){if(Date.now()-lastAct>2500)return;saveShownAt=Date.now();el.className="savest on busy";el.innerHTML=`<i></i>${tx("Sparar…","Saving…")}`;return}
+  if(!el.classList.contains("busy")&&s!=="fail")return;
+  const wait=Math.max(0,400-(Date.now()-saveShownAt));
+  saveT=setTimeout(()=>{if(s==="fail"){el.className="savest on fail";el.textContent=tx("Kunde inte spara","Could not save");saveT=setTimeout(()=>{el.className="savest"},6000);return}
+    el.className="savest on";el.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>${tx("Sparat","Saved")}`;saveT=setTimeout(()=>{el.className="savest"},2600)},wait)}
+addEventListener("kk-save",e=>saveState(e.detail));
 </script>
 
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")</script>

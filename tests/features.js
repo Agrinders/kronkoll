@@ -74,6 +74,10 @@ await ev(()=>{go('h');scrollTo(0,0)});await p.waitForTimeout(300);check('title b
 await ev(()=>go('s'));await p.waitForTimeout(300);{const k=await ev(()=>G[0].k);await p.click(`[data-gfold="${k}"]`);await p.waitForTimeout(400);
 check('goal folds to its name',await ev(k=>{const w=document.querySelector(`[data-gfold="${k}"]`).closest('.lnw');return[w.classList.contains('folded'),w.querySelector('.gbody').getBoundingClientRect().height<2,localStorage.getItem('kronkoll.gfold').includes(k)]},k),[true,true,true]);
 await p.click(`[data-gfold="${k}"]`);await p.waitForTimeout(400);check('goal opens again',await ev(k=>document.querySelector(`[data-gfold="${k}"]`).closest('.lnw').classList.contains('folded'),k),false)}
+// Title bar shows Sparar… / Sparat after you change something, and fades again
+await ev(()=>{go('b');d_inc.open=true});await p.waitForTimeout(300);await p.fill('#l_inc .am >> nth=0','31000');await p.locator('#l_inc .am >> nth=0').blur();
+await p.waitForFunction(()=>savest.classList.contains('on')&&!savest.classList.contains('busy'),null,{timeout:3000}).catch(()=>{});check('save status says Sparat',await ev(()=>savest.textContent),'Sparat');
+await p.waitForFunction(()=>!savest.classList.contains('on'),null,{timeout:5000}).catch(()=>{});check('save status fades',await ev(()=>savest.classList.contains('on')),false);
 // Touch: while typing, a tap elsewhere only closes the keyboard; the next tap acts. Buttons in the same form work at once.
 {const c3=await b.newContext({viewport:{width:384,height:760},hasTouch:true,isMobile:true,serviceWorkers:'block'});await c3.addInitScript(()=>{try{localStorage.setItem('kronkoll.welcome','1');localStorage.setItem('kronkoll.armTips','3')}catch(e){}});const q=await c3.newPage();q.on('pageerror',e=>errs.push(e.message));
 await q.goto('http://localhost:'+srv.address().port+'/');await q.waitForTimeout(2600);await q.evaluate(()=>{go('b');d_out.open=true});await q.waitForTimeout(300);const fe=()=>q.evaluate(()=>document.activeElement.id||document.activeElement.tagName);

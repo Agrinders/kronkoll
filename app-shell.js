@@ -7,7 +7,9 @@
   const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"{}")||{}}catch(e){return {}}};
   /* Always starts from what is saved right now, so a second open copy of the app can never overwrite newer changes. */
   let data=read();const fresh=()=>{data=read()};
-  const write=()=>{localStorage.setItem(KEY,JSON.stringify(data))};
+  /* Every save tells the page, so the title bar can show "Sparar… / Sparat". */
+  const say=s=>{try{dispatchEvent(new CustomEvent("kk-save",{detail:s}))}catch(e){}};
+  const write=()=>{say("start");try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){say("fail");throw e}say("ok")};
   if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
   const subs={},copy=v=>JSON.parse(JSON.stringify(v));
   const snap=p=>{const m=data[p]||{},docs=Object.keys(m).sort().map(id=>({id,exists:true,data:()=>copy(m[id]),metadata:{fromCache:false,hasPendingWrites:false}}));return{docs,size:docs.length,empty:!docs.length,metadata:{fromCache:false,hasPendingWrites:false}}};

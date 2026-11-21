@@ -485,3 +485,12 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 .gbody{display:grid;grid-template-rows:1fr;transition:grid-template-rows .26s cubic-bezier(.2,.8,.2,1),opacity .2s}
 .gbody>div{min-height:0;overflow:hidden}
 .lnw.folded .gbody{grid-template-rows:0fr;opacity:0}
+
+/* "Sparar… / Sparat" at the right of the title bar. */
+.top h1{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.savest{flex:none;display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:var(--soft);opacity:0;transform:translateY(-2px);transition:opacity .35s,transform .35s;pointer-events:none;white-space:nowrap}
+.savest.on{opacity:1;transform:none}.savest.fail{color:var(--warn)}
+.savest svg{width:15px;height:15px;fill:none;stroke:var(--good);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.savest i{width:11px;height:11px;border-radius:50%;border:2px solid var(--rule);border-top-color:var(--soft);animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.savest i{animation:none}}
