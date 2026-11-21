@@ -24,7 +24,8 @@
 <div id="yrs"><p data-i="pickYear"></p><div id="yr_list"></div></div>
 
 <main>
-<div class="top"><button class="menu" id="menu" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h11M4 17h16"/></svg></button><h1 id="ttl"></h1><span class="savest" id="savest" role="status" aria-live="polite"></span></div>
+<div class="top"><button class="menu" id="menu" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h11M4 17h16"/></svg></button><h1 id="ttl"></h1><span class="savest" id="savest" role="status" aria-live="polite"></span><button class="acctop hide" id="acc_btn" type="button" aria-expanded="false" aria-controls="accdd"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="17" height="12" rx="2.5"/><path d="M3.5 10h17"/></svg><span id="acc_btn_t"></span><svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div>
+<div id="accdd" class="accdd" role="dialog" aria-labelledby="accdd_t"><b id="accdd_t"></b><div id="acc_l"></div></div>
 
 <section id="h">
 <div class="sheet hide" id="h_bk"></div>
@@ -51,7 +52,6 @@
 </div>
 <div class="sheet"><div class="split"><div><span data-i="spentL"></span><b id="b_spent"></b></div><div><span data-i="lifeRow"></span><b id="b_life"></b></div></div><div class="srate"><div class="srow"><span id="b_rl"></span><b id="b_rate"></b></div><div class="sgoal" id="b_rgoal"></div><div class="sbar"><i id="b_rbar"></i></div><small id="b_rsub"></small></div>
 </div>
-<div class="sheet" id="b_accs"><details id="d_acc"><summary><span><span class="head" id="acc_h"></span><span class="sub2" id="acc_sub"></span></span><span class="sumv" id="sum_acc"></span></summary><div id="acc_l"></div></details></div>
 <div class="sheet tint t-save"><p class="head" data-i="addSaveHead"></p>
 <div class="form"><input id="s_amt" type="text" inputmode="decimal" autocomplete="off" data-p="amountPh"><button type="button" class="pick" id="s_pot_b"><span id="s_pot_t"></span></button><select id="s_pot" hidden></select><button class="btn" id="s_add" data-i="bSaved"></button><button class="btn out" id="s_out" data-i="bWd"></button></div>
 <details class="bdeps" id="b_deps"><summary><span id="b_deps_t"></span><span class="sumv" id="b_deps_n"></span></summary><div id="b_deps_l"></div></details>

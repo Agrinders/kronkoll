@@ -81,7 +81,13 @@ await p.waitForFunction(()=>!savest.classList.contains('on'),null,{timeout:5000}
 // Accounts: pick or create an account on a row; Budget shows what each account needs and the payday moves
 await ev(()=>{go('b');d_inc.open=true});await p.waitForTimeout(200);await p.click('#l_inc [data-acc] >> nth=0');await p.waitForTimeout(250);await p.fill('#ac_n','Lönekonto');await p.click('#ac_add');await p.waitForTimeout(300);
 await ev(()=>d_out.open=true);await p.waitForTimeout(200);await p.click('#l_items [data-acc] >> nth=0');await p.waitForTimeout(250);await p.fill('#ac_n','Räkningskonto');await p.click('#ac_add');await p.waitForTimeout(400);
-{const r=await ev(()=>{const inc=monthData(P.y,P.m).items.find(x=>x.acc);return[ACC.map(a=>a.n).join(','),!!inc,document.querySelectorAll('#acc_l .accc').length>=2,!!document.querySelector('.accmove')&&document.querySelector('.accmove').textContent.includes('Räkningskonto')]});check('accounts created, assigned and summed with a payday move',r,['Lönekonto,Räkningskonto',true,true,true])}
+await ev(()=>scrollTo(0,0));await p.click('#acc_btn');await p.waitForTimeout(300);
+{const r=await ev(()=>{const inc=monthData(P.y,P.m).items.find(x=>x.acc);return[ACC.map(a=>a.n).join(','),!!inc,accdd.classList.contains('on'),document.querySelectorAll('#acc_l .ddr').length>=2,!!document.querySelector('.ddm')&&document.querySelector('.ddm').textContent.includes('Räkningskonto')]});check('accounts dropdown shows each account and the payday move',r,['Lönekonto,Räkningskonto',true,true,true,true])}
+await p.click('#ttl');await p.waitForTimeout(250);check('dropdown closes on a tap outside',await ev(()=>accdd.classList.contains('on')),false);
+await ev(()=>go('h'));await p.waitForTimeout(150);check('accounts button only on Budget',await ev(()=>getComputedStyle(acc_btn).display),'none');
+// Amounts take two decimals
+await ev(()=>{go('b');d_out.open=true});await p.waitForTimeout(250);await p.fill('#l_items .am >> nth=0','8 500,45');await p.locator('#l_items .am >> nth=0').blur();await p.waitForTimeout(400);
+check('amount keeps two decimals',await ev(()=>[document.querySelector('#l_items .am').value,sum_out.textContent.includes(',45')]),['8 500,45',true]);
 // Touch: while typing, a tap elsewhere only closes the keyboard; the next tap acts. Buttons in the same form work at once.
 {const c3=await b.newContext({viewport:{width:384,height:760},hasTouch:true,isMobile:true,serviceWorkers:'block'});await c3.addInitScript(()=>{try{localStorage.setItem('kronkoll.welcome','1');localStorage.setItem('kronkoll.armTips','3')}catch(e){}});const q=await c3.newPage();q.on('pageerror',e=>errs.push(e.message));
 await q.goto('http://localhost:'+srv.address().port+'/');await q.waitForTimeout(2600);await q.evaluate(()=>{go('b');d_out.open=true});await q.waitForTimeout(300);const fe=()=>q.evaluate(()=>document.activeElement.id||document.activeElement.tagName);

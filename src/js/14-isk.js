@@ -2,7 +2,7 @@
 const ISK={rate:.01065,free:300000};
 function renderIsk(){const hv=holdTotals().val,v=S.iskV>0?S.iskV:hv,base=v+S.iskIn/4,free=ISK.free*S.iskP,tax=Math.max(0,(base-free)*ISK.rate),ae=document.activeElement;
   $("isk_h").textContent=tx("Skatt på ISK","Tax on ISK");$("isk_l").textContent=tx("Uppskattad skatt för 2026","Estimated tax for 2026");$("isk_big").textContent=kr(tax);
-  $("isk_sub").textContent=tax>0?tx(`Ungefär ${kr(tax/12)} i månaden · betalas via slutskatten våren 2027`,`About ${kr(tax/12)} a month · paid with your final tax in spring 2027`):tx(`Ingen skatt. Upp till ${kr(free)} är skattefritt.`,`No tax. Up to ${kr(free)} is tax-free.`);
+  $("isk_sub").textContent=tax>0?tx(`Ungefär ${krr(tax/12)} i månaden · betalas via slutskatten våren 2027`,`About ${krr(tax/12)} a month · paid with your final tax in spring 2027`):tx(`Ingen skatt. Upp till ${kr(free)} är skattefritt.`,`No tax. Up to ${kr(free)} is tax-free.`);
   $("isk_vl").textContent=tx("Värde på ISK, kr","Value of your ISK, kr");$("isk_inl").textContent=tx("Insättningar under året, kr","Deposits during the year, kr");$("isk_pl").textContent=tx("Hur många har eget ISK?","How many have their own ISK?");
   if($("isk_v")!==ae)$("isk_v").value=S.iskV>0?fmtA(S.iskV):"";$("isk_v").placeholder=hv>0?fmtA(hv):"0";if($("isk_in")!==ae)$("isk_in").value=S.iskIn>0?fmtA(S.iskIn):"";
   $("isk_p").innerHTML=[1,2].map(n=>`<button class="chip ${S.iskP===n?"on":""}" data-iskp="${n}">${n===1?tx("En person","One person"):tx("Två personer","Two people")}</button>`).join("");

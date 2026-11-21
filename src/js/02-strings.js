@@ -52,7 +52,8 @@ pYes:["Gör det ändå","Do it anyway"],pNo:["Avbryt","Cancel"],pWd1T:["Du tar a
 const t=(k,...a)=>{lastKey=k;const v=T[k][li()];return typeof v==="function"?v(...a):v};
 
 let deps=[],PM={},allIds=[],col=null,tab="h",P={y:NOW.getFullYear(),m:NOW.getMonth()},seenData=false;
-const kr=v=>(v<0?"−":"")+Math.round(Math.abs(v)).toLocaleString("sv-SE")+" kr";
+/* Money with up to 2 decimals: 12 kr, 12,50 kr. krr rounds to whole kronor, for values the app works out itself (per day, estimates). */
+const cents=v=>Math.round(Math.abs(v)*100)/100,kr=v=>{const a=cents(v);return(v<0&&a?"−":"")+a.toLocaleString("sv-SE",a%1?{minimumFractionDigits:2,maximumFractionDigits:2}:{maximumFractionDigits:0})+" kr"},krr=v=>kr(Math.round(v));
 const pc=v=>Math.round(v*100)+" %";
 const esc=x=>String(x).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const sum=x=>x.reduce((s,i)=>s+i.a,0);
