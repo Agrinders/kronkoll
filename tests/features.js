@@ -83,6 +83,7 @@ await p.waitForFunction(()=>!savest.classList.contains('on'),null,{timeout:5000}
 await q.goto('http://localhost:'+srv.address().port+'/');await q.waitForTimeout(2600);await q.evaluate(()=>{go('b');d_out.open=true});await q.waitForTimeout(300);const fe=()=>q.evaluate(()=>document.activeElement.id||document.activeElement.tagName);
 await q.locator('#l_items .nm').nth(0).tap();await q.locator('#l_items .nm').nth(2).tap();await q.waitForTimeout(150);check('tap on another field only unfocuses',await fe(),'BODY');
 await q.locator('#l_items .nm').nth(2).tap();await q.waitForTimeout(150);check('next tap focuses it',await fe(),'items_n2');
+await q.locator('#l_items .am').nth(2).tap();await q.waitForTimeout(150);check('field in the same row focuses at once',await fe(),'items_a2');await q.locator('#l_items .nm').nth(2).tap();await q.waitForTimeout(150);
 await q.locator('nav [data-go="h"]').tap();await q.waitForTimeout(150);check('tab tap while typing does nothing',await q.evaluate(()=>[tab,document.activeElement.tagName]),['b','BODY']);
 await q.locator('#s_amt').tap();await q.keyboard.type('250');const d0=await q.evaluate(()=>deps.length);await q.locator('#s_add').tap();await q.waitForTimeout(400);check('button in the same form works in one tap',await q.evaluate(()=>deps.length),d0+1);await c3.close()}
 check('no page errors',errs,[]);await b.close();srv.close();if(fails){console.log('FAILED:',fails);process.exit(1)}console.log('All checks passed')})().catch(e=>{console.error(e);process.exit(1)});

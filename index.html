@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="245de09269d1">
+<meta name="kk-build" content="67ec17680a5f">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -1018,6 +1018,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
+{v:"4.1",d:"21 nov 2026",i:[["b","#l_items",["Hoppa mellan fält på samma rad","Move between fields in the same row"],["När du skriver ett namn kan du trycka direkt på beloppet på samma rad utan att tangentbordet först fälls ner.","While typing a name you can tap the amount in the same row straight away, without the keyboard closing first."]]]},
 {v:"4.0",d:"21 nov 2026",i:[["b","#d_inc",["Färgat glas i alla teman","Tinted glass in every theme"],["Färgerna i Budget syns lika tydligt i alla teman, och glaskanten tar upp rutans färg. Sparande har en lugnare glasblå ton.","The Budget colours show equally well in every theme, and the glass rim picks up the box colour. Saving has a calmer glass blue."]],["b","",["Sparat-besked","Saved indicator"],["När du ändrar något står det Sparar… och sedan Sparat i titelraden, så du vet att det är sparat.","When you change something the title bar shows Saving… then Saved, so you know it is stored."]]]},
 {v:"3.9",d:"21 nov 2026",i:[["s","#s_goals",["Fäll ihop sparmål","Fold savings goals"],["Tryck på pilen vid ett mål för att bara se namnet. Appen kommer ihåg vilka du fällt ihop.","Tap the arrow next to a goal to see just its name. The app remembers which ones you folded."]],["s","#s_chips",["Sparande utan dubbletter","Savings without duplicates"],["Rutan Sparat per mål är borta. Samma sak ser du överst, där du väljer mål.","The Saved per goal box is gone. You see the same at the top, where you pick a goal."]],["h","",["Rakare hörn","Squarer corners"],["Rutor och knappar är lite fyrkantigare, och det som ligger inuti en ruta har hörn som följer rutans.","Boxes and buttons are a little squarer, and anything inside a box has corners that follow the box."]],["h","",["Titelraden på plats","Title bar in place"],["Titelraden ligger högst upp igen, med samma avstånd ner till första rutan som mellan rutorna.","The title bar sits at the top again, with the same gap to the first box as between boxes."]]]},
 {v:"3.8",d:"21 nov 2026",i:[["b","#d_inc",["Färgat glas i Budget","Tinted glass in Budget"],["Inkomster är gröna, fasta utgifter röda, rörliga orange och sparande turkosa, så det går snabbt att hitta rätt.","Income is green, fixed expenses red, variable orange and saving turquoise, so the right section is quick to find."]],["h","",["Glaskanter","Glass edges"],["Rutor, knappar och fält har fått en ljus glaskant som fångar ljuset upptill.","Panels, buttons and fields have a light glass rim that catches the light at the top."]]]},
@@ -1587,13 +1588,14 @@ function animOut(el,fn){if(!el||el._going){fn();return}el._going=1;
   const h=el.offsetHeight,cs=getComputedStyle(el);el.style.overflow="hidden";el.style.pointerEvents="none";
   const slide=el.animate([{transform:"none",opacity:1,background:cs.backgroundColor},{transform:"none",opacity:1,background:"color-mix(in srgb,var(--bad) 16%,var(--glass2))",offset:.25},{transform:"translateX(-36px)",opacity:0,background:"color-mix(in srgb,var(--bad) 16%,var(--glass2))"}],{duration:230,easing:"cubic-bezier(.4,0,.6,1)",fill:"forwards"});
   slide.onfinish=()=>{el.animate([{height:h+"px",marginTop:cs.marginTop,paddingTop:cs.paddingTop,paddingBottom:cs.paddingBottom,borderTopWidth:cs.borderTopWidth,borderBottomWidth:cs.borderBottomWidth},{height:"0px",marginTop:"0px",paddingTop:"0px",paddingBottom:"0px",borderTopWidth:"0px",borderBottomWidth:"0px"}],{duration:200,easing:"cubic-bezier(.2,.8,.2,1)",fill:"forwards"}).onfinish=fn}}
-/* While typing on a touch screen, a tap somewhere else only closes the keyboard. It does not press a button, open another field
-   or do anything else; the next tap works as usual. Buttons in the same pop-up or form as the field still work in one tap
-   (Spara, Lägg till, picking from a list), and scrolling while typing keeps the keyboard up. Mouse use is unchanged. */
+/* While typing on a touch screen, a tap outside the item you are in only closes the keyboard. It does not press a button,
+   open another field or do anything else; the next tap works as usual. Scrolling while typing keeps the keyboard up.
+   Mouse use is unchanged. */
 let tapGuard=null;
 const isEdit=a=>!!a&&a!==document.body&&(a.isContentEditable||a.tagName==="TEXTAREA"||(a.tagName==="INPUT"&&!/^(checkbox|radio|range|button|submit|color|file)$/.test(a.type)));
-function tapAllowed(a,t){if(a.contains(t))return true;const b=t.closest&&t.closest("button,[role=button],.opt,label,a");if(!b||b.matches("input,textarea"))return false;
-  const scope=a.closest(".mbox,.form");return !!scope&&scope.contains(b)}
+/* Taps inside the same item (a budget row, a savings goal card, a form or a pop-up) work at once, so you can go
+   from the name straight to the amount. Taps anywhere else only close the keyboard. */
+function tapAllowed(a,t){if(a.contains(t))return true;const item=a.closest(".lnw,.form,.mbox,.set");return !!item&&item.contains(t)}
 window.addEventListener("pointerdown",e=>{if(e.pointerType!=="touch")return;const a=document.activeElement;if(!isEdit(a)||tapAllowed(a,e.target))return;
   tapGuard={a,at:Date.now()};e.stopImmediatePropagation()},true);
 window.addEventListener("pointercancel",()=>{if(tapGuard&&!tapGuard.done)tapGuard=null},true);
