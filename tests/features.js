@@ -71,7 +71,7 @@ check('saved deposit shows in Budget',await ev(()=>[b_deps.open,document.querySe
 // The title bar stays at the top with the same gap below it as between the boxes
 await ev(()=>{go('h');scrollTo(0,0)});await p.waitForTimeout(300);check('title bar is sticky with a normal gap',await ev(()=>{const t=document.querySelector('.top'),r=t.getBoundingClientRect(),n=[...document.querySelectorAll('#h>*')].find(e=>e.offsetParent).getBoundingClientRect(),g=parseFloat(getComputedStyle(document.querySelector('main')).rowGap)||parseFloat(getComputedStyle(document.querySelector('main')).gap);return[getComputedStyle(t).position,Math.round(n.top-r.bottom)>=g-1]}),['sticky',true]);
 // Savings goals fold to just the name, and stay folded after a reload
-await ev(()=>go('s'));await p.waitForTimeout(300);{const k=await ev(()=>G[0].k);await p.click(`[data-gfold="${k}"]`);await p.waitForTimeout(400);
+await ev(()=>go('s'));await p.waitForTimeout(300);{const k=await ev(()=>G[0].k);await p.click(`[data-gfold="${k}"]`);await p.waitForFunction(k=>document.querySelector(`[data-gfold="${k}"]`).closest('.lnw').querySelector('.gbody').getBoundingClientRect().height<2,k,{timeout:4000}).catch(()=>{});
 check('goal folds to its name',await ev(k=>{const w=document.querySelector(`[data-gfold="${k}"]`).closest('.lnw');return[w.classList.contains('folded'),w.querySelector('.gbody').getBoundingClientRect().height<2,localStorage.getItem('kronkoll.gfold').includes(k)]},k),[true,true,true]);
 await p.click(`[data-gfold="${k}"]`);await p.waitForTimeout(400);check('goal opens again',await ev(k=>document.querySelector(`[data-gfold="${k}"]`).closest('.lnw').classList.contains('folded'),k),false)}
 // Title bar shows Sparar… / Sparat after you change something, and fades again
