@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="67ec17680a5f">
+<meta name="kk-build" content="ada3e2271f2f">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -129,7 +129,7 @@ nav .more{display:none}
   .cols{height:156px}
   #h>:nth-child(2){grid-column:span 7}#h>:nth-child(3){grid-column:span 5;align-content:center}#h>.btn{justify-self:start;min-width:260px}
   #b>:nth-child(2),#b>:nth-child(3),#b>:nth-child(4),#b>:nth-child(5){grid-column:span 6}
-  #b details:not(#b_deps)>summary{cursor:default}#b details:not(#b_deps)>summary::after{display:none}
+  #b details:not(#b_deps):not(.accrows)>summary{cursor:default}#b details:not(#b_deps):not(.accrows)>summary::after{display:none}
   #s_per{order:-1}#s>:nth-child(1){grid-column:span 5}#s>:nth-child(3){grid-column:span 7}#s>:nth-child(4){grid-column:span 7;align-self:start}#s>:nth-child(5){grid-column:span 5;align-self:start}
   #r>:nth-child(4),#r>:nth-child(5){align-self:start}#r>:nth-child(6),#r>:nth-child(7){grid-column:span 6;align-self:start}
   #m>:nth-child(2),#m>:nth-child(3){grid-column:span 6}#m>:nth-child(4),#m>:nth-child(5){grid-column:span 6}
@@ -348,7 +348,8 @@ nav .nhead{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:up
 @media (hover:hover){.dgr button:not(.s):hover{background:var(--rule)}}
 .dbtn,.selbtn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;height:48px;margin-top:6px;padding:0 12px;border:1px solid var(--rule);border-radius:12px;background:none;color:var(--ink);font-size:16px;font-weight:500;text-align:left}.dbtn.empty span,.selbtn.empty span{color:var(--soft)}.dbtn svg,.selbtn svg{flex:none;width:20px;height:20px;fill:none;stroke:var(--soft);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 #pk{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));background:rgba(5,10,20,.55);opacity:0;pointer-events:none;transition:opacity .2s}#pk.on{opacity:1;pointer-events:auto}
-#pk .mbox{max-height:calc(100dvh / var(--z,1) - 24px);overflow-y:auto}#pk .mbox b{display:block}
+#ac{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));background:rgba(5,10,20,.55);opacity:0;pointer-events:none;transition:opacity .2s}#ac.on{opacity:1;pointer-events:auto}
+#pk .mbox{max-height:calc(100dvh / var(--z,1) - 24px);overflow-y:auto}#ac .mbox{max-height:calc(100dvh / var(--z,1) - 24px);overflow-y:auto}#pk .mbox b{display:block}#ac .mbox b{display:block}
 #pk input{width:100%;height:48px;padding:0 12px;border:1px solid var(--rule);border-radius:12px;background:none;margin-top:10px}
 #pk label{display:block;font-size:14px;color:var(--soft);margin-top:12px}#pk label+input{margin-top:6px}
 #lo{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));background:rgba(5,10,20,.55);opacity:0;pointer-events:none;transition:opacity .2s}#lo.on{opacity:1;pointer-events:auto}
@@ -522,6 +523,26 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 /* The glass rim of a tinted box picks up its colour. */
 .sheet.tint::before{background:linear-gradient(170deg,color-mix(in srgb,var(--tc) 55%,var(--edge)),var(--edge3) 38%,var(--edge3) 70%,color-mix(in srgb,var(--tc) 35%,var(--edge2)))}
 .sheet.tint{border-color:color-mix(in srgb,var(--tc) 42%,var(--rule))}
+
+/* Accounts: the chip under a row and the per-account summary in Budget. */
+.rmeta{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;margin-top:-6px;padding-bottom:8px}.rmeta .freq{margin-top:0;padding-bottom:0}
+.accb{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:2px 10px;border:1px dashed var(--rule);border-radius:var(--rs);background:none;color:var(--soft);font-size:13px;font-weight:600;position:relative}
+.accb::after{content:"";position:absolute;inset:-8px -4px}
+.accb svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.accb.on{border-style:solid;color:var(--ink);background:var(--glass2)}
+.accb i,.accdot{display:inline-block;width:9px;height:9px;border-radius:50%;flex:none}
+.pko .accdot{margin-right:8px;vertical-align:1px}
+.acnew{display:flex;gap:8px;margin-top:12px}.acnew input{flex:1;min-width:0;height:48px;padding:0 12px;border:1px solid var(--rule);border-radius:var(--r);background:var(--glass2);color:var(--ink);font:inherit;font-size:16px}.acnew .btn{flex:none}
+.accg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;margin-top:6px}
+.accc{border:1px solid var(--rule);border-radius:var(--r);background:var(--glass2);padding:10px 12px;min-width:0;box-shadow:inset 0 1px 0 var(--edge),inset 0 0 0 1px var(--edge3)}
+.acch{display:flex;align-items:center;gap:8px;min-height:36px}.acch .accn{flex:1;min-width:0;border:0;background:none;font-weight:700;font-size:16px;height:36px;padding:0;color:var(--ink)}.acch .accn:focus{outline:0;box-shadow:inset 0 -2px 0 var(--pen)}.accnone{font-size:16px}
+.accnum{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:4px}.accnum span{color:var(--soft);font-size:14px}.accnum b{font:700 24px/1.1 var(--hand);letter-spacing:-.02em}
+.accsub{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--soft);margin-top:3px}.accsub span:last-child{font-weight:650}
+.accrows{margin-top:6px}.accrows>summary{min-height:36px;font-size:14px;font-weight:600;color:var(--pen)}
+.accr{display:flex;justify-content:space-between;gap:8px;font-size:14px;padding:4px 0;border-top:1px solid var(--rule)}.accr span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.accplan{margin-top:8px;padding:10px 12px;border-radius:var(--r);background:color-mix(in srgb,var(--pen) 10%,var(--glass2));border:1px solid color-mix(in srgb,var(--pen) 28%,var(--rule))}
+.accplan>b{display:block;font-size:14px;color:var(--soft);font-weight:650;margin-bottom:2px}
+.accmove{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:5px 0;font-size:15px}.accmove em{font-style:normal;font-weight:700}.accmove>b{white-space:nowrap;font-size:16px}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -541,6 +562,7 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 <div id="ps"><div class="mbox"><b data-i="pickGoal"></b><div id="ps_o"></div><button class="lnk" data-go="s" data-i="newGoalLink"></button><button class="btn out" id="ps_no" style="width:100%" data-i="cancel"></button></div></div>
 <div id="as"><div class="mbox"><b id="as_t"></b><label for="as_n" id="as_nl"></label><input id="as_n" type="text" maxlength="50" autocomplete="off"><label for="as_a" id="as_al"></label><input id="as_a" type="text" inputmode="decimal"><div class="seg" id="as_f"></div><label for="as_d" id="as_dl"></label><button type="button" class="dbtn" id="as_d" value=""><span></span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.500" y="5" width="17" height="15.500" rx="3"/><path d="M3.500 10h17M8 3v4M16 3v4"/></svg></button><div style="height:14px"></div><div class="mact"><button class="btn out" id="as_no"></button><button class="btn" id="as_ok"></button></div><button class="lnk hide" id="as_end" style="margin-top:10px;width:100%;text-align:center;color:var(--bad)"></button><button class="lnk hide" id="as_del" style="width:100%;text-align:center;color:var(--soft)"></button></div></div>
 <div id="dp" role="dialog" aria-modal="true"><div class="mbox"><div class="gnav"><button data-dm="-1" aria-label="‹">‹</button><span id="dp_t"></span><button data-dm="1" aria-label="›">›</button></div><div class="dwk" id="dp_w"></div><div class="dgr" id="dp_g"></div><div class="mact" style="margin-top:14px"><button class="btn out" id="dp_no"></button><button class="btn out" id="dp_now"></button></div><button class="lnk hide" id="dp_cl" style="width:100%;text-align:center;margin-top:8px;color:var(--soft)"></button></div></div>
+<div id="ac" role="dialog" aria-modal="true" aria-labelledby="ac_t"><div class="mbox"><b id="ac_t"></b><p class="note" id="ac_row"></p><div id="ac_l"></div><div class="acnew"><input id="ac_n" type="text" maxlength="30" autocomplete="off"><button class="btn" id="ac_add"></button></div><div class="mact" style="margin-top:12px"><button class="btn out" id="ac_no"></button></div></div></div>
 <div id="pk" role="dialog" aria-modal="true"><div class="mbox"><b id="pk_t"></b><input id="pk_q" type="search" autocomplete="off" class="hide"><div id="pk_l"></div><div class="mact" style="margin-top:12px"><button class="btn out" id="pk_no"></button></div></div></div>
 <div id="lo" role="dialog" aria-modal="true"><div class="mbox"><b id="lo_t"></b><div class="ltypes" id="lo_ty"></div><label for="lo_n" id="lo_nl"></label><input id="lo_n" type="text" maxlength="40" autocomplete="off"><label for="lo_b" id="lo_bl"></label><input id="lo_b" type="text" inputmode="decimal"><label for="lo_r" id="lo_rl"></label><input id="lo_r" type="text" inputmode="decimal"><label for="lo_p" id="lo_pl"></label><input id="lo_p" type="text" inputmode="decimal"><p class="note" id="lo_hint" style="margin:6px 0 0"></p><div style="height:14px"></div><div class="mact"><button class="btn out" id="lo_no"></button><button class="btn" id="lo_ok"></button></div><button class="lnk hide" id="lo_del" style="margin-top:10px;width:100%;text-align:center;color:var(--bad)"></button></div></div>
 <div id="hs"><div class="mbox"><b id="hs_t"></b>
@@ -577,6 +599,7 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 </div>
 <div class="sheet"><div class="split"><div><span data-i="spentL"></span><b id="b_spent"></b></div><div><span data-i="lifeRow"></span><b id="b_life"></b></div></div><div class="srate"><div class="srow"><span id="b_rl"></span><b id="b_rate"></b></div><div class="sgoal" id="b_rgoal"></div><div class="sbar"><i id="b_rbar"></i></div><small id="b_rsub"></small></div>
 </div>
+<div class="sheet" id="b_accs"><details id="d_acc"><summary><span><span class="head" id="acc_h"></span><span class="sub2" id="acc_sub"></span></span><span class="sumv" id="sum_acc"></span></summary><div id="acc_l"></div></details></div>
 <div class="sheet tint t-save"><p class="head" data-i="addSaveHead"></p>
 <div class="form"><input id="s_amt" type="text" inputmode="decimal" autocomplete="off" data-p="amountPh"><button type="button" class="pick" id="s_pot_b"><span id="s_pot_t"></span></button><select id="s_pot" hidden></select><button class="btn" id="s_add" data-i="bSaved"></button><button class="btn out" id="s_out" data-i="bWd"></button></div>
 <details class="bdeps" id="b_deps"><summary><span id="b_deps_t"></span><span class="sumv" id="b_deps_n"></span></summary><div id="b_deps_l"></div></details>
@@ -679,6 +702,11 @@ const FUNDS=[["Avanza Global",.10,["Bara hos Avanza. Ca 1 100 bolag, 73 % USA.",
 ["Storebrand Global All Countries",.32,["1 431 bolag, 63 % USA, även tillväxtmarknader.","1,431 companies, 63% US, emerging markets included."]],
 ["Handelsbanken Global Index Criteria",.44,["1 815 bolag, 63 % USA.","1,815 companies, 63% US."]]];
 const SRC=[["https://www.riksbank.se/sv/press-och-publicerat/nyheter-och-pressmeddelanden/pressmeddelanden/2026/styrrantan-hojs-till-2-procent/","Riksbanken: styrräntan höjs till 2 %"],["https://www.svt.se/nyheter/ekonomi/riksbanken-hojer-rantan-661uov","SVT: Riksbanken höjer räntan"],["https://www.scb.se/hitta-statistik/statistik-efter-amne/priser-och-ekonomiska-tendenser/priser/konsumentprisindex-kpi/pong/statistiknyhet/snabb-kpi-oktober-2026","SCB: snabb-KPI oktober 2026"],["https://www.vfab.se/wp-content/uploads/2025/06/Koll-pa-pengarna.pdf","Konsumentverket: Koll på pengarna 2025"],["https://www.dagensps.se/privatekonomi/har-du-rad-med-2027-sa-testar-du-din-ekonomi-redan-nu/","Dagens PS: buffert och ränte-test"],["https://www.dagensps.se/privatekonomi/parekonomin-som-vinner-sa-sparar-ni-ihop-framgangsrikt/","Dagens PS: så sparar par ihop"],["https://www.dagensps.se/privatekonomi/virala-sparknepet-sa-ska-du-dela-upp-lonen/","Dagens PS: 70-20-10"],["https://www.sparkonton.se/basta-sparrantan","Sparkonton.se: sparräntor 7 nov"],["https://finansvalp.se/spara/basta-sparrantan","Finansvalp: sparräntor 3 nov"],["https://isk-guiden.se/basta-globalfonder/","ISK-guiden: globalfonder 31 okt"],["https://isk-guiden.se/guider/isk-skatt-2027/","ISK-guiden: ISK-skatt 2027"],["https://www.marketscreener.com/news/s-p-500-index-pulled-back-after-the-stockholm-stock-exchange-closed-on-friday-ce785fd3d98cff26","MarketScreener: index 6–9 nov"],["https://dollar.nu/","Dollar.nu: USD/SEK"],["https://mitrade.com/insights/commodity-analysis/gold/gold-democrats-sweep-midterms-cpi","Mitrade: guld 9 nov"]];
+
+/* Accounts (see 23-accounts.js), declared here because Budget renders them during startup. */
+let ACC=[],accDirty=false,ACX=null;
+const ACOL=["var(--c1)","var(--c2)","var(--c3)","var(--c4)","var(--pen)","var(--good)","var(--warn)"];
+const accOf=k=>ACC.find(a=>a.k===k),accCol=k=>ACOL[Math.max(0,ACC.findIndex(a=>a.k===k))%ACOL.length];
 /* every UI string: [Swedish, English]; functions take values */
 const T={
 nH:["Översikt","Overview"],nB:["Budget","Budget"],nS:["Sparande","Savings"],nA:["Abonnemang","Subscriptions"],nV:["Lån","Loans"],nAs:["Abonn.","Subs."],nM:["Marknad","Market"],
@@ -779,7 +807,7 @@ const startKey=r=>{const[y,m]=r.date.split("-");return y+"_"+m};
 function due(r,y,m){const k=mk(y,m),[sy,sm]=r.date.split("-").map(Number);if(k<startKey(r)||(r.end&&k>=r.end))return false;const n=y*12+m-(sy*12+sm-1);return r.freq==="m"||(r.freq==="q"?n%3===0:n%12===0)}
 function amtOf(r,k){if((r.skip||[]).includes(k))return 0;if(r.over&&r.over[k]!=null)return r.over[k];let v=r.amts[0].a;r.amts.forEach(x=>{if(x.f<=k)v=x.a});return v}
 function rawMonth(y,m){const k=mk(y,m);if(PM[k])return PM[k];const ks=Object.keys(PM).filter(x=>x<k&&Array.isArray(PM[x].split)).sort(),s=ks.length?PM[ks[ks.length-1]].split:null;return{inc:[],items:[],vars:[],...(s?{split:s.map(l=>({...l}))}:{})}}
-function monthData(y,m){const k=mk(y,m),raw=rawMonth(y,m),v={};RW.forEach(t=>{v[t]=[...RULES.filter(r=>r.t===t&&due(r,y,m)).map(r=>({n:r.n,a:amtOf(r,k),rid:r.id,freq:r.freq,date:r.date,end:r.end,skip:(r.skip||[]).includes(k)})),...raw[t].map((x,i)=>({...x,ix:i}))]});v.y=y;v.m=m;return v}
+function monthData(y,m){const k=mk(y,m),raw=rawMonth(y,m),v={};RW.forEach(t=>{v[t]=[...RULES.filter(r=>r.t===t&&due(r,y,m)).map(r=>({n:r.n,a:amtOf(r,k),rid:r.id,freq:r.freq,date:r.date,end:r.end,skip:(r.skip||[]).includes(k),acc:r.acc||""})),...raw[t].map((x,i)=>({...x,ix:i}))]});v.y=y;v.m=m;return v}
 const isoOf=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const defDate=()=>isNow()?isoOf(NOW):P.y+"-"+String(P.m+1).padStart(2,"0")+"-01";
 const newId=()=>"r"+Date.now()+Math.floor(Math.random()*1e3);
@@ -793,7 +821,7 @@ function cancelSave(key){const e=PEND.get(key);if(e){clearTimeout(e.t);PEND.dele
 function flushSaves(){PEND.forEach(e=>{clearTimeout(e.t);e.fn()});PEND.clear()}
 addEventListener("pagehide",flushSaves);addEventListener("beforeunload",flushSaves);document.addEventListener("visibilitychange",()=>{if(document.hidden)flushSaves()});
 const pmDoc=k=>{const w=PM[k];return{kind:"pm",inc:w.inc,items:w.items,vars:w.vars,...(Array.isArray(w.split)?{split:w.split}:{})}};
-const ruleDoc=r=>({kind:"rec",id:r.id,t:r.t,n:r.n,freq:r.freq,date:r.date,ds:!!r.ds,amts:r.amts,end:r.end||null,over:r.over||{},skip:r.skip||[]});
+const ruleDoc=r=>({kind:"rec",id:r.id,t:r.t,n:r.n,freq:r.freq,date:r.date,ds:!!r.ds,amts:r.amts,end:r.end||null,over:r.over||{},skip:r.skip||[],...(r.acc?{acc:r.acc}:{})});
 const DIRTYR=new Set();
 function leaveExample(){if(!exampleMode)return;exampleMode=false;if(!col)return;histMute++;try{col.doc("started").set({kind:"started"}).catch(()=>{});RULES.forEach(r=>col.doc("rec_"+r.id).set(ruleDoc(r)).catch(()=>{}));Object.keys(PM).forEach(k=>col.doc("pm_"+k).set(pmDoc(k)).catch(()=>{}))}finally{histMute--}}
 function editMonth(fn,y=P.y,m=P.m){leaveExample();const k=mk(y,m);if(!PM[k])PM[k]=rawMonth(y,m);fn(PM[k]);if(!col)return;DIRTY.add(k);later("m"+k,()=>{DIRTY.delete(k);if(PM[k])col.doc("pm_"+k).set(pmDoc(k)).catch(()=>toast(t("tFail")))},150)}
@@ -888,7 +916,7 @@ function yearScroll(){const sc=$("y_sc"),th=sc.querySelector("th.cur"),first=sc.
 const fmtA=v=>Math.round(v)?Math.round(v).toLocaleString("sv-SE"):"",parseA=v=>+String(v).replace(/\s/g,"").replace(",",".")||0;
 function rowHtml(rw,name,amt,i,extra,key){const k=key||`data-ix="${i}"`,ph=t("linePh");return `<div class="lnw"><div class="ln"><input class="nm" type="text" id="${rw}_n${i}" data-rw="${rw}" data-f="n" ${k} value="${esc(name)}" maxlength="40" placeholder="${ph}" aria-label="${ph}"><span class="amw"><input class="am" type="text" inputmode="decimal" id="${rw}_a${i}" data-rw="${rw}" data-f="a" ${k} value="${fmtA(amt)}" placeholder="0" aria-label="kr"><span>kr</span></span><button class="x" data-delrw="${rw}" ${k} aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>${extra||""}<div class="subslot"></div></div>`}
 function buildSheet(){const md=cur();
-  RW.forEach(rw=>{$("l_"+rw).innerHTML=md[rw].map((r,i)=>{const key=r.rid?`data-rid="${r.rid}"`:`data-ix="${r.ix}"`;return rowHtml(rw,r.n,r.a,i,`<button class="freq ${r.skip?"skip":r.rid?"on":""}" ${r.skip?`data-rdel="${r.rid}"`:`data-rs="${rw}"`} ${key}>${esc(chip(r))}</button>`,key)}).join("");md[rw].forEach((r,i)=>{if(r.skip)$(rw+"_a"+i).readOnly=true})});document.querySelectorAll("#b .lnw").forEach(subHintFor)}
+  RW.forEach(rw=>{$("l_"+rw).innerHTML=md[rw].map((r,i)=>{const key=r.rid?`data-rid="${r.rid}"`:`data-ix="${r.ix}"`;return rowHtml(rw,r.n,r.a,i,`<div class="rmeta"><button class="freq ${r.skip?"skip":r.rid?"on":""}" ${r.skip?`data-rdel="${r.rid}"`:`data-rs="${rw}"`} ${key}>${esc(chip(r))}</button>${accChip(rw,r,key)}</div>`,key)}).join("");md[rw].forEach((r,i)=>{if(r.skip)$(rw+"_a"+i).readOnly=true})});document.querySelectorAll("#b .lnw").forEach(subHintFor)}
 /* Goals can be folded to show just the name. Which ones are folded is remembered on this device. */
 let GF=new Set();try{GF=new Set(JSON.parse(localStorage.getItem("kronkoll.gfold")||"[]"))}catch(e){}
 function toggleGoal(k){GF.has(k)?GF.delete(k):GF.add(k);try{localStorage.setItem("kronkoll.gfold",JSON.stringify([...GF]))}catch(e){}
@@ -903,7 +931,7 @@ function renderBudgetDeps(){const[a,b]=range(),list=deps.filter(d=>d.at>=a&&d.at
   $("b_deps_n").textContent=list.length?(net<0?"−":"＋")+" "+kr(Math.abs(net)):"";
   $("b_deps_l").innerHTML=list.map(depRow).join("")||`<p class="note">${tx("Inget sparat eller uttaget den här månaden än.","Nothing saved or withdrawn this month yet.")}</p>`}
 function renderBudget(){
-  renderBudgetDeps();
+  renderBudgetDeps();renderAccounts();
   const p=planCalc(cur()),ae=document.activeElement;
   $("b_per").innerHTML=mnavHtml();$("sum_inc").textContent=kr(p.inc);$("sum_out").textContent=kr(p.fixed);$("sum_var").textContent=kr(p.vars);
   const sp=spendOf(P.y,P.m);$("b_spent").textContent=kr(p.needs+sp.used);{const r=p.inc>0?p.save/p.inc*100:null;$("b_rl").textContent=tx("Sparkvot","Savings rate");$("b_rate").textContent=r==null?"–":r.toLocaleString(loc(),{maximumFractionDigits:r<10&&r>-10?1:0})+" %";$("b_rate").className=r!=null&&r<0?"er":"";const goal=Math.min(100,Math.max(1,S.rateGoal||30)),hit=r!=null&&r>=goal;$("b_rbar").style.width=Math.max(0,Math.min(100,(r||0)/goal*100))+"%";$("b_rbar").parentElement.classList.toggle("hit",hit);$("b_rgoal").textContent=tx(`Mål ${goal} %`,`Goal ${goal}%`);$("b_rsub").textContent=p.inc>0?(hit?tx(`Målet är nått. ${kr(p.save)} sparat av ${kr(p.inc)} i inkomster.`,`Goal reached. ${kr(p.save)} saved of ${kr(p.inc)} income.`):tx(`${kr(p.save)} sparat · ${kr(p.inc*goal/100-p.save)} kvar till målet`,`${kr(p.save)} saved · ${kr(p.inc*goal/100-p.save)} left to the goal`)):tx("Lägg in inkomster för att se sparkvoten","Add income to see the savings rate")}$("b_life").textContent=kr(sp.left);$("b_life").className=sp.left<0?"er":"";
@@ -1471,7 +1499,7 @@ const WIDE=matchMedia("(min-width:700px)"),RAIL=matchMedia("(min-width:1024px)")
 /* Wider screens show all budget sections at once; phones keep one open at a time. */
 function layout(){const D=["d_inc","d_out","d_var"].map(x=>$(x));if(WIDE.matches)D.forEach(d=>{d.removeAttribute("name");d.open=true});else{D.forEach(d=>{d.open=false;d.setAttribute("name","bud")});if(!hasData())D[0].open=true}}
 [WIDE,RAIL].forEach(m=>m.addEventListener("change",()=>{closeYears();layout();render()}));
-$("b").addEventListener("click",e=>{if(WIDE.matches&&e.target.closest("summary")&&!e.target.closest("#b_deps"))e.preventDefault()});
+$("b").addEventListener("click",e=>{if(WIDE.matches&&e.target.closest("summary")&&!e.target.closest("#b_deps,.accrows"))e.preventDefault()});
 seedExample();applyTheme();applyLang();let startTab="h";try{const s=sessionStorage.getItem("kronkoll.tab");if(s&&$(s)&&"hbsarmvlunc".includes(s))startTab=s}catch(e){}go(startTab);layout();
 /* Opening transition: wait until the first screen is drawn and the fonts are in, then reveal it. */
 (()=>{const H=document.documentElement,still=!S.motion||matchMedia("(prefers-reduced-motion:reduce)").matches;if(still)H.classList.add("still");
@@ -1494,13 +1522,14 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});const keepR=RULES.filter(r=>DIRTYR.has(r.id)),real=snap.docs.some(d=>/^(pm|rec|dep|exp|hold|sub|loan)_|^started$/.test(d.id)),ex=exampleMode&&!real;if(!ex){exampleMode=false;PM={};RULES=[]}deps=[];HOLD=[];SL=[];LO=[];allIds=snap.docs.map(d=>d.id);const old=S.lang;let sawGoals=false;const MIG=[];
     snap.docs.forEach(d=>{const v=d.data()||{};
       if(d.id==="plan"){["saved","buf","lifePct","adults","taxT","taxPay","taxPct","payH","payR","taxCol","zoom","iskV","iskIn","iskP","rateGoal"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});["taxKom","taxFors"].forEach(k=>{if(typeof v[k]==="string")S[k]=v[k]});if(v.bg2==="mist"||v.bg2==="lines"){S.bg=v.bg2;S.bgPick=true}["taxKy","hc"].forEach(k=>{if(typeof v[k]==="boolean")S[k]=v[k]});applyRead();if(v.taxMode==="t"||v.taxMode==="p")S.taxMode=v.taxMode;if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.sound==="boolean")S.sound=v.sound;if(typeof v.click==="boolean")S.click=v.click;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
-      else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
+      else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{}),...(i.acc?{acc:String(i.acc)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
       else if(v.kind==="hold"&&typeof v.qty==="number")HOLD.push({id:String(v.id),ref:String(v.ref||""),name:String(v.name||""),qty:v.qty,cost:+v.cost||0,...(typeof v.manual==="number"?{manual:v.manual}:{})});
+      else if(v.kind==="accounts"){if(!accDirty&&Array.isArray(v.list))ACC=v.list.map(a=>({k:String(a.k),n:String(a.n||"")}))}
       else if(v.kind==="goals"){sawGoals=true;if(!goalsDirty&&Array.isArray(v.list))G=v.list.map(g=>({k:String(g.k),n:String(g.n||""),s:+g.s||0,t:+g.t||0}))}
       else if(v.kind==="loan"&&typeof v.bal==="number")LO.push({id:String(v.id),n:String(v.n||""),ty:String(v.ty||"annat"),bal:v.bal,r:+v.r||0,pay:+v.pay||0});
       else if(v.kind==="sub"&&typeof v.a==="number")SL.push({id:String(v.id),n:String(v.n||""),a:v.a,f:v.f==="q"||v.f==="y"?v.f:"m",d:String(v.d||""),off:!!v.off});
       else if(v.kind==="rec"&&v.sub){MIG.push(v)}
-      else if(v.kind==="rec"&&Array.isArray(v.amts)&&v.amts.length&&!ex)RULES.push({id:String(v.id),t:v.t,n:String(v.n||""),freq:v.freq,date:String(v.date),ds:!!v.ds,amts:v.amts.map(x=>({f:String(x.f),a:+x.a||0})),end:v.end||null,over:v.over&&typeof v.over==="object"?{...v.over}:{},skip:Array.isArray(v.skip)?[...v.skip]:[]});
+      else if(v.kind==="rec"&&Array.isArray(v.amts)&&v.amts.length&&!ex)RULES.push({id:String(v.id),t:v.t,n:String(v.n||""),freq:v.freq,date:String(v.date),ds:!!v.ds,amts:v.amts.map(x=>({f:String(x.f),a:+x.a||0})),end:v.end||null,over:v.over&&typeof v.over==="object"?{...v.over}:{},skip:Array.isArray(v.skip)?[...v.skip]:[],...(v.acc?{acc:String(v.acc)}:{})});
       else if(typeof v.amount==="number")deps.push({id:d.id,amount:v.amount,note:v.note||"",at:v.at||0,pot:v.pot||"",potN:v.potN||""})});
     Object.assign(PM,keep);
     /* Subscriptions that were first saved as budget lines move out of the budget, once. */
@@ -1532,7 +1561,7 @@ $("empty").onclick=async()=>{if(!await ask(tx("Börja med en tom budget?","Start
 (()=>{const NAV=[];let backing=false;const _go=go;
   go=function(x){if(!backing&&x!==tab){NAV.push(tab);if(NAV.length>30)NAV.shift()}return _go(x)};
   const on=id=>{const e=$(id);return !!(e&&e.classList.contains("on"))};
-  function closeTop(){if(on("wl")){wlPick("ex");return true}if(on("modal")){$("m_no").click();return true}
+  function closeTop(){if(on("wl")){wlPick("ex");return true}if(on("ac")){closeAC();return true}if(on("modal")){$("m_no").click();return true}
     for(const [id,f] of [["dp",closeDP],["pk",closePK],["lo",closeLO],["as",closeAS],["hs",closeHS],["rs",closeRS],["rd",closeRD]])if(on(id)){f();return true}
     if(on("ps")){$("ps").classList.remove("on");return true}
     if(yrOpen()){closeYears();return true}
@@ -1613,6 +1642,62 @@ function saveState(s){const el=$("savest");clearTimeout(saveT);
   saveT=setTimeout(()=>{if(s==="fail"){el.className="savest on fail";el.textContent=tx("Kunde inte spara","Could not save");saveT=setTimeout(()=>{el.className="savest"},6000);return}
     el.className="savest on";el.innerHTML=`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>${tx("Sparat","Saved")}`;saveT=setTimeout(()=>{el.className="savest"},2600)},wait)}
 addEventListener("kk-save",e=>saveState(e.detail));
+/* Accounts: each income or expense row can say which bank account the money comes into or goes from.
+   Budget then shows, per account, what has to be there this month. Accounts are stored as one "accounts" doc. */
+function saveAccounts(){leaveExample();if(!col)return;accDirty=true;later("acc",()=>{accDirty=false;col.doc("accounts").set({kind:"accounts",list:ACC}).catch(()=>toast(t("tFail")))},150)}
+
+/* The small button under a row, next to "Varje månad". */
+function accChip(rw,r,key){const a=r.acc&&accOf(r.acc);
+  return `<button class="accb${a?" on":""}" data-acc="${rw}" ${key} aria-label="${a?tx("Konto: ","Account: ")+esc(a.n):tx("Välj konto","Choose account")}">`+
+    (a?`<i style="background:${accCol(a.k)}"></i>${esc(a.n)}`:`<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="17" height="12" rx="2.5"/><path d="M3.5 10h17"/></svg>${tx("Konto","Account")}`)+`</button>`}
+
+/* Which row the sheet is choosing for, and its current account. */
+function rowRef(b){const rw=b.dataset.acc,rid=b.dataset.rid,ix=b.dataset.ix;
+  if(rid){const r=RULES.find(x=>x.id===rid);return{rw,name:r?r.n:"",acc:r&&r.acc||"",set:k=>{if(!r)return;if(k)r.acc=k;else delete r.acc;saveRule(r)}}}
+  const it=rawMonth(P.y,P.m)[rw][+ix]||{};return{rw,name:it.n||"",acc:it.acc||"",set:k=>editMonth(md=>{const x=md[rw][+ix];if(!x)return;if(k)x.acc=k;else delete x.acc})}}
+function openAC(b){ACX=rowRef(b);
+  $("ac_t").textContent=tx("Vilket konto?","Which account?");
+  $("ac_row").textContent=ACX.name?(ACX.rw==="inc"?tx(`Vart kommer ${ACX.name} in?`,`Where does ${ACX.name} arrive?`):tx(`Varifrån betalas ${ACX.name}?`,`Which account pays ${ACX.name}?`)):"";
+  $("ac_n").placeholder=tx("Namn på nytt konto","New account name");$("ac_n").value="";
+  $("ac_add").textContent=tx("Lägg till","Add");$("ac_no").textContent=t("cancel");paintAC();$("ac").classList.add("on")}
+function paintAC(){const cur=ACX?ACX.acc:"";
+  $("ac_l").innerHTML=ACC.map(a=>`<button class="pko${a.k===cur?" on":""}" data-ack="${esc(a.k)}"><span><i class="accdot" style="background:${accCol(a.k)}"></i>${esc(a.n)}</span>${a.k===cur?"<small>✓</small>":""}</button>`).join("")+
+    (cur?`<button class="pko" data-ack=""><span>${tx("Inget konto","No account")}</span></button>`:"")+
+    (ACC.length?"":`<p class="note">${tx("Du har inga konton än. Skriv ett namn nedan, till exempel Lönekonto eller Räkningskonto.","You have no accounts yet. Type a name below, for example Salary account or Bills account.")}</p>`)}
+function closeAC(){$("ac").classList.remove("on");ACX=null}
+function pickAC(k){if(!ACX)return;ACX.set(k);closeAC();buildSheet();render()}
+$("ac").addEventListener("click",e=>{if(e.target===$("ac"))return closeAC();const b=e.target.closest("[data-ack]");if(b)pickAC(b.dataset.ack)});
+$("ac_no").onclick=closeAC;
+function addAC(){const n=$("ac_n").value.trim();if(!n){$("ac_n").focus();return}
+  let a=ACC.find(x=>x.n.toLowerCase()===n.toLowerCase());if(!a){a={k:"a"+Date.now().toString(36),n};ACC.push(a);saveAccounts()}pickAC(a.k)}
+$("ac_add").onclick=addAC;$("ac_n").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addAC()}});
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-acc]");if(b&&!e.defaultPrevented)openAC(b)});
+
+/* Budget: what each account needs this month. */
+function renderAccounts(){const md=monthData(P.y,P.m),used=new Set(),B={};
+  const add=(t,r)=>{if(r.skip||!(r.a>0))return;const k=r.acc&&accOf(r.acc)?r.acc:"";used.add(k);(B[k]=B[k]||{in:0,out:0,rows:[]});if(t==="inc")B[k].in+=r.a;else B[k].out+=r.a;B[k].rows.push([t,r.n||tx("Utan namn","Unnamed"),r.a])};
+  RW.forEach(t=>md[t].forEach(r=>add(t,r)));
+  const none=B[""];
+  $("acc_h").textContent=tx("Konton","Accounts");
+  $("acc_sub").textContent=ACC.length?tx(`Vad som behövs på varje konto i ${mn(P.m).toLowerCase()}`,`What each account needs in ${mn(P.m)}`):tx("Välj konto på en rad med knappen Konto","Pick an account on a row with the Account button");
+  const tot=ACC.reduce((s,a)=>s+((B[a.k]||{}).out||0),0);$("sum_acc").textContent=ACC.length?kr(tot):"";
+  const card=(k,name,b,colr)=>{b=b||{in:0,out:0,rows:[]};const left=b.in-b.out;
+    return `<div class="accc"><div class="acch">${k?`<i class="accdot" style="background:${colr}"></i><input class="nm accn" data-accn="${esc(k)}" value="${esc(name)}" maxlength="30" aria-label="${tx("Kontots namn","Account name")}"><button class="x" data-accdel="${esc(k)}" aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button>`:`<b class="accnone">${tx("Utan konto","No account")}</b>`}</div>
+      <div class="accnum"><span>${tx("Ska finnas","Needs")}</span><b>${kr(b.out)}</b></div>
+      ${b.in?`<div class="accsub"><span>${tx("Kommer in","Comes in")}</span><span class="ok">＋ ${kr(b.in)}</span></div><div class="accsub"><span>${left>=0?tx("Över efter räkningar","Left after bills"):tx("Behöver föras över","Needs moving in")}</span><span class="${left>=0?"ok":"wn"}">${kr(Math.abs(left))}</span></div>`:(k&&b.out?`<div class="accsub"><span>${tx("Behöver föras över","Needs moving in")}</span><span class="wn">${kr(b.out)}</span></div>`:"")}
+      ${b.rows.length?`<details class="accrows"><summary>${tx(`${b.rows.length} rader`,`${b.rows.length} rows`)}</summary>${b.rows.map(([t,n,a])=>`<div class="accr"><span>${esc(n)}</span><span>${t==="inc"?"＋ ":""}${kr(a)}</span></div>`).join("")}</details>`:`<p class="note">${tx("Inga rader på det här kontot den här månaden.","No rows on this account this month.")}</p>`}</div>`};
+  /* Payday plan: move money from accounts with money left over to accounts that are short. */
+  const src=ACC.map(a=>({a,v:((B[a.k]||{}).in||0)-((B[a.k]||{}).out||0)})).filter(x=>x.v>0).sort((x,y)=>y.v-x.v),
+        need=ACC.map(a=>({a,v:((B[a.k]||{}).out||0)-((B[a.k]||{}).in||0)})).filter(x=>x.v>0),moves=[];
+  need.forEach(n=>{let rest=n.v;src.forEach(s_=>{if(rest<=0||s_.v<=0)return;const m=Math.min(rest,s_.v);moves.push([s_.a,n.a,m]);s_.v-=m;rest-=m});if(rest>0)moves.push([null,n.a,rest])});
+  const plan=moves.length?`<div class="accplan"><b>${tx("På lönedagen","On payday")}</b>${moves.map(([f,to,m])=>`<div class="accmove"><span>${f?tx(`Flytta från <em>${esc(f.n)}</em> till <em>${esc(to.n)}</em>`,`Move from <em>${esc(f.n)}</em> to <em>${esc(to.n)}</em>`):tx(`Sätt in på <em>${esc(to.n)}</em>`,`Put into <em>${esc(to.n)}</em>`)}</span><b>${kr(m)}</b></div>`).join("")}</div>`:"";
+  $("acc_l").innerHTML=plan+(ACC.length?`<div class="accg">${ACC.map(a=>card(a.k,a.n,B[a.k],accCol(a.k))).join("")}${none&&(none.out||none.in)?card("","",none):""}</div>`:"")+
+    `<p class="note">${ACC.length?tx("Siffrorna gäller månaden du valt högst upp. Ändra namn genom att skriva i rutan.","Figures are for the month chosen at the top. Rename by typing in the box."):tx("Tryck på Konto under en inkomst eller utgift för att välja eller skapa ett konto, till exempel Lönekonto och Räkningskonto. Här ser du sedan vad som behöver finnas på varje konto.","Tap Account under an income or expense to choose or create an account, for example Salary account and Bills account. Here you then see what needs to be on each account.")}</p>`}
+document.addEventListener("change",e=>{const n=e.target.closest&&e.target.closest("[data-accn]");if(!n)return;const a=accOf(n.dataset.accn),v=n.value.trim();if(!a)return;if(!v){n.value=a.n;return}a.n=v;saveAccounts();buildSheet();render()});
+document.addEventListener("click",e=>{const d=e.target.closest&&e.target.closest("[data-accdel]");if(!d)return;const k=d.dataset.accdel;
+  animOut(d.closest(".accc"),()=>{ACC=ACC.filter(a=>a.k!==k);saveAccounts();RULES.forEach(r=>{if(r.acc===k){delete r.acc;saveRule(r)}});
+    Object.keys(PM).forEach(mk_=>{const w=PM[mk_];if(RW.some(t=>(w[t]||[]).some(x=>x.acc===k))){const[y,m]=mk_.split("_").map(Number);editMonth(md=>RW.forEach(t=>(md[t]||[]).forEach(x=>{if(x.acc===k)delete x.acc})),y,m-1)}});
+    buildSheet();render();toast(tx("Kontot borttaget","Account removed"),"del")})});
 </script>
 
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")</script>

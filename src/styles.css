@@ -116,7 +116,7 @@ nav .more{display:none}
   .cols{height:156px}
   #h>:nth-child(2){grid-column:span 7}#h>:nth-child(3){grid-column:span 5;align-content:center}#h>.btn{justify-self:start;min-width:260px}
   #b>:nth-child(2),#b>:nth-child(3),#b>:nth-child(4),#b>:nth-child(5){grid-column:span 6}
-  #b details:not(#b_deps)>summary{cursor:default}#b details:not(#b_deps)>summary::after{display:none}
+  #b details:not(#b_deps):not(.accrows)>summary{cursor:default}#b details:not(#b_deps):not(.accrows)>summary::after{display:none}
   #s_per{order:-1}#s>:nth-child(1){grid-column:span 5}#s>:nth-child(3){grid-column:span 7}#s>:nth-child(4){grid-column:span 7;align-self:start}#s>:nth-child(5){grid-column:span 5;align-self:start}
   #r>:nth-child(4),#r>:nth-child(5){align-self:start}#r>:nth-child(6),#r>:nth-child(7){grid-column:span 6;align-self:start}
   #m>:nth-child(2),#m>:nth-child(3){grid-column:span 6}#m>:nth-child(4),#m>:nth-child(5){grid-column:span 6}
@@ -335,7 +335,8 @@ nav .nhead{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:up
 @media (hover:hover){.dgr button:not(.s):hover{background:var(--rule)}}
 .dbtn,.selbtn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;height:48px;margin-top:6px;padding:0 12px;border:1px solid var(--rule);border-radius:12px;background:none;color:var(--ink);font-size:16px;font-weight:500;text-align:left}.dbtn.empty span,.selbtn.empty span{color:var(--soft)}.dbtn svg,.selbtn svg{flex:none;width:20px;height:20px;fill:none;stroke:var(--soft);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 #pk{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));background:rgba(5,10,20,.55);opacity:0;pointer-events:none;transition:opacity .2s}#pk.on{opacity:1;pointer-events:auto}
-#pk .mbox{max-height:calc(100dvh / var(--z,1) - 24px);overflow-y:auto}#pk .mbox b{display:block}
+#ac{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));background:rgba(5,10,20,.55);opacity:0;pointer-events:none;transition:opacity .2s}#ac.on{opacity:1;pointer-events:auto}
+#pk .mbox{max-height:calc(100dvh / var(--z,1) - 24px);overflow-y:auto}#ac .mbox{max-height:calc(100dvh / var(--z,1) - 24px);overflow-y:auto}#pk .mbox b{display:block}#ac .mbox b{display:block}
 #pk input{width:100%;height:48px;padding:0 12px;border:1px solid var(--rule);border-radius:12px;background:none;margin-top:10px}
 #pk label{display:block;font-size:14px;color:var(--soft);margin-top:12px}#pk label+input{margin-top:6px}
 #lo{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));background:rgba(5,10,20,.55);opacity:0;pointer-events:none;transition:opacity .2s}#lo.on{opacity:1;pointer-events:auto}
@@ -509,3 +510,23 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 /* The glass rim of a tinted box picks up its colour. */
 .sheet.tint::before{background:linear-gradient(170deg,color-mix(in srgb,var(--tc) 55%,var(--edge)),var(--edge3) 38%,var(--edge3) 70%,color-mix(in srgb,var(--tc) 35%,var(--edge2)))}
 .sheet.tint{border-color:color-mix(in srgb,var(--tc) 42%,var(--rule))}
+
+/* Accounts: the chip under a row and the per-account summary in Budget. */
+.rmeta{display:flex;align-items:center;flex-wrap:wrap;gap:4px 14px;margin-top:-6px;padding-bottom:8px}.rmeta .freq{margin-top:0;padding-bottom:0}
+.accb{display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:2px 10px;border:1px dashed var(--rule);border-radius:var(--rs);background:none;color:var(--soft);font-size:13px;font-weight:600;position:relative}
+.accb::after{content:"";position:absolute;inset:-8px -4px}
+.accb svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.accb.on{border-style:solid;color:var(--ink);background:var(--glass2)}
+.accb i,.accdot{display:inline-block;width:9px;height:9px;border-radius:50%;flex:none}
+.pko .accdot{margin-right:8px;vertical-align:1px}
+.acnew{display:flex;gap:8px;margin-top:12px}.acnew input{flex:1;min-width:0;height:48px;padding:0 12px;border:1px solid var(--rule);border-radius:var(--r);background:var(--glass2);color:var(--ink);font:inherit;font-size:16px}.acnew .btn{flex:none}
+.accg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px;margin-top:6px}
+.accc{border:1px solid var(--rule);border-radius:var(--r);background:var(--glass2);padding:10px 12px;min-width:0;box-shadow:inset 0 1px 0 var(--edge),inset 0 0 0 1px var(--edge3)}
+.acch{display:flex;align-items:center;gap:8px;min-height:36px}.acch .accn{flex:1;min-width:0;border:0;background:none;font-weight:700;font-size:16px;height:36px;padding:0;color:var(--ink)}.acch .accn:focus{outline:0;box-shadow:inset 0 -2px 0 var(--pen)}.accnone{font-size:16px}
+.accnum{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:4px}.accnum span{color:var(--soft);font-size:14px}.accnum b{font:700 24px/1.1 var(--hand);letter-spacing:-.02em}
+.accsub{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--soft);margin-top:3px}.accsub span:last-child{font-weight:650}
+.accrows{margin-top:6px}.accrows>summary{min-height:36px;font-size:14px;font-weight:600;color:var(--pen)}
+.accr{display:flex;justify-content:space-between;gap:8px;font-size:14px;padding:4px 0;border-top:1px solid var(--rule)}.accr span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.accplan{margin-top:8px;padding:10px 12px;border-radius:var(--r);background:color-mix(in srgb,var(--pen) 10%,var(--glass2));border:1px solid color-mix(in srgb,var(--pen) 28%,var(--rule))}
+.accplan>b{display:block;font-size:14px;color:var(--soft);font-weight:650;margin-bottom:2px}
+.accmove{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:5px 0;font-size:15px}.accmove em{font-style:normal;font-weight:700}.accmove>b{white-space:nowrap;font-size:16px}

@@ -11,7 +11,7 @@ const startKey=r=>{const[y,m]=r.date.split("-");return y+"_"+m};
 function due(r,y,m){const k=mk(y,m),[sy,sm]=r.date.split("-").map(Number);if(k<startKey(r)||(r.end&&k>=r.end))return false;const n=y*12+m-(sy*12+sm-1);return r.freq==="m"||(r.freq==="q"?n%3===0:n%12===0)}
 function amtOf(r,k){if((r.skip||[]).includes(k))return 0;if(r.over&&r.over[k]!=null)return r.over[k];let v=r.amts[0].a;r.amts.forEach(x=>{if(x.f<=k)v=x.a});return v}
 function rawMonth(y,m){const k=mk(y,m);if(PM[k])return PM[k];const ks=Object.keys(PM).filter(x=>x<k&&Array.isArray(PM[x].split)).sort(),s=ks.length?PM[ks[ks.length-1]].split:null;return{inc:[],items:[],vars:[],...(s?{split:s.map(l=>({...l}))}:{})}}
-function monthData(y,m){const k=mk(y,m),raw=rawMonth(y,m),v={};RW.forEach(t=>{v[t]=[...RULES.filter(r=>r.t===t&&due(r,y,m)).map(r=>({n:r.n,a:amtOf(r,k),rid:r.id,freq:r.freq,date:r.date,end:r.end,skip:(r.skip||[]).includes(k)})),...raw[t].map((x,i)=>({...x,ix:i}))]});v.y=y;v.m=m;return v}
+function monthData(y,m){const k=mk(y,m),raw=rawMonth(y,m),v={};RW.forEach(t=>{v[t]=[...RULES.filter(r=>r.t===t&&due(r,y,m)).map(r=>({n:r.n,a:amtOf(r,k),rid:r.id,freq:r.freq,date:r.date,end:r.end,skip:(r.skip||[]).includes(k),acc:r.acc||""})),...raw[t].map((x,i)=>({...x,ix:i}))]});v.y=y;v.m=m;return v}
 const isoOf=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const defDate=()=>isNow()?isoOf(NOW):P.y+"-"+String(P.m+1).padStart(2,"0")+"-01";
 const newId=()=>"r"+Date.now()+Math.floor(Math.random()*1e3);
@@ -25,7 +25,7 @@ function cancelSave(key){const e=PEND.get(key);if(e){clearTimeout(e.t);PEND.dele
 function flushSaves(){PEND.forEach(e=>{clearTimeout(e.t);e.fn()});PEND.clear()}
 addEventListener("pagehide",flushSaves);addEventListener("beforeunload",flushSaves);document.addEventListener("visibilitychange",()=>{if(document.hidden)flushSaves()});
 const pmDoc=k=>{const w=PM[k];return{kind:"pm",inc:w.inc,items:w.items,vars:w.vars,...(Array.isArray(w.split)?{split:w.split}:{})}};
-const ruleDoc=r=>({kind:"rec",id:r.id,t:r.t,n:r.n,freq:r.freq,date:r.date,ds:!!r.ds,amts:r.amts,end:r.end||null,over:r.over||{},skip:r.skip||[]});
+const ruleDoc=r=>({kind:"rec",id:r.id,t:r.t,n:r.n,freq:r.freq,date:r.date,ds:!!r.ds,amts:r.amts,end:r.end||null,over:r.over||{},skip:r.skip||[],...(r.acc?{acc:r.acc}:{})});
 const DIRTYR=new Set();
 function leaveExample(){if(!exampleMode)return;exampleMode=false;if(!col)return;histMute++;try{col.doc("started").set({kind:"started"}).catch(()=>{});RULES.forEach(r=>col.doc("rec_"+r.id).set(ruleDoc(r)).catch(()=>{}));Object.keys(PM).forEach(k=>col.doc("pm_"+k).set(pmDoc(k)).catch(()=>{}))}finally{histMute--}}
 function editMonth(fn,y=P.y,m=P.m){leaveExample();const k=mk(y,m);if(!PM[k])PM[k]=rawMonth(y,m);fn(PM[k]);if(!col)return;DIRTY.add(k);later("m"+k,()=>{DIRTY.delete(k);if(PM[k])col.doc("pm_"+k).set(pmDoc(k)).catch(()=>toast(t("tFail")))},150)}
@@ -120,7 +120,7 @@ function yearScroll(){const sc=$("y_sc"),th=sc.querySelector("th.cur"),first=sc.
 const fmtA=v=>Math.round(v)?Math.round(v).toLocaleString("sv-SE"):"",parseA=v=>+String(v).replace(/\s/g,"").replace(",",".")||0;
 function rowHtml(rw,name,amt,i,extra,key){const k=key||`data-ix="${i}"`,ph=t("linePh");return `<div class="lnw"><div class="ln"><input class="nm" type="text" id="${rw}_n${i}" data-rw="${rw}" data-f="n" ${k} value="${esc(name)}" maxlength="40" placeholder="${ph}" aria-label="${ph}"><span class="amw"><input class="am" type="text" inputmode="decimal" id="${rw}_a${i}" data-rw="${rw}" data-f="a" ${k} value="${fmtA(amt)}" placeholder="0" aria-label="kr"><span>kr</span></span><button class="x" data-delrw="${rw}" ${k} aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>${extra||""}<div class="subslot"></div></div>`}
 function buildSheet(){const md=cur();
-  RW.forEach(rw=>{$("l_"+rw).innerHTML=md[rw].map((r,i)=>{const key=r.rid?`data-rid="${r.rid}"`:`data-ix="${r.ix}"`;return rowHtml(rw,r.n,r.a,i,`<button class="freq ${r.skip?"skip":r.rid?"on":""}" ${r.skip?`data-rdel="${r.rid}"`:`data-rs="${rw}"`} ${key}>${esc(chip(r))}</button>`,key)}).join("");md[rw].forEach((r,i)=>{if(r.skip)$(rw+"_a"+i).readOnly=true})});document.querySelectorAll("#b .lnw").forEach(subHintFor)}
+  RW.forEach(rw=>{$("l_"+rw).innerHTML=md[rw].map((r,i)=>{const key=r.rid?`data-rid="${r.rid}"`:`data-ix="${r.ix}"`;return rowHtml(rw,r.n,r.a,i,`<div class="rmeta"><button class="freq ${r.skip?"skip":r.rid?"on":""}" ${r.skip?`data-rdel="${r.rid}"`:`data-rs="${rw}"`} ${key}>${esc(chip(r))}</button>${accChip(rw,r,key)}</div>`,key)}).join("");md[rw].forEach((r,i)=>{if(r.skip)$(rw+"_a"+i).readOnly=true})});document.querySelectorAll("#b .lnw").forEach(subHintFor)}
 /* Goals can be folded to show just the name. Which ones are folded is remembered on this device. */
 let GF=new Set();try{GF=new Set(JSON.parse(localStorage.getItem("kronkoll.gfold")||"[]"))}catch(e){}
 function toggleGoal(k){GF.has(k)?GF.delete(k):GF.add(k);try{localStorage.setItem("kronkoll.gfold",JSON.stringify([...GF]))}catch(e){}
@@ -135,7 +135,7 @@ function renderBudgetDeps(){const[a,b]=range(),list=deps.filter(d=>d.at>=a&&d.at
   $("b_deps_n").textContent=list.length?(net<0?"−":"＋")+" "+kr(Math.abs(net)):"";
   $("b_deps_l").innerHTML=list.map(depRow).join("")||`<p class="note">${tx("Inget sparat eller uttaget den här månaden än.","Nothing saved or withdrawn this month yet.")}</p>`}
 function renderBudget(){
-  renderBudgetDeps();
+  renderBudgetDeps();renderAccounts();
   const p=planCalc(cur()),ae=document.activeElement;
   $("b_per").innerHTML=mnavHtml();$("sum_inc").textContent=kr(p.inc);$("sum_out").textContent=kr(p.fixed);$("sum_var").textContent=kr(p.vars);
   const sp=spendOf(P.y,P.m);$("b_spent").textContent=kr(p.needs+sp.used);{const r=p.inc>0?p.save/p.inc*100:null;$("b_rl").textContent=tx("Sparkvot","Savings rate");$("b_rate").textContent=r==null?"–":r.toLocaleString(loc(),{maximumFractionDigits:r<10&&r>-10?1:0})+" %";$("b_rate").className=r!=null&&r<0?"er":"";const goal=Math.min(100,Math.max(1,S.rateGoal||30)),hit=r!=null&&r>=goal;$("b_rbar").style.width=Math.max(0,Math.min(100,(r||0)/goal*100))+"%";$("b_rbar").parentElement.classList.toggle("hit",hit);$("b_rgoal").textContent=tx(`Mål ${goal} %`,`Goal ${goal}%`);$("b_rsub").textContent=p.inc>0?(hit?tx(`Målet är nått. ${kr(p.save)} sparat av ${kr(p.inc)} i inkomster.`,`Goal reached. ${kr(p.save)} saved of ${kr(p.inc)} income.`):tx(`${kr(p.save)} sparat · ${kr(p.inc*goal/100-p.save)} kvar till målet`,`${kr(p.save)} saved · ${kr(p.inc*goal/100-p.save)} left to the goal`)):tx("Lägg in inkomster för att se sparkvoten","Add income to see the savings rate")}$("b_life").textContent=kr(sp.left);$("b_life").className=sp.left<0?"er":"";
