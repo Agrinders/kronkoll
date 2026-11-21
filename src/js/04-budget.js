@@ -149,10 +149,6 @@ function renderSaving(){
   $("s_month").textContent=mn(P.m)+": "+kr(mSum);
   const perM=MNS[0].map((_,i)=>deps.filter(d=>{const x=new Date(d.at);return x.getFullYear()===P.y&&x.getMonth()===i}).reduce((s,d)=>s+d.amount,0)),mx=Math.max(1,...perM);
   $("s_cols").innerHTML=perM.map((v,i)=>`<div><i style="height:${Math.max(0,Math.round(v/mx*(WIDE.matches?132:66)))}px${i===P.m?";background:var(--c2)":""}" title="${ms(i)}: ${kr(v)}"></i>${ms(i)[0]}</div>`).join("");
-  const names={},add=(k,n)=>{names[k]=n||names[k]||""};[...deps].sort((x,y)=>x.at-y.at).forEach(d=>add(d.pot||"",d.potN||(POTS[d.pot]?t(POTS[d.pot]):"")));pSel.lines.forEach(l=>add(l.k,potName(l)));
-  let html=Object.keys(names).map(k=>{const mine=deps.filter(d=>(d.pot||"")===k),pl=0,per=mine.filter(d=>d.at>=a&&d.at<b).reduce((s,d)=>s+d.amount,0),tot=mine.reduce((s,d)=>s+d.amount,0)+((G.find(g=>g.k===k)||{}).s||0);return `<div class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px"><span>${esc(k?names[k]:t("potOther"))}</span><b>${kr(tot)}</b></div><div class="lbl">${pl>0?t("sMonth",mn(P.m),kr(per),kr(pl)):mn(P.m)+": "+kr(per)}</div>${pl>0?`<div class="bar"><i style="width:${Math.max(0,Math.min(100,per/pl*100))}%"></i></div>`:""}</div>`}).join("");
-  if(S.saved)html+=`<div class="row"><span>${t("fSaved")}</span><b>${kr(S.saved)}</b></div>`;
-  $("s_pots").innerHTML=html||`<p class="note">${t("none")}</p>`;
   $("s_cnt").textContent=list.length||"";
   $("s_list").innerHTML=list.slice(0,60).map(depRow).join("")||`<p class="note">${t("none")}</p>`;
 }

@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="8646c5cb042d">
+<meta name="kk-build" content="1ae8aa41c72a">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -130,7 +130,7 @@ nav .more{display:none}
   #h>:nth-child(2){grid-column:span 7}#h>:nth-child(3){grid-column:span 5;align-content:center}#h>.btn{justify-self:start;min-width:260px}
   #b>:nth-child(2),#b>:nth-child(3),#b>:nth-child(4),#b>:nth-child(5){grid-column:span 6}
   #b details:not(#b_deps)>summary{cursor:default}#b details:not(#b_deps)>summary::after{display:none}
-  #s_per{order:-1}#s>:nth-child(1){grid-column:span 5}#s>:nth-child(3){grid-column:span 7}#s>:nth-child(5){grid-column:span 7}#s>:nth-child(6){grid-column:span 5}
+  #s_per{order:-1}#s>:nth-child(1){grid-column:span 5}#s>:nth-child(3){grid-column:span 7}#s>:nth-child(4){grid-column:span 7;align-self:start}#s>:nth-child(5){grid-column:span 5;align-self:start}
   #r>:nth-child(4),#r>:nth-child(5){align-self:start}#r>:nth-child(6),#r>:nth-child(7){grid-column:span 6;align-self:start}
   #m>:nth-child(2),#m>:nth-child(3){grid-column:span 6}#m>:nth-child(4),#m>:nth-child(5){grid-column:span 6}
   #m .links{max-width:440px}
@@ -554,7 +554,6 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 <div class="mnavw" id="s_per"></div>
 <div class="sheet"><div class="lbl" id="s_month"></div><div class="cols" id="s_cols"></div></div>
 <div class="sheet"><p class="head" data-i="goalsHead"></p><p class="note" style="margin-top:-4px" data-i="goalsNote"></p><div id="s_goals"></div><button class="lnk" id="g_add" data-i="newGoal"></button></div>
-<div class="sheet"><p class="head" data-i="potHead"></p><div id="s_pots"></div></div>
 <div class="sheet"><details><summary><span class="head" data-i="entries"></span><span class="sumv" id="s_cnt"></span></summary><div id="s_list"></div></details></div>
 </section>
 
@@ -884,10 +883,6 @@ function renderSaving(){
   $("s_month").textContent=mn(P.m)+": "+kr(mSum);
   const perM=MNS[0].map((_,i)=>deps.filter(d=>{const x=new Date(d.at);return x.getFullYear()===P.y&&x.getMonth()===i}).reduce((s,d)=>s+d.amount,0)),mx=Math.max(1,...perM);
   $("s_cols").innerHTML=perM.map((v,i)=>`<div><i style="height:${Math.max(0,Math.round(v/mx*(WIDE.matches?132:66)))}px${i===P.m?";background:var(--c2)":""}" title="${ms(i)}: ${kr(v)}"></i>${ms(i)[0]}</div>`).join("");
-  const names={},add=(k,n)=>{names[k]=n||names[k]||""};[...deps].sort((x,y)=>x.at-y.at).forEach(d=>add(d.pot||"",d.potN||(POTS[d.pot]?t(POTS[d.pot]):"")));pSel.lines.forEach(l=>add(l.k,potName(l)));
-  let html=Object.keys(names).map(k=>{const mine=deps.filter(d=>(d.pot||"")===k),pl=0,per=mine.filter(d=>d.at>=a&&d.at<b).reduce((s,d)=>s+d.amount,0),tot=mine.reduce((s,d)=>s+d.amount,0)+((G.find(g=>g.k===k)||{}).s||0);return `<div class="row" style="display:block"><div style="display:flex;justify-content:space-between;gap:10px"><span>${esc(k?names[k]:t("potOther"))}</span><b>${kr(tot)}</b></div><div class="lbl">${pl>0?t("sMonth",mn(P.m),kr(per),kr(pl)):mn(P.m)+": "+kr(per)}</div>${pl>0?`<div class="bar"><i style="width:${Math.max(0,Math.min(100,per/pl*100))}%"></i></div>`:""}</div>`}).join("");
-  if(S.saved)html+=`<div class="row"><span>${t("fSaved")}</span><b>${kr(S.saved)}</b></div>`;
-  $("s_pots").innerHTML=html||`<p class="note">${t("none")}</p>`;
   $("s_cnt").textContent=list.length||"";
   $("s_list").innerHTML=list.slice(0,60).map(depRow).join("")||`<p class="note">${t("none")}</p>`;
 }
@@ -985,7 +980,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
-{v:"3.9",d:"21 nov 2026",i:[["h","",["Rakare hörn","Squarer corners"],["Rutor och knappar är lite fyrkantigare, och det som ligger inuti en ruta har hörn som följer rutans.","Boxes and buttons are a little squarer, and anything inside a box has corners that follow the box."]],["h","",["Titelraden på plats","Title bar in place"],["Titelraden ligger högst upp igen, med samma avstånd ner till första rutan som mellan rutorna.","The title bar sits at the top again, with the same gap to the first box as between boxes."]]]},
+{v:"3.9",d:"21 nov 2026",i:[["s","#s_chips",["Sparande utan dubbletter","Savings without duplicates"],["Rutan Sparat per mål är borta. Samma sak ser du överst, där du väljer mål.","The Saved per goal box is gone. You see the same at the top, where you pick a goal."]],["h","",["Rakare hörn","Squarer corners"],["Rutor och knappar är lite fyrkantigare, och det som ligger inuti en ruta har hörn som följer rutans.","Boxes and buttons are a little squarer, and anything inside a box has corners that follow the box."]],["h","",["Titelraden på plats","Title bar in place"],["Titelraden ligger högst upp igen, med samma avstånd ner till första rutan som mellan rutorna.","The title bar sits at the top again, with the same gap to the first box as between boxes."]]]},
 {v:"3.8",d:"21 nov 2026",i:[["b","#d_inc",["Färgat glas i Budget","Tinted glass in Budget"],["Inkomster är gröna, fasta utgifter röda, rörliga orange och sparande turkosa, så det går snabbt att hitta rätt.","Income is green, fixed expenses red, variable orange and saving turquoise, so the right section is quick to find."]],["h","",["Glaskanter","Glass edges"],["Rutor, knappar och fält har fått en ljus glaskant som fångar ljuset upptill.","Panels, buttons and fields have a light glass rim that catches the light at the top."]]]},
 {v:"3.7",d:"16 nov 2026",i:[["b","#b_deps",["Se vad du sparat i Budget","See your savings in Budget"],["Under Lägg till och Ta ut finns en lista med månadens insättningar och uttag. Den öppnas när du sparar, och du kan ta bort en rad där.","Under Add and Withdraw there is a list of the month's deposits and withdrawals. It opens when you save, and you can remove a row there."]]]},
 {v:"3.6",d:"16 nov 2026",i:[["b","#l_items",["Tryck bredvid stänger tangentbordet","Tap outside closes the keyboard"],["När du skriver och trycker någon annanstans försvinner bara tangentbordet. Inget annat händer förrän du trycker igen.","When you are typing and tap somewhere else, only the keyboard goes away. Nothing else happens until you tap again."]]]},
