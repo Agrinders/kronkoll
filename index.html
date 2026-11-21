@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="e9d0022cd041">
+<meta name="kk-build" content="cb9043a53f8a">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -457,6 +457,18 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 .sheet.tint .lnw,.sheet.tint .form input,.sheet.tint .pick{background:color-mix(in srgb,var(--tc) var(--tk2),var(--glass2));border-color:color-mix(in srgb,var(--tc) 24%,var(--rule))}
 .sheet.tint .lnw:focus-within{border-color:var(--pen)}
 .sheet.tint .lnk{color:color-mix(in srgb,var(--tc) 55%,var(--ink))}
+
+/* Frosted glass edges: a light rim that catches the light at the top and fades down, on panels and on buttons, fields and rows. */
+:root{--edge:rgba(255,255,255,.9);--edge2:rgba(255,255,255,.5);--edge3:rgba(255,255,255,.18)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--edge:rgba(255,255,255,.2);--edge2:rgba(255,255,255,.07);--edge3:rgba(255,255,255,.03)}}
+:root[data-theme="dark"],:root[data-theme="midnatt"],:root[data-theme="skog"],:root[data-theme="norrsken"]{--edge:rgba(255,255,255,.2);--edge2:rgba(255,255,255,.07);--edge3:rgba(255,255,255,.03)}
+.sheet,.top,.mnav,.mbox,.toast,#upd{position:relative}
+.sheet::before,.top::before,.mnav::before,nav::after,.mbox::before,.toast::before,#upd::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;pointer-events:none;z-index:1;
+  background:linear-gradient(170deg,var(--edge),var(--edge3) 38%,var(--edge3) 70%,var(--edge2));
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0)}
+.btn,.chip,.pick,.lnw,.tile,.form input,.set input,.ynav button,.mnav button,.selbtn,.dbtn,.wopt,.exb{box-shadow:inset 0 1px 0 var(--edge),inset 0 0 0 1px var(--edge3)}
+.btn.out,.chip:not(.on),.pick,.lnw,.tile,.form input,.set input{box-shadow:inset 0 1px 0 var(--edge),inset 0 0 0 1px var(--edge2)}
+.lnw:focus-within,.sheet.tint .lnw:focus-within{box-shadow:inset 0 1px 0 var(--edge),0 0 0 3px color-mix(in srgb,var(--pen) 16%,transparent)}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -954,7 +966,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
-{v:"3.8",d:"21 nov 2026",i:[["b","#d_inc",["Färgat glas i Budget","Tinted glass in Budget"],["Inkomster är gröna, fasta utgifter röda, rörliga orange och sparande turkosa, så det går snabbt att hitta rätt.","Income is green, fixed expenses red, variable orange and saving turquoise, so the right section is quick to find."]]]},
+{v:"3.8",d:"21 nov 2026",i:[["b","#d_inc",["Färgat glas i Budget","Tinted glass in Budget"],["Inkomster är gröna, fasta utgifter röda, rörliga orange och sparande turkosa, så det går snabbt att hitta rätt.","Income is green, fixed expenses red, variable orange and saving turquoise, so the right section is quick to find."]],["h","",["Glaskanter","Glass edges"],["Rutor, knappar och fält har fått en ljus glaskant som fångar ljuset upptill.","Panels, buttons and fields have a light glass rim that catches the light at the top."]]]},
 {v:"3.7",d:"16 nov 2026",i:[["b","#b_deps",["Se vad du sparat i Budget","See your savings in Budget"],["Under Lägg till och Ta ut finns en lista med månadens insättningar och uttag. Den öppnas när du sparar, och du kan ta bort en rad där.","Under Add and Withdraw there is a list of the month's deposits and withdrawals. It opens when you save, and you can remove a row there."]]]},
 {v:"3.6",d:"16 nov 2026",i:[["b","#l_items",["Tryck bredvid stänger tangentbordet","Tap outside closes the keyboard"],["När du skriver och trycker någon annanstans försvinner bara tangentbordet. Inget annat händer förrän du trycker igen.","When you are typing and tap somewhere else, only the keyboard goes away. Nothing else happens until you tap again."]]]},
 {v:"3.5",d:"12 nov 2026",i:[["b","#l_items",["Krysset tappar inte greppet","The cross keeps its place"],["Det röda krysset står kvar i 5 sekunder och även om raderna ritas om, så två tryck alltid räcker.","The red cross stays for 5 seconds, even if the rows are redrawn, so two taps are always enough."]],["n","",["Notiserna flyttar upp","Notifications move up"],["När en notis försvinner glider de under upp och fyller platsen.","When a notification leaves, the ones below slide up to fill its place."]]]},
