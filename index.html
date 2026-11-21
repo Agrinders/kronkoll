@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="36f00a3b4545">
+<meta name="kk-build" content="8e8d01c33203">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -561,6 +561,12 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 .ddm{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding-top:3px}.ddm b{white-space:nowrap}
 .ddnote{margin:8px 0 0;font-size:12.5px;color:var(--soft)}
 .acrow{display:flex;align-items:center;gap:6px}.acrow .pko{flex:1;min-width:0}
+
+/* Longer names fit in budget rows: the amount field is only as wide as the amount, and the cross column is tighter. */
+.ln{grid-template-columns:minmax(0,1fr) auto 32px;gap:6px}
+.ln .am{field-sizing:content;width:auto;min-width:2.6ch;max-width:7.5em;padding-inline:1px}
+@supports not (field-sizing:content){.ln .am{width:4.6em}}
+.amw{gap:4px}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -1065,7 +1071,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
-{v:"4.2",d:"21 nov 2026",i:[["b","#l_items",["Konton","Accounts"],["Under en inkomst eller utgift väljer du vilket konto pengarna kommer in på eller dras från. Knappen Konton i titelraden visar vad som ska finnas på varje konto och vad du ska flytta på lönedagen.","Under an income or expense you choose which account the money comes into or leaves from. The Accounts button in the title bar shows what needs to be on each account and what to move on payday."]],["b","#l_items",["Belopp med ören","Amounts with öre"],["Du kan skriva belopp med två decimaler, till exempel 249,50.","You can enter amounts with two decimals, for example 249.50."]]]},
+{v:"4.2",d:"21 nov 2026",i:[["b","#l_items",["Längre namn får plats","Longer names fit"],["Beloppsfältet är bara så brett som beloppet, så namn som Liseberg julmarknad syns hela.","The amount field is only as wide as the amount, so names like Liseberg julmarknad show in full."]],["b","#l_items",["Konton","Accounts"],["Under en inkomst eller utgift väljer du vilket konto pengarna kommer in på eller dras från. Knappen Konton i titelraden visar vad som ska finnas på varje konto och vad du ska flytta på lönedagen.","Under an income or expense you choose which account the money comes into or leaves from. The Accounts button in the title bar shows what needs to be on each account and what to move on payday."]],["b","#l_items",["Belopp med ören","Amounts with öre"],["Du kan skriva belopp med två decimaler, till exempel 249,50.","You can enter amounts with two decimals, for example 249.50."]]]},
 {v:"4.1",d:"21 nov 2026",i:[["b","#l_items",["Hoppa mellan fält på samma rad","Move between fields in the same row"],["När du skriver ett namn kan du trycka direkt på beloppet på samma rad utan att tangentbordet först fälls ner.","While typing a name you can tap the amount in the same row straight away, without the keyboard closing first."]]]},
 {v:"4.0",d:"21 nov 2026",i:[["b","#d_inc",["Färgat glas i alla teman","Tinted glass in every theme"],["Färgerna i Budget syns lika tydligt i alla teman, och glaskanten tar upp rutans färg. Sparande har en lugnare glasblå ton.","The Budget colours show equally well in every theme, and the glass rim picks up the box colour. Saving has a calmer glass blue."]],["b","",["Sparat-besked","Saved indicator"],["När du ändrar något står det Sparar… och sedan Sparat i titelraden, så du vet att det är sparat.","When you change something the title bar shows Saving… then Saved, so you know it is stored."]]]},
 {v:"3.9",d:"21 nov 2026",i:[["s","#s_goals",["Fäll ihop sparmål","Fold savings goals"],["Tryck på pilen vid ett mål för att bara se namnet. Appen kommer ihåg vilka du fällt ihop.","Tap the arrow next to a goal to see just its name. The app remembers which ones you folded."]],["s","#s_chips",["Sparande utan dubbletter","Savings without duplicates"],["Rutan Sparat per mål är borta. Samma sak ser du överst, där du väljer mål.","The Saved per goal box is gone. You see the same at the top, where you pick a goal."]],["h","",["Rakare hörn","Squarer corners"],["Rutor och knappar är lite fyrkantigare, och det som ligger inuti en ruta har hörn som följer rutans.","Boxes and buttons are a little squarer, and anything inside a box has corners that follow the box."]],["h","",["Titelraden på plats","Title bar in place"],["Titelraden ligger högst upp igen, med samma avstånd ner till första rutan som mellan rutorna.","The title bar sits at the top again, with the same gap to the first box as between boxes."]]]},

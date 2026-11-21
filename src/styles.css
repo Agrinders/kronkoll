@@ -548,3 +548,9 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 .ddm{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding-top:3px}.ddm b{white-space:nowrap}
 .ddnote{margin:8px 0 0;font-size:12.5px;color:var(--soft)}
 .acrow{display:flex;align-items:center;gap:6px}.acrow .pko{flex:1;min-width:0}
+
+/* Longer names fit in budget rows: the amount field is only as wide as the amount, and the cross column is tighter. */
+.ln{grid-template-columns:minmax(0,1fr) auto 32px;gap:6px}
+.ln .am{field-sizing:content;width:auto;min-width:2.6ch;max-width:7.5em;padding-inline:1px}
+@supports not (field-sizing:content){.ln .am{width:4.6em}}
+.amw{gap:4px}

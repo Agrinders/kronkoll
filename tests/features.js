@@ -88,6 +88,9 @@ await ev(()=>go('h'));await p.waitForTimeout(150);check('accounts button only on
 // Amounts take two decimals
 await ev(()=>{go('b');d_out.open=true});await p.waitForTimeout(250);await p.fill('#l_items .am >> nth=0','8 500,45');await p.locator('#l_items .am >> nth=0').blur();await p.waitForTimeout(400);
 check('amount keeps two decimals',await ev(()=>[document.querySelector('#l_items .am').value,sum_out.textContent.includes(',45')]),['8 500,45',true]);
+// A long row name like "Liseberg julmarknad" fits without being cut
+await ev(()=>{go('b');d_var.open=true;editMonth(md=>{md.vars.push({n:'Liseberg julmarknad',a:1250})});buildSheet();render()});await p.waitForTimeout(300);
+check('long name fits in a row',await ev(()=>{const i=[...document.querySelectorAll('#l_vars .nm')].find(x=>x.value==='Liseberg julmarknad');return i.scrollWidth<=i.clientWidth+1}),true);
 // Touch: while typing, a tap elsewhere only closes the keyboard; the next tap acts. Buttons in the same form work at once.
 {const c3=await b.newContext({viewport:{width:384,height:760},hasTouch:true,isMobile:true,serviceWorkers:'block'});await c3.addInitScript(()=>{try{localStorage.setItem('kronkoll.welcome','1');localStorage.setItem('kronkoll.armTips','3')}catch(e){}});const q=await c3.newPage();q.on('pageerror',e=>errs.push(e.message));
 await q.goto('http://localhost:'+srv.address().port+'/');await q.waitForTimeout(2600);await q.evaluate(()=>{go('b');d_out.open=true});await q.waitForTimeout(300);const fe=()=>q.evaluate(()=>document.activeElement.id||document.activeElement.tagName);
