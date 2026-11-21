@@ -494,3 +494,18 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 .savest i{width:11px;height:11px;border-radius:50%;border:2px solid var(--rule);border-top-color:var(--soft);animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.savest i{animation:none}}
+
+/* Tinted glass tuned per theme, so the four colours read the same in every theme.
+   Saving is a calm glass blue and a little weaker than the others (--tks). */
+:root{--t-save:#5f9fd6;--tks:10%;--tks2:6%}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--t-save:#7db6ea;--tk:20%;--tk2:11%;--tks:14%;--tks2:8%}}
+:root[data-theme="dark"]{--t-save:#7db6ea;--tk:20%;--tk2:11%;--tks:14%;--tks2:8%}
+:root[data-theme="midnatt"]{--t-inc:#4fe0a0;--t-out:#ff6f7d;--t-var:#ffb15c;--t-save:#8cbcf0;--tk:24%;--tk2:13%;--tks:17%;--tks2:9%}
+:root[data-theme="skog"]{--t-inc:#5ef0b0;--t-out:#ff7468;--t-var:#ffb557;--t-save:#8cc4f0;--tk:24%;--tk2:13%;--tks:17%;--tks2:9%}
+:root[data-theme="norrsken"]{--t-inc:#4fe6a2;--t-out:#ff6f80;--t-var:#ffb45e;--t-save:#88baf5;--tk:24%;--tk2:13%;--tks:17%;--tks2:9%}
+:root[data-theme="hav"]{--t-inc:#17a865;--t-out:#de3b3b;--t-var:#e8891a;--t-save:#4f8fd0;--tk:16%;--tk2:9%;--tks:11%;--tks2:6%}
+:root[data-theme="korsbar"]{--t-inc:#159c5c;--t-out:#d8261e;--t-var:#e98a12;--t-save:#4f8ed6;--tk:17%;--tk2:10%;--tks:12%;--tks2:7%}
+.t-save{--tk:var(--tks);--tk2:var(--tks2)}
+/* The glass rim of a tinted box picks up its colour. */
+.sheet.tint::before{background:linear-gradient(170deg,color-mix(in srgb,var(--tc) 55%,var(--edge)),var(--edge3) 38%,var(--edge3) 70%,color-mix(in srgb,var(--tc) 35%,var(--edge2)))}
+.sheet.tint{border-color:color-mix(in srgb,var(--tc) 42%,var(--rule))}

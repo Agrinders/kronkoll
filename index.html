@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="62dfc6ef548b">
+<meta name="kk-build" content="245de09269d1">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -507,6 +507,21 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 .savest i{width:11px;height:11px;border-radius:50%;border:2px solid var(--rule);border-top-color:var(--soft);animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){.savest i{animation:none}}
+
+/* Tinted glass tuned per theme, so the four colours read the same in every theme.
+   Saving is a calm glass blue and a little weaker than the others (--tks). */
+:root{--t-save:#5f9fd6;--tks:10%;--tks2:6%}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--t-save:#7db6ea;--tk:20%;--tk2:11%;--tks:14%;--tks2:8%}}
+:root[data-theme="dark"]{--t-save:#7db6ea;--tk:20%;--tk2:11%;--tks:14%;--tks2:8%}
+:root[data-theme="midnatt"]{--t-inc:#4fe0a0;--t-out:#ff6f7d;--t-var:#ffb15c;--t-save:#8cbcf0;--tk:24%;--tk2:13%;--tks:17%;--tks2:9%}
+:root[data-theme="skog"]{--t-inc:#5ef0b0;--t-out:#ff7468;--t-var:#ffb557;--t-save:#8cc4f0;--tk:24%;--tk2:13%;--tks:17%;--tks2:9%}
+:root[data-theme="norrsken"]{--t-inc:#4fe6a2;--t-out:#ff6f80;--t-var:#ffb45e;--t-save:#88baf5;--tk:24%;--tk2:13%;--tks:17%;--tks2:9%}
+:root[data-theme="hav"]{--t-inc:#17a865;--t-out:#de3b3b;--t-var:#e8891a;--t-save:#4f8fd0;--tk:16%;--tk2:9%;--tks:11%;--tks2:6%}
+:root[data-theme="korsbar"]{--t-inc:#159c5c;--t-out:#d8261e;--t-var:#e98a12;--t-save:#4f8ed6;--tk:17%;--tk2:10%;--tks:12%;--tks2:7%}
+.t-save{--tk:var(--tks);--tk2:var(--tks2)}
+/* The glass rim of a tinted box picks up its colour. */
+.sheet.tint::before{background:linear-gradient(170deg,color-mix(in srgb,var(--tc) 55%,var(--edge)),var(--edge3) 38%,var(--edge3) 70%,color-mix(in srgb,var(--tc) 35%,var(--edge2)))}
+.sheet.tint{border-color:color-mix(in srgb,var(--tc) 42%,var(--rule))}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -1003,7 +1018,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
-{v:"4.0",d:"21 nov 2026",i:[["b","",["Sparat-besked","Saved indicator"],["När du ändrar något står det Sparar… och sedan Sparat i titelraden, så du vet att det är sparat.","When you change something the title bar shows Saving… then Saved, so you know it is stored."]]]},
+{v:"4.0",d:"21 nov 2026",i:[["b","#d_inc",["Färgat glas i alla teman","Tinted glass in every theme"],["Färgerna i Budget syns lika tydligt i alla teman, och glaskanten tar upp rutans färg. Sparande har en lugnare glasblå ton.","The Budget colours show equally well in every theme, and the glass rim picks up the box colour. Saving has a calmer glass blue."]],["b","",["Sparat-besked","Saved indicator"],["När du ändrar något står det Sparar… och sedan Sparat i titelraden, så du vet att det är sparat.","When you change something the title bar shows Saving… then Saved, so you know it is stored."]]]},
 {v:"3.9",d:"21 nov 2026",i:[["s","#s_goals",["Fäll ihop sparmål","Fold savings goals"],["Tryck på pilen vid ett mål för att bara se namnet. Appen kommer ihåg vilka du fällt ihop.","Tap the arrow next to a goal to see just its name. The app remembers which ones you folded."]],["s","#s_chips",["Sparande utan dubbletter","Savings without duplicates"],["Rutan Sparat per mål är borta. Samma sak ser du överst, där du väljer mål.","The Saved per goal box is gone. You see the same at the top, where you pick a goal."]],["h","",["Rakare hörn","Squarer corners"],["Rutor och knappar är lite fyrkantigare, och det som ligger inuti en ruta har hörn som följer rutans.","Boxes and buttons are a little squarer, and anything inside a box has corners that follow the box."]],["h","",["Titelraden på plats","Title bar in place"],["Titelraden ligger högst upp igen, med samma avstånd ner till första rutan som mellan rutorna.","The title bar sits at the top again, with the same gap to the first box as between boxes."]]]},
 {v:"3.8",d:"21 nov 2026",i:[["b","#d_inc",["Färgat glas i Budget","Tinted glass in Budget"],["Inkomster är gröna, fasta utgifter röda, rörliga orange och sparande turkosa, så det går snabbt att hitta rätt.","Income is green, fixed expenses red, variable orange and saving turquoise, so the right section is quick to find."]],["h","",["Glaskanter","Glass edges"],["Rutor, knappar och fält har fått en ljus glaskant som fångar ljuset upptill.","Panels, buttons and fields have a light glass rim that catches the light at the top."]]]},
 {v:"3.7",d:"16 nov 2026",i:[["b","#b_deps",["Se vad du sparat i Budget","See your savings in Budget"],["Under Lägg till och Ta ut finns en lista med månadens insättningar och uttag. Den öppnas när du sparar, och du kan ta bort en rad där.","Under Add and Withdraw there is a list of the month's deposits and withdrawals. It opens when you save, and you can remove a row there."]]]},
