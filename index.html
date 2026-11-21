@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="abdec5c533bf">
+<meta name="kk-build" content="e9d0022cd041">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -447,6 +447,16 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 #b_deps .sumv{font-size:16px}#b_deps_l{padding-bottom:2px}#b_deps .note{margin:4px 0 6px}
 .dep.new{animation:depnew 2.2s ease-out}@keyframes depnew{0%,30%{background:color-mix(in srgb,var(--good) 18%,transparent)}100%{background:transparent}}
 .dep{border-radius:10px;padding-inline:6px;margin-inline:-6px}
+
+/* Budget sections in tinted frosted glass: income green, fixed red, variable orange, saving turquoise. */
+:root{--t-inc:#1f9d63;--t-out:#d64545;--t-var:#e0861f;--t-save:#169fb0;--tk:14%;--tk2:8%}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--t-inc:#3fd18f;--t-out:#ff6b6b;--t-var:#ffaa4d;--t-save:#3fd0e0;--tk:15%;--tk2:9%}}
+:root[data-theme="dark"],:root[data-theme="midnatt"],:root[data-theme="skog"],:root[data-theme="norrsken"]{--t-inc:#3fd18f;--t-out:#ff6b6b;--t-var:#ffaa4d;--t-save:#3fd0e0;--tk:15%;--tk2:9%}
+.t-inc{--tc:var(--t-inc)}.t-out{--tc:var(--t-out)}.t-var{--tc:var(--t-var)}.t-save{--tc:var(--t-save)}
+.sheet.tint{background:linear-gradient(160deg,color-mix(in srgb,var(--tc) calc(var(--tk) + 6%),var(--glass)),color-mix(in srgb,var(--tc) var(--tk),var(--glass)) 60%);border-color:color-mix(in srgb,var(--tc) 34%,var(--rule))}
+.sheet.tint .lnw,.sheet.tint .form input,.sheet.tint .pick{background:color-mix(in srgb,var(--tc) var(--tk2),var(--glass2));border-color:color-mix(in srgb,var(--tc) 24%,var(--rule))}
+.sheet.tint .lnw:focus-within{border-color:var(--pen)}
+.sheet.tint .lnk{color:color-mix(in srgb,var(--tc) 55%,var(--ink))}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -491,18 +501,18 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 
 <section id="b" class="hide">
 <div class="mnavw" id="b_per"></div>
-<div class="sheet">
+<div class="sheet tint t-inc">
 <details name="bud" id="d_inc"><summary><span class="head" data-i="incHead"></span><span class="sumv" id="sum_inc"></span></summary><div id="l_inc"></div><button class="lnk" data-add="inc" data-i="newLine"></button></details>
 </div>
-<div class="sheet">
+<div class="sheet tint t-out">
 <details name="bud" id="d_out"><summary><span class="head" data-i="outHead"></span><span class="sumv" id="sum_out"></span></summary><div id="l_items"></div><button class="lnk" data-add="items" data-i="newLine"></button></details>
 </div>
-<div class="sheet">
+<div class="sheet tint t-var">
 <details name="bud" id="d_var"><summary><span class="head" data-i="varHead"></span><span class="sumv" id="sum_var"></span></summary><div id="l_vars"></div><button class="lnk" data-add="vars" data-i="newLine"></button></details>
 </div>
 <div class="sheet"><div class="split"><div><span data-i="spentL"></span><b id="b_spent"></b></div><div><span data-i="lifeRow"></span><b id="b_life"></b></div></div><div class="srate"><div class="srow"><span id="b_rl"></span><b id="b_rate"></b></div><div class="sgoal" id="b_rgoal"></div><div class="sbar"><i id="b_rbar"></i></div><small id="b_rsub"></small></div>
 </div>
-<div class="sheet"><p class="head" data-i="addSaveHead"></p>
+<div class="sheet tint t-save"><p class="head" data-i="addSaveHead"></p>
 <div class="form"><input id="s_amt" type="text" inputmode="decimal" autocomplete="off" data-p="amountPh"><button type="button" class="pick" id="s_pot_b"><span id="s_pot_t"></span></button><select id="s_pot" hidden></select><button class="btn" id="s_add" data-i="bSaved"></button><button class="btn out" id="s_out" data-i="bWd"></button></div>
 <details class="bdeps" id="b_deps"><summary><span id="b_deps_t"></span><span class="sumv" id="b_deps_n"></span></summary><div id="b_deps_l"></div></details>
 </div>
@@ -944,6 +954,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
+{v:"3.8",d:"21 nov 2026",i:[["b","#d_inc",["Färgat glas i Budget","Tinted glass in Budget"],["Inkomster är gröna, fasta utgifter röda, rörliga orange och sparande turkosa, så det går snabbt att hitta rätt.","Income is green, fixed expenses red, variable orange and saving turquoise, so the right section is quick to find."]]]},
 {v:"3.7",d:"16 nov 2026",i:[["b","#b_deps",["Se vad du sparat i Budget","See your savings in Budget"],["Under Lägg till och Ta ut finns en lista med månadens insättningar och uttag. Den öppnas när du sparar, och du kan ta bort en rad där.","Under Add and Withdraw there is a list of the month's deposits and withdrawals. It opens when you save, and you can remove a row there."]]]},
 {v:"3.6",d:"16 nov 2026",i:[["b","#l_items",["Tryck bredvid stänger tangentbordet","Tap outside closes the keyboard"],["När du skriver och trycker någon annanstans försvinner bara tangentbordet. Inget annat händer förrän du trycker igen.","When you are typing and tap somewhere else, only the keyboard goes away. Nothing else happens until you tap again."]]]},
 {v:"3.5",d:"12 nov 2026",i:[["b","#l_items",["Krysset tappar inte greppet","The cross keeps its place"],["Det röda krysset står kvar i 5 sekunder och även om raderna ritas om, så två tryck alltid räcker.","The red cross stays for 5 seconds, even if the rows are redrawn, so two taps are always enough."]],["n","",["Notiserna flyttar upp","Notifications move up"],["När en notis försvinner glider de under upp och fyller platsen.","When a notification leaves, the ones below slide up to fill its place."]]]},

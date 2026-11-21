@@ -434,3 +434,13 @@ nav .langs{display:none}@media (min-width:1024px){nav .langs.more{display:flex;p
 #b_deps .sumv{font-size:16px}#b_deps_l{padding-bottom:2px}#b_deps .note{margin:4px 0 6px}
 .dep.new{animation:depnew 2.2s ease-out}@keyframes depnew{0%,30%{background:color-mix(in srgb,var(--good) 18%,transparent)}100%{background:transparent}}
 .dep{border-radius:10px;padding-inline:6px;margin-inline:-6px}
+
+/* Budget sections in tinted frosted glass: income green, fixed red, variable orange, saving turquoise. */
+:root{--t-inc:#1f9d63;--t-out:#d64545;--t-var:#e0861f;--t-save:#169fb0;--tk:14%;--tk2:8%}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--t-inc:#3fd18f;--t-out:#ff6b6b;--t-var:#ffaa4d;--t-save:#3fd0e0;--tk:15%;--tk2:9%}}
+:root[data-theme="dark"],:root[data-theme="midnatt"],:root[data-theme="skog"],:root[data-theme="norrsken"]{--t-inc:#3fd18f;--t-out:#ff6b6b;--t-var:#ffaa4d;--t-save:#3fd0e0;--tk:15%;--tk2:9%}
+.t-inc{--tc:var(--t-inc)}.t-out{--tc:var(--t-out)}.t-var{--tc:var(--t-var)}.t-save{--tc:var(--t-save)}
+.sheet.tint{background:linear-gradient(160deg,color-mix(in srgb,var(--tc) calc(var(--tk) + 6%),var(--glass)),color-mix(in srgb,var(--tc) var(--tk),var(--glass)) 60%);border-color:color-mix(in srgb,var(--tc) 34%,var(--rule))}
+.sheet.tint .lnw,.sheet.tint .form input,.sheet.tint .pick{background:color-mix(in srgb,var(--tc) var(--tk2),var(--glass2));border-color:color-mix(in srgb,var(--tc) 24%,var(--rule))}
+.sheet.tint .lnw:focus-within{border-color:var(--pen)}
+.sheet.tint .lnk{color:color-mix(in srgb,var(--tc) 55%,var(--ink))}
