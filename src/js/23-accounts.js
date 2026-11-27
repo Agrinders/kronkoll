@@ -1,6 +1,6 @@
 /* Accounts: each income or expense row can say which bank account the money comes into or goes from.
    Budget then shows, per account, what has to be there this month. Accounts are stored as one "accounts" doc. */
-function saveAccounts(){leaveExample();if(!col)return;accDirty=true;later("acc",()=>{accDirty=false;col.doc("accounts").set({kind:"accounts",list:ACC}).catch(()=>toast(t("tFail")))},150)}
+function saveAccounts(){leaveExample();if(!col)return;accDirty=true;later("acc",()=>{accDirty=false;col.doc("accounts").set({kind:"accounts",list:ACC,done:ACCD}).catch(()=>toast(t("tFail")))},150)}
 
 /* The small button under a row, next to "Varje månad". */
 function accChip(rw,r,key){const a=r.acc&&accOf(r.acc);
@@ -42,7 +42,7 @@ function renderAccounts(){const md=monthData(P.y,P.m),B={};
   const none=B[""];
   $("acc_l").innerHTML=ACC.map(a=>row(`<i class="accdot" style="background:${accCol(a.k)}"></i>`,a.n,B[a.k]||{in:0,out:0})).join("")+
     (none&&none.out?row(`<i class="accdot none"></i>`,tx("Utan konto","No account"),none):"")+
-    (moves.length?`<div class="ddplan"><span>${tx("På lönedagen","On payday")}</span>${moves.map(([f,to,m])=>`<div class="ddm"><span>${f?`${esc(f.n)} → ${esc(to.n)}`:tx(`Sätt in på ${esc(to.n)}`,`Into ${esc(to.n)}`)}</span><b>${kr(m)}</b></div>`).join("")}</div>`:"")+
+    (moves.length?`<div class="ddplan"><span>${tx("På lönedagen","On payday")}</span>${moves.map(([f,to,m])=>{const id=`${mk(P.y,P.m)}|${f?f.k:"_"}>${to.k}`,on=!!ACCD[id];return`<div class="ddm${on?" isdone":""}"><button class="mvb${on?" on":""}" data-mvdone="${esc(id)}" aria-pressed="${on}" aria-label="${tx("Överfört","Transferred")}"><svg viewBox="0 0 24 24" aria-hidden="true">${on?'<circle cx="12" cy="12" r="9"/><path d="m8 12.3 2.8 2.8 5.2-5.6"/>':'<circle cx="12" cy="12" r="8.5"/>'}</svg></button><span>${f?`${esc(f.n)} → ${esc(to.n)}`:tx(`Sätt in på ${esc(to.n)}`,`Into ${esc(to.n)}`)}</span><b>${kr(m)}</b></div>`}).join("")}</div>`:"")+
     `<p class="ddnote">${tx("Beloppet är vad som ska finnas på kontot för månadens utgifter.","The amount is what needs to be on the account for the month's expenses.")}</p>`}
 function closeAccDD(){const d=$("accdd");if(!d||!d.classList.contains("on"))return;d.classList.remove("on");$("acc_btn").setAttribute("aria-expanded","false")}
 $("acc_btn").onclick=e=>{e.stopPropagation();const d=$("accdd"),o=!d.classList.contains("on");if(!o)return closeAccDD();renderAccounts();
@@ -54,3 +54,4 @@ document.addEventListener("click",e=>{const d=e.target.closest&&e.target.closest
   animOut(d.closest(".acrow"),()=>{ACC=ACC.filter(a=>a.k!==k);saveAccounts();RULES.forEach(r=>{if(r.acc===k){delete r.acc;saveRule(r)}});
     Object.keys(PM).forEach(mk_=>{const w=PM[mk_];if(RW.some(t=>(w[t]||[]).some(x=>x.acc===k))){const[y,m]=mk_.split("_").map(Number);editMonth(md=>RW.forEach(t=>(md[t]||[]).forEach(x=>{if(x.acc===k)delete x.acc})),y,m-1)}});
     if(ACX&&ACX.acc===k)ACX.acc="";paintAC();buildSheet();render();toast(tx("Kontot borttaget","Account removed"),"del")})});
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-mvdone]");if(!b)return;e.stopPropagation();const id=b.dataset.mvdone;if(ACCD[id])delete ACCD[id];else ACCD[id]=todayISO();saveAccounts();renderAccounts()});

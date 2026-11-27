@@ -92,6 +92,12 @@ check('spent and left are rounded',await ev(()=>[b_spent.textContent.includes(',
 // A long row name like "Liseberg julmarknad" fits without being cut
 await ev(()=>{go('b');d_var.open=true;editMonth(md=>{md.vars.push({n:'Liseberg julmarknad',a:1250})});buildSheet();render()});await p.waitForTimeout(300);
 check('long name fits in a row',await ev(()=>{const i=[...document.querySelectorAll('#l_vars .nm')].find(x=>x.value==='Liseberg julmarknad');return i.scrollWidth<=i.clientWidth+1}),true);
+// Överfört: tick a fixed expense, header counts it, Översikt shows what is left, next month starts unticked
+await ev(()=>{go('b');d_out.open=true});await p.waitForTimeout(250);{const n=await ev(()=>monthData(P.y,P.m).items.filter(r=>!r.skip&&r.a>0).length);
+await p.click('#l_items [data-done] >> nth=0');await p.waitForTimeout(300);
+check('transferred tick counts in the header',await ev(()=>[dc_items.textContent.startsWith('1 av '+n),document.querySelectorAll('#l_items .lnw.isdone').length>=1,document.querySelector('#l_items .donb.on').textContent.startsWith('Överfört ')]),[true,true,true]);
+check('next month starts unticked',await ev(()=>{const d=new Date(P.y,P.m+1,1);return doneSum(monthData(d.getFullYear(),d.getMonth())).d}),0);
+await p.click('#l_items .donb.on >> nth=0');await p.waitForTimeout(300);check('tick can be undone',await ev(()=>dc_items.textContent.startsWith('0 av')),true)}
 // Touch: while typing, a tap elsewhere only closes the keyboard; the next tap acts. Buttons in the same form work at once.
 {const c3=await b.newContext({viewport:{width:384,height:760},hasTouch:true,isMobile:true,serviceWorkers:'block'});await c3.addInitScript(()=>{try{localStorage.setItem('kronkoll.welcome','1');localStorage.setItem('kronkoll.armTips','3')}catch(e){}});const q=await c3.newPage();q.on('pageerror',e=>errs.push(e.message));
 await q.goto('http://localhost:'+srv.address().port+'/');await q.waitForTimeout(2600);await q.evaluate(()=>{go('b');d_out.open=true});await q.waitForTimeout(300);const fe=()=>q.evaluate(()=>document.activeElement.id||document.activeElement.tagName);

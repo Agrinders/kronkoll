@@ -4,7 +4,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090d15"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon-192.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}[hidden]{display:none!important}body{margin:0}</style>
-<meta name="kk-build" content="3e4cfb1ef169">
+<meta name="kk-build" content="277add731270">
 <title>Kronkoll</title>
 <script>document.documentElement.classList.add("boot")</script>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -567,6 +567,21 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 .ln .am{field-sizing:content;width:auto;min-width:2.6ch;max-width:7.5em;padding-inline:1px}
 @supports not (field-sizing:content){.ln .am{width:4.6em}}
 .amw{gap:4px}
+
+/* Överfört: tick under fixed and variable expenses, counts in the section headers, and the line on Översikt. */
+.donb{display:inline-flex;align-items:center;gap:5px;min-height:28px;padding:2px 8px 2px 4px;border:0;border-radius:var(--rs);background:none;color:var(--soft);font-size:13px;font-weight:600;position:relative}
+.donb::after{content:"";position:absolute;inset:-8px -4px}
+.donb svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.donb.on{color:var(--good);background:color-mix(in srgb,var(--good) 12%,transparent)}.donb.on svg circle{fill:color-mix(in srgb,var(--good) 18%,transparent)}.donb.on svg path{stroke-width:2.4}
+.donb.on svg{animation:donepop .28s ease-out}@keyframes donepop{40%{transform:scale(1.25)}}
+.lnw.isdone .ln input{opacity:.62}.lnw.isdone .amw span{opacity:.62}
+.dct{display:flex;align-items:center;gap:8px}.dcbar{display:inline-block;width:56px;height:4px;border-radius:99px;background:var(--rule);overflow:hidden}.dcbar>i{display:block;height:100%;background:var(--good);border-radius:99px;transition:width .4s}
+.dct.all{color:var(--good)}
+.htodo{margin-top:2px}.htodo b{color:var(--ink);font-weight:650}
+.ddm{align-items:center}.ddm>span{flex:1;min-width:0}.mvb{flex:none;width:30px;height:30px;margin:-4px 2px -4px -6px;border:0;background:none;color:var(--soft);display:grid;place-items:center;padding:0;position:relative}.mvb::after{content:"";position:absolute;inset:-6px}
+.mvb svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.mvb.on{color:var(--good)}.mvb.on svg circle{fill:color-mix(in srgb,var(--good) 18%,transparent)}
+.ddm.isdone>span,.ddm.isdone>b{opacity:.6;text-decoration:line-through;text-decoration-thickness:1px}
+.rmeta .donb{margin-left:auto}
 </style>
 <script src="app-shell.js"></script>
 </head>
@@ -603,7 +618,7 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 <div class="sheet hide" id="h_bk"></div>
 <div class="sheet hide" id="h_ex"><span class="exb" data-i="exBadge"></span><p class="note" data-i="exNote"></p><div class="exa"><button class="btn" id="h_exe" data-i="exEmpty"></button><button class="btn out" data-go="b" data-i="exGo"></button></div></div>
 <div class="sheet">
-<p class="hello" id="h_hi"></p><div class="lbl" id="h_lbl"></div><div class="big" id="h_big"></div><div class="lbl" id="h_day"></div>
+<p class="hello" id="h_hi"></p><div class="lbl" id="h_lbl"></div><div class="big" id="h_big"></div><div class="lbl" id="h_day"></div><div class="lbl htodo" id="h_todo"></div>
 </div>
 <div class="sheet" id="h_pay"><div class="phead"><p class="head" id="hp_t" style="margin:0"></p><button class="lnk" id="hp_all"></button></div><p class="note" id="hp_sum" style="margin:2px 0 6px"></p><div id="hp_list"></div></div>
 <div class="sheet" id="h_year"><div class="yhead"><p class="head" id="y_t" style="margin:0"></p><div class="ynav"><button data-hy="-1" aria-label="‹">‹</button><button data-hy="1" aria-label="›">›</button></div></div><div class="tiles" id="y_tiles"></div><div class="ybars" id="y_bars"></div><div class="keys" id="y_keys"></div><div class="scroll ytable" id="y_sc"><table id="y_tbl"></table></div></div>
@@ -617,10 +632,10 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 <details name="bud" id="d_inc"><summary><span class="head" data-i="incHead"></span><span class="sumv" id="sum_inc"></span></summary><div id="l_inc"></div><button class="lnk" data-add="inc" data-i="newLine"></button></details>
 </div>
 <div class="sheet tint t-out">
-<details name="bud" id="d_out"><summary><span class="head" data-i="outHead"></span><span class="sumv" id="sum_out"></span></summary><div id="l_items"></div><button class="lnk" data-add="items" data-i="newLine"></button></details>
+<details name="bud" id="d_out"><summary><span><span class="head" data-i="outHead"></span><span class="sub2 dct" id="dc_items"></span></span><span class="sumv" id="sum_out"></span></summary><div id="l_items"></div><button class="lnk" data-add="items" data-i="newLine"></button></details>
 </div>
 <div class="sheet tint t-var">
-<details name="bud" id="d_var"><summary><span class="head" data-i="varHead"></span><span class="sumv" id="sum_var"></span></summary><div id="l_vars"></div><button class="lnk" data-add="vars" data-i="newLine"></button></details>
+<details name="bud" id="d_var"><summary><span><span class="head" data-i="varHead"></span><span class="sub2 dct" id="dc_vars"></span></span><span class="sumv" id="sum_var"></span></summary><div id="l_vars"></div><button class="lnk" data-add="vars" data-i="newLine"></button></details>
 </div>
 <div class="sheet"><div class="split"><div><span data-i="spentL"></span><b id="b_spent"></b></div><div><span data-i="lifeRow"></span><b id="b_life"></b></div></div><div class="srate"><div class="srow"><span id="b_rl"></span><b id="b_rate"></b></div><div class="sgoal" id="b_rgoal"></div><div class="sbar"><i id="b_rbar"></i></div><small id="b_rsub"></small></div>
 </div>
@@ -728,7 +743,7 @@ const FUNDS=[["Avanza Global",.10,["Bara hos Avanza. Ca 1 100 bolag, 73 % USA.",
 const SRC=[["https://www.riksbank.se/sv/press-och-publicerat/nyheter-och-pressmeddelanden/pressmeddelanden/2026/styrrantan-hojs-till-2-procent/","Riksbanken: styrräntan höjs till 2 %"],["https://www.svt.se/nyheter/ekonomi/riksbanken-hojer-rantan-661uov","SVT: Riksbanken höjer räntan"],["https://www.scb.se/hitta-statistik/statistik-efter-amne/priser-och-ekonomiska-tendenser/priser/konsumentprisindex-kpi/pong/statistiknyhet/snabb-kpi-oktober-2026","SCB: snabb-KPI oktober 2026"],["https://www.vfab.se/wp-content/uploads/2025/06/Koll-pa-pengarna.pdf","Konsumentverket: Koll på pengarna 2025"],["https://www.dagensps.se/privatekonomi/har-du-rad-med-2027-sa-testar-du-din-ekonomi-redan-nu/","Dagens PS: buffert och ränte-test"],["https://www.dagensps.se/privatekonomi/parekonomin-som-vinner-sa-sparar-ni-ihop-framgangsrikt/","Dagens PS: så sparar par ihop"],["https://www.dagensps.se/privatekonomi/virala-sparknepet-sa-ska-du-dela-upp-lonen/","Dagens PS: 70-20-10"],["https://www.sparkonton.se/basta-sparrantan","Sparkonton.se: sparräntor 7 nov"],["https://finansvalp.se/spara/basta-sparrantan","Finansvalp: sparräntor 3 nov"],["https://isk-guiden.se/basta-globalfonder/","ISK-guiden: globalfonder 31 okt"],["https://isk-guiden.se/guider/isk-skatt-2027/","ISK-guiden: ISK-skatt 2027"],["https://www.marketscreener.com/news/s-p-500-index-pulled-back-after-the-stockholm-stock-exchange-closed-on-friday-ce785fd3d98cff26","MarketScreener: index 6–9 nov"],["https://dollar.nu/","Dollar.nu: USD/SEK"],["https://mitrade.com/insights/commodity-analysis/gold/gold-democrats-sweep-midterms-cpi","Mitrade: guld 9 nov"]];
 
 /* Accounts (see 23-accounts.js), declared here because Budget renders them during startup. */
-let ACC=[],accDirty=false,ACX=null;
+let ACC=[],accDirty=false,ACX=null,ACCD={};
 const ACOL=["var(--c1)","var(--c2)","var(--c3)","var(--c4)","var(--pen)","var(--good)","var(--warn)"];
 const accOf=k=>ACC.find(a=>a.k===k),accCol=k=>ACOL[Math.max(0,ACC.findIndex(a=>a.k===k))%ACOL.length];
 /* every UI string: [Swedish, English]; functions take values */
@@ -832,7 +847,7 @@ const startKey=r=>{const[y,m]=r.date.split("-");return y+"_"+m};
 function due(r,y,m){const k=mk(y,m),[sy,sm]=r.date.split("-").map(Number);if(k<startKey(r)||(r.end&&k>=r.end))return false;const n=y*12+m-(sy*12+sm-1);return r.freq==="m"||(r.freq==="q"?n%3===0:n%12===0)}
 function amtOf(r,k){if((r.skip||[]).includes(k))return 0;if(r.over&&r.over[k]!=null)return r.over[k];let v=r.amts[0].a;r.amts.forEach(x=>{if(x.f<=k)v=x.a});return v}
 function rawMonth(y,m){const k=mk(y,m);if(PM[k])return PM[k];const ks=Object.keys(PM).filter(x=>x<k&&Array.isArray(PM[x].split)).sort(),s=ks.length?PM[ks[ks.length-1]].split:null;return{inc:[],items:[],vars:[],...(s?{split:s.map(l=>({...l}))}:{})}}
-function monthData(y,m){const k=mk(y,m),raw=rawMonth(y,m),v={};RW.forEach(t=>{v[t]=[...RULES.filter(r=>r.t===t&&due(r,y,m)).map(r=>({n:r.n,a:amtOf(r,k),rid:r.id,freq:r.freq,date:r.date,end:r.end,skip:(r.skip||[]).includes(k),acc:r.acc||""})),...raw[t].map((x,i)=>({...x,ix:i}))]});v.y=y;v.m=m;return v}
+function monthData(y,m){const k=mk(y,m),raw=rawMonth(y,m),v={};RW.forEach(t=>{v[t]=[...RULES.filter(r=>r.t===t&&due(r,y,m)).map(r=>({n:r.n,a:amtOf(r,k),rid:r.id,freq:r.freq,date:r.date,end:r.end,skip:(r.skip||[]).includes(k),acc:r.acc||"",done:(r.done||{})[k]||""})),...raw[t].map((x,i)=>({...x,ix:i}))]});v.y=y;v.m=m;return v}
 const isoOf=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const defDate=()=>isNow()?isoOf(NOW):P.y+"-"+String(P.m+1).padStart(2,"0")+"-01";
 const newId=()=>"r"+Date.now()+Math.floor(Math.random()*1e3);
@@ -846,7 +861,7 @@ function cancelSave(key){const e=PEND.get(key);if(e){clearTimeout(e.t);PEND.dele
 function flushSaves(){PEND.forEach(e=>{clearTimeout(e.t);e.fn()});PEND.clear()}
 addEventListener("pagehide",flushSaves);addEventListener("beforeunload",flushSaves);document.addEventListener("visibilitychange",()=>{if(document.hidden)flushSaves()});
 const pmDoc=k=>{const w=PM[k];return{kind:"pm",inc:w.inc,items:w.items,vars:w.vars,...(Array.isArray(w.split)?{split:w.split}:{})}};
-const ruleDoc=r=>({kind:"rec",id:r.id,t:r.t,n:r.n,freq:r.freq,date:r.date,ds:!!r.ds,amts:r.amts,end:r.end||null,over:r.over||{},skip:r.skip||[],...(r.acc?{acc:r.acc}:{})});
+const ruleDoc=r=>({kind:"rec",id:r.id,t:r.t,n:r.n,freq:r.freq,date:r.date,ds:!!r.ds,amts:r.amts,end:r.end||null,over:r.over||{},skip:r.skip||[],...(r.acc?{acc:r.acc}:{}),...(r.done&&Object.keys(r.done).length?{done:r.done}:{})});
 const DIRTYR=new Set();
 function leaveExample(){if(!exampleMode)return;exampleMode=false;if(!col)return;histMute++;try{col.doc("started").set({kind:"started"}).catch(()=>{});RULES.forEach(r=>col.doc("rec_"+r.id).set(ruleDoc(r)).catch(()=>{}));Object.keys(PM).forEach(k=>col.doc("pm_"+k).set(pmDoc(k)).catch(()=>{}))}finally{histMute--}}
 function editMonth(fn,y=P.y,m=P.m){leaveExample();const k=mk(y,m);if(!PM[k])PM[k]=rawMonth(y,m);fn(PM[k]);if(!col)return;DIRTY.add(k);later("m"+k,()=>{DIRTY.delete(k);if(PM[k])col.doc("pm_"+k).set(pmDoc(k)).catch(()=>toast(t("tFail")))},150)}
@@ -918,6 +933,7 @@ function renderHome(){{const h=new Date().getHours(),g=h>=5&&h<10?tx("God morgon
   const y=NOW.getFullYear(),m=NOW.getMonth(),s=spendOf(y,m),p=s.p,mName=mn(m).toLowerCase(),dim=new Date(y,m+1,0).getDate(),dl=Math.max(1,dim-NOW.getDate()+1),a=advise(monthData(y,m));
   $("h_lbl").textContent=t("leftIn",mName);$("h_big").textContent=krr(s.left);$("h_big").className="big"+(s.left<0?" er":"");
   $("h_day").textContent=s.left>=0?t("perDay",krr(s.left/dl),dl):t("overBy",kr(-s.left));
+  {const d=doneSum(monthData(y,m));$("h_todo").innerHTML=d.n?(d.left>0?tx(`Kvar att föra över i ${mName}: <b>${krr(d.left)}</b>`,`Still to transfer in ${mn(m)}: <b>${krr(d.left)}</b>`):`<span class="ok">✓ ${tx(`Allt är överfört i ${mName}`,`Everything is transferred in ${mn(m)}`)}</span>`):""}
   const f=a.F[0];$("h_top").innerHTML=`<p class="head" style="margin-top:4px">${esc(f[0])}</p><p class="note">${esc(f[1])}</p>`;
   $("h_ex").classList.toggle("hide",hasData());
   renderPays();
@@ -941,7 +957,7 @@ function yearScroll(){const sc=$("y_sc"),th=sc.querySelector("th.cur"),first=sc.
 const fmtA=v=>{const a=Math.round((+v||0)*100)/100;return a?a.toLocaleString("sv-SE",a%1?{minimumFractionDigits:2,maximumFractionDigits:2}:{maximumFractionDigits:0}):""},parseA=v=>Math.round((+String(v).replace(/[\s\u00a0\u202f]/g,"").replace(",",".")||0)*100)/100;
 function rowHtml(rw,name,amt,i,extra,key){const k=key||`data-ix="${i}"`,ph=t("linePh");return `<div class="lnw"><div class="ln"><input class="nm" type="text" id="${rw}_n${i}" data-rw="${rw}" data-f="n" ${k} value="${esc(name)}" maxlength="40" placeholder="${ph}" aria-label="${ph}"><span class="amw"><input class="am" type="text" inputmode="decimal" id="${rw}_a${i}" data-rw="${rw}" data-f="a" ${k} value="${fmtA(amt)}" placeholder="0" aria-label="kr"><span>kr</span></span><button class="x" data-delrw="${rw}" ${k} aria-label="${t("del")}"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 2.5l7 7M9.5 2.5l-7 7"/></svg></button></div>${extra||""}<div class="subslot"></div></div>`}
 function buildSheet(){const md=cur();
-  RW.forEach(rw=>{$("l_"+rw).innerHTML=md[rw].map((r,i)=>{const key=r.rid?`data-rid="${r.rid}"`:`data-ix="${r.ix}"`;return rowHtml(rw,r.n,r.a,i,`<div class="rmeta"><button class="freq ${r.skip?"skip":r.rid?"on":""}" ${r.skip?`data-rdel="${r.rid}"`:`data-rs="${rw}"`} ${key}>${esc(chip(r))}</button>${accChip(rw,r,key)}</div>`,key)}).join("");md[rw].forEach((r,i)=>{if(r.skip)$(rw+"_a"+i).readOnly=true})});document.querySelectorAll("#b .lnw").forEach(subHintFor)}
+  RW.forEach(rw=>{$("l_"+rw).innerHTML=md[rw].map((r,i)=>{const key=r.rid?`data-rid="${r.rid}"`:`data-ix="${r.ix}"`;const h=rowHtml(rw,r.n,r.a,i,`<div class="rmeta"><button class="freq ${r.skip?"skip":r.rid?"on":""}" ${r.skip?`data-rdel="${r.rid}"`:`data-rs="${rw}"`} ${key}>${esc(chip(r))}</button>${accChip(rw,r,key)}${doneChip(rw,r,key)}</div>`,key);return r.done&&rw!=="inc"&&!r.skip?h.replace('<div class="lnw">','<div class="lnw isdone">'):h}).join("");md[rw].forEach((r,i)=>{if(r.skip)$(rw+"_a"+i).readOnly=true})});document.querySelectorAll("#b .lnw").forEach(subHintFor)}
 /* Goals can be folded to show just the name. Which ones are folded is remembered on this device. */
 let GF=new Set();try{GF=new Set(JSON.parse(localStorage.getItem("kronkoll.gfold")||"[]"))}catch(e){}
 function toggleGoal(k){GF.has(k)?GF.delete(k):GF.add(k);try{localStorage.setItem("kronkoll.gfold",JSON.stringify([...GF]))}catch(e){}
@@ -956,7 +972,7 @@ function renderBudgetDeps(){const[a,b]=range(),list=deps.filter(d=>d.at>=a&&d.at
   $("b_deps_n").textContent=list.length?(net<0?"−":"＋")+" "+kr(Math.abs(net)):"";
   $("b_deps_l").innerHTML=list.map(depRow).join("")||`<p class="note">${tx("Inget sparat eller uttaget den här månaden än.","Nothing saved or withdrawn this month yet.")}</p>`}
 function renderBudget(){
-  renderBudgetDeps();renderAccounts();
+  renderBudgetDeps();renderAccounts();renderDoneCounts();
   const p=planCalc(cur()),ae=document.activeElement;
   $("b_per").innerHTML=mnavHtml();$("sum_inc").textContent=kr(p.inc);$("sum_out").textContent=kr(p.fixed);$("sum_var").textContent=kr(p.vars);
   const sp=spendOf(P.y,P.m);$("b_spent").textContent=krr(p.needs+sp.used);{const r=p.inc>0?p.save/p.inc*100:null;$("b_rl").textContent=tx("Sparkvot","Savings rate");$("b_rate").textContent=r==null?"–":r.toLocaleString(loc(),{maximumFractionDigits:r<10&&r>-10?1:0})+" %";$("b_rate").className=r!=null&&r<0?"er":"";const goal=Math.min(100,Math.max(1,S.rateGoal||30)),hit=r!=null&&r>=goal;$("b_rbar").style.width=Math.max(0,Math.min(100,(r||0)/goal*100))+"%";$("b_rbar").parentElement.classList.toggle("hit",hit);$("b_rgoal").textContent=tx(`Mål ${goal} %`,`Goal ${goal}%`);$("b_rsub").textContent=p.inc>0?(hit?tx(`Målet är nått. ${kr(p.save)} sparat av ${kr(p.inc)} i inkomster.`,`Goal reached. ${kr(p.save)} saved of ${kr(p.inc)} income.`):tx(`${kr(p.save)} sparat · ${krr(p.inc*goal/100-p.save)} kvar till målet`,`${kr(p.save)} saved · ${krr(p.inc*goal/100-p.save)} left to the goal`)):tx("Lägg in inkomster för att se sparkvoten","Add income to see the savings rate")}$("b_life").textContent=krr(sp.left);$("b_life").className=sp.left<0?"er":"";
@@ -1071,6 +1087,7 @@ const THEMES=[["midnatt","Midnattssol","Midnight Sun","Lila kväll med varma ton
 const TCOL={"midnatt":["#6a3fc0","#e0566f","#f59a3c"],"skog":["#1f6b47","#6ea832","#c79a2e"],"hav":["#49b4d8","#62d6c0","#9dc3f0"],"norrsken":["#7a3ff0","#12d8a0","#2f9cf0"],"korsbar":["#f28bb0","#f6b4a0","#c79ae8"]};
 /* Add a new entry at the top whenever the app changes. "to" says where Take me there should go. */
 const CHANGELOG=[
+{v:"4.3",d:"27 nov 2026",i:[["b","#l_items",["Överfört","Transferred"],["Under varje fast och rörlig utgift kan du bocka av Överfört när pengarna är flyttade. Rubriken visar hur många som är klara, och Översikt visar vad som är kvar att föra över. Varje ny månad börjar oavbockad.","Under each fixed and variable expense you can tick Transferred once the money is moved. The header shows how many are done, and Overview shows what is left to transfer. Each new month starts unticked."]],["b","#acc_btn",["Bocka av flyttar","Tick off moves"],["Flyttarna på lönedagen under Konton kan också bockas av.","The payday moves under Accounts can be ticked off too."]]]},
 {v:"4.2",d:"21 nov 2026",i:[["b","#b_spent",["Avrundade summor","Rounded totals"],["Spenderat och Kvar att leva på visas i hela kronor, även när raderna har ören.","Spent and Left to live on show whole kronor, even when rows have öre."]],["b","#l_items",["Längre namn får plats","Longer names fit"],["Beloppsfältet är bara så brett som beloppet, så namn som Liseberg julmarknad syns hela.","The amount field is only as wide as the amount, so names like Liseberg julmarknad show in full."]],["b","#l_items",["Konton","Accounts"],["Under en inkomst eller utgift väljer du vilket konto pengarna kommer in på eller dras från. Knappen Konton i titelraden visar vad som ska finnas på varje konto och vad du ska flytta på lönedagen.","Under an income or expense you choose which account the money comes into or leaves from. The Accounts button in the title bar shows what needs to be on each account and what to move on payday."]],["b","#l_items",["Belopp med ören","Amounts with öre"],["Du kan skriva belopp med två decimaler, till exempel 249,50.","You can enter amounts with two decimals, for example 249.50."]]]},
 {v:"4.1",d:"21 nov 2026",i:[["b","#l_items",["Hoppa mellan fält på samma rad","Move between fields in the same row"],["När du skriver ett namn kan du trycka direkt på beloppet på samma rad utan att tangentbordet först fälls ner.","While typing a name you can tap the amount in the same row straight away, without the keyboard closing first."]]]},
 {v:"4.0",d:"21 nov 2026",i:[["b","#d_inc",["Färgat glas i alla teman","Tinted glass in every theme"],["Färgerna i Budget syns lika tydligt i alla teman, och glaskanten tar upp rutans färg. Sparande har en lugnare glasblå ton.","The Budget colours show equally well in every theme, and the glass rim picks up the box colour. Saving has a calmer glass blue."]],["b","",["Sparat-besked","Saved indicator"],["När du ändrar något står det Sparar… och sedan Sparat i titelraden, så du vet att det är sparat.","When you change something the title bar shows Saving… then Saved, so you know it is stored."]]]},
@@ -1548,14 +1565,14 @@ document.addEventListener("visibilitychange",()=>{if(document.hidden)return;cons
     const keep={};DIRTY.forEach(k=>{if(PM[k])keep[k]=PM[k]});const keepR=RULES.filter(r=>DIRTYR.has(r.id)),real=snap.docs.some(d=>/^(pm|rec|dep|exp|hold|sub|loan)_|^started$/.test(d.id)),ex=exampleMode&&!real;if(!ex){exampleMode=false;PM={};RULES=[]}deps=[];HOLD=[];SL=[];LO=[];allIds=snap.docs.map(d=>d.id);const old=S.lang;let sawGoals=false;const MIG=[];
     snap.docs.forEach(d=>{const v=d.data()||{};
       if(d.id==="plan"){["saved","buf","lifePct","adults","taxT","taxPay","taxPct","payH","payR","taxCol","zoom","iskV","iskIn","iskP","rateGoal"].forEach(k=>{if(typeof v[k]==="number")S[k]=v[k]});["taxKom","taxFors"].forEach(k=>{if(typeof v[k]==="string")S[k]=v[k]});if(v.bg2==="mist"||v.bg2==="lines"){S.bg=v.bg2;S.bgPick=true}["taxKy","hc"].forEach(k=>{if(typeof v[k]==="boolean")S[k]=v[k]});applyRead();if(v.taxMode==="t"||v.taxMode==="p")S.taxMode=v.taxMode;if(typeof v.theme==="string")S.theme=v.theme;if(typeof v.toasts==="boolean")S.toasts=v.toasts;if(typeof v.sound==="boolean")S.sound=v.sound;if(typeof v.click==="boolean")S.click=v.click;if(typeof v.motion==="boolean"){S.motion=v.motion;FX.setMotion()}if(typeof v.recV==="number")S.recV=v.recV;if(v.lang==="sv"||v.lang==="en")S.lang=v.lang}
-      else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{}),...(i.acc?{acc:String(i.acc)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
+      else if(v.kind==="pm"){const rows=a=>Array.isArray(a)?a.filter(i=>i&&typeof i.a==="number").map(i=>({n:String(i.n||""),a:i.a,...(i.d?{d:String(i.d)}:{}),...(i.acc?{acc:String(i.acc)}:{}),...(i.done?{done:String(i.done)}:{})})):[];let its=rows(v.items),vr=rows(v.vars);if(!Array.isArray(v.vars)){vr=its.filter(i=>VARS.test(i.n));its=its.filter(i=>!VARS.test(i.n))}const inc=Array.isArray(v.inc)?rows(v.inc):[["Jobb",+v.job||0],["CSN",+v.csn||0]].filter((r,i)=>r[1]>0||i===0).map(([n,a])=>({n,a}));PM[d.id.slice(3)]={inc,items:its,vars:vr,...(Array.isArray(v.split)?{split:v.split.filter(l=>l&&typeof l.a==="number").map(l=>({k:String(l.k||""),n:String(l.n||""),a:l.a}))}:{})}}
       else if(v.kind==="hold"&&typeof v.qty==="number")HOLD.push({id:String(v.id),ref:String(v.ref||""),name:String(v.name||""),qty:v.qty,cost:+v.cost||0,...(typeof v.manual==="number"?{manual:v.manual}:{})});
-      else if(v.kind==="accounts"){if(!accDirty&&Array.isArray(v.list))ACC=v.list.map(a=>({k:String(a.k),n:String(a.n||"")}))}
+      else if(v.kind==="accounts"){if(!accDirty){if(Array.isArray(v.list))ACC=v.list.map(a=>({k:String(a.k),n:String(a.n||"")}));ACCD=v.done&&typeof v.done==="object"?{...v.done}:{}}}
       else if(v.kind==="goals"){sawGoals=true;if(!goalsDirty&&Array.isArray(v.list))G=v.list.map(g=>({k:String(g.k),n:String(g.n||""),s:+g.s||0,t:+g.t||0}))}
       else if(v.kind==="loan"&&typeof v.bal==="number")LO.push({id:String(v.id),n:String(v.n||""),ty:String(v.ty||"annat"),bal:v.bal,r:+v.r||0,pay:+v.pay||0});
       else if(v.kind==="sub"&&typeof v.a==="number")SL.push({id:String(v.id),n:String(v.n||""),a:v.a,f:v.f==="q"||v.f==="y"?v.f:"m",d:String(v.d||""),off:!!v.off});
       else if(v.kind==="rec"&&v.sub){MIG.push(v)}
-      else if(v.kind==="rec"&&Array.isArray(v.amts)&&v.amts.length&&!ex)RULES.push({id:String(v.id),t:v.t,n:String(v.n||""),freq:v.freq,date:String(v.date),ds:!!v.ds,amts:v.amts.map(x=>({f:String(x.f),a:+x.a||0})),end:v.end||null,over:v.over&&typeof v.over==="object"?{...v.over}:{},skip:Array.isArray(v.skip)?[...v.skip]:[],...(v.acc?{acc:String(v.acc)}:{})});
+      else if(v.kind==="rec"&&Array.isArray(v.amts)&&v.amts.length&&!ex)RULES.push({id:String(v.id),t:v.t,n:String(v.n||""),freq:v.freq,date:String(v.date),ds:!!v.ds,amts:v.amts.map(x=>({f:String(x.f),a:+x.a||0})),end:v.end||null,over:v.over&&typeof v.over==="object"?{...v.over}:{},skip:Array.isArray(v.skip)?[...v.skip]:[],...(v.acc?{acc:String(v.acc)}:{}),...(v.done&&typeof v.done==="object"?{done:{...v.done}}:{})});
       else if(typeof v.amount==="number")deps.push({id:d.id,amount:v.amount,note:v.note||"",at:v.at||0,pot:v.pot||"",potN:v.potN||""})});
     Object.assign(PM,keep);
     /* Subscriptions that were first saved as budget lines move out of the budget, once. */
@@ -1670,7 +1687,7 @@ function saveState(s){const el=$("savest");clearTimeout(saveT);
 addEventListener("kk-save",e=>saveState(e.detail));
 /* Accounts: each income or expense row can say which bank account the money comes into or goes from.
    Budget then shows, per account, what has to be there this month. Accounts are stored as one "accounts" doc. */
-function saveAccounts(){leaveExample();if(!col)return;accDirty=true;later("acc",()=>{accDirty=false;col.doc("accounts").set({kind:"accounts",list:ACC}).catch(()=>toast(t("tFail")))},150)}
+function saveAccounts(){leaveExample();if(!col)return;accDirty=true;later("acc",()=>{accDirty=false;col.doc("accounts").set({kind:"accounts",list:ACC,done:ACCD}).catch(()=>toast(t("tFail")))},150)}
 
 /* The small button under a row, next to "Varje månad". */
 function accChip(rw,r,key){const a=r.acc&&accOf(r.acc);
@@ -1712,7 +1729,7 @@ function renderAccounts(){const md=monthData(P.y,P.m),B={};
   const none=B[""];
   $("acc_l").innerHTML=ACC.map(a=>row(`<i class="accdot" style="background:${accCol(a.k)}"></i>`,a.n,B[a.k]||{in:0,out:0})).join("")+
     (none&&none.out?row(`<i class="accdot none"></i>`,tx("Utan konto","No account"),none):"")+
-    (moves.length?`<div class="ddplan"><span>${tx("På lönedagen","On payday")}</span>${moves.map(([f,to,m])=>`<div class="ddm"><span>${f?`${esc(f.n)} → ${esc(to.n)}`:tx(`Sätt in på ${esc(to.n)}`,`Into ${esc(to.n)}`)}</span><b>${kr(m)}</b></div>`).join("")}</div>`:"")+
+    (moves.length?`<div class="ddplan"><span>${tx("På lönedagen","On payday")}</span>${moves.map(([f,to,m])=>{const id=`${mk(P.y,P.m)}|${f?f.k:"_"}>${to.k}`,on=!!ACCD[id];return`<div class="ddm${on?" isdone":""}"><button class="mvb${on?" on":""}" data-mvdone="${esc(id)}" aria-pressed="${on}" aria-label="${tx("Överfört","Transferred")}"><svg viewBox="0 0 24 24" aria-hidden="true">${on?'<circle cx="12" cy="12" r="9"/><path d="m8 12.3 2.8 2.8 5.2-5.6"/>':'<circle cx="12" cy="12" r="8.5"/>'}</svg></button><span>${f?`${esc(f.n)} → ${esc(to.n)}`:tx(`Sätt in på ${esc(to.n)}`,`Into ${esc(to.n)}`)}</span><b>${kr(m)}</b></div>`}).join("")}</div>`:"")+
     `<p class="ddnote">${tx("Beloppet är vad som ska finnas på kontot för månadens utgifter.","The amount is what needs to be on the account for the month's expenses.")}</p>`}
 function closeAccDD(){const d=$("accdd");if(!d||!d.classList.contains("on"))return;d.classList.remove("on");$("acc_btn").setAttribute("aria-expanded","false")}
 $("acc_btn").onclick=e=>{e.stopPropagation();const d=$("accdd"),o=!d.classList.contains("on");if(!o)return closeAccDD();renderAccounts();
@@ -1724,6 +1741,21 @@ document.addEventListener("click",e=>{const d=e.target.closest&&e.target.closest
   animOut(d.closest(".acrow"),()=>{ACC=ACC.filter(a=>a.k!==k);saveAccounts();RULES.forEach(r=>{if(r.acc===k){delete r.acc;saveRule(r)}});
     Object.keys(PM).forEach(mk_=>{const w=PM[mk_];if(RW.some(t=>(w[t]||[]).some(x=>x.acc===k))){const[y,m]=mk_.split("_").map(Number);editMonth(md=>RW.forEach(t=>(md[t]||[]).forEach(x=>{if(x.acc===k)delete x.acc})),y,m-1)}});
     if(ACX&&ACX.acc===k)ACX.acc="";paintAC();buildSheet();render();toast(tx("Kontot borttaget","Account removed"),"del")})});
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-mvdone]");if(!b)return;e.stopPropagation();const id=b.dataset.mvdone;if(ACCD[id])delete ACCD[id];else ACCD[id]=todayISO();saveAccounts();renderAccounts()});
+/* "Överfört": tick off fixed and variable expenses once the money is moved. The tick belongs to the month you are
+   looking at, so recurring rows start unticked each new month. Rules keep {monthKey: date}, one-off rows keep a date. */
+const todayISO=()=>{const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
+const shortD=iso=>{const[y,m,d]=iso.split("-").map(Number);return new Date(y,m-1,d).toLocaleDateString(loc(),{day:"numeric",month:"short"}).replace(".","")};
+function doneChip(rw,r,key){if(rw==="inc"||r.skip)return"";const on=!!r.done;
+  return `<button class="donb${on?" on":""}" data-done="${rw}" ${key} aria-pressed="${on}"><svg viewBox="0 0 24 24" aria-hidden="true">${on?'<circle cx="12" cy="12" r="9"/><path d="m8 12.3 2.8 2.8 5.2-5.6"/>':'<circle cx="12" cy="12" r="8.5"/>'}</svg>${on?tx("Överfört ","Transferred ")+shortD(r.done):tx("Överfört","Transferred")}</button>`}
+/* Totals for a month: how many expense rows, how many ticked, and how much is still to move. */
+function doneSum(md){let n=0,d=0,left=0;["items","vars"].forEach(t=>md[t].forEach(r=>{if(r.skip||!(r.a>0))return;n++;if(r.done)d++;else left+=r.a}));return{n,d,left}}
+function renderDoneCounts(){const md=monthData(P.y,P.m);["items","vars"].forEach(t=>{const rows=md[t].filter(r=>!r.skip&&r.a>0),d=rows.filter(r=>r.done).length,el=$("dc_"+t);
+  el.innerHTML=rows.length?`<span>${tx(`${d} av ${rows.length} överförda`,`${d} of ${rows.length} transferred`)}</span><i class="dcbar"><i style="width:${Math.round(d/rows.length*100)}%"></i></i>`:"";el.classList.toggle("all",rows.length>0&&d===rows.length)})}
+document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-done]");if(!b)return;const rw=b.dataset.done,k=mk(P.y,P.m),now=todayISO();
+  if(b.dataset.rid){const r=RULES.find(x=>x.id===b.dataset.rid);if(!r)return;r.done={...(r.done||{})};if(r.done[k])delete r.done[k];else r.done[k]=now;saveRule(r)}
+  else{const ix=+b.dataset.ix;editMonth(md=>{const x=md[rw][ix];if(!x)return;if(x.done)delete x.done;else x.done=now})}
+  buildSheet();render()});
 </script>
 
 <script>if("serviceWorker" in navigator)navigator.serviceWorker.register("sw.js")</script>

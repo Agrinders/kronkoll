@@ -554,3 +554,18 @@ nav{border-radius:18px}nav button{border-radius:13px}                /* 18 − 5
 .ln .am{field-sizing:content;width:auto;min-width:2.6ch;max-width:7.5em;padding-inline:1px}
 @supports not (field-sizing:content){.ln .am{width:4.6em}}
 .amw{gap:4px}
+
+/* Överfört: tick under fixed and variable expenses, counts in the section headers, and the line on Översikt. */
+.donb{display:inline-flex;align-items:center;gap:5px;min-height:28px;padding:2px 8px 2px 4px;border:0;border-radius:var(--rs);background:none;color:var(--soft);font-size:13px;font-weight:600;position:relative}
+.donb::after{content:"";position:absolute;inset:-8px -4px}
+.donb svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.donb.on{color:var(--good);background:color-mix(in srgb,var(--good) 12%,transparent)}.donb.on svg circle{fill:color-mix(in srgb,var(--good) 18%,transparent)}.donb.on svg path{stroke-width:2.4}
+.donb.on svg{animation:donepop .28s ease-out}@keyframes donepop{40%{transform:scale(1.25)}}
+.lnw.isdone .ln input{opacity:.62}.lnw.isdone .amw span{opacity:.62}
+.dct{display:flex;align-items:center;gap:8px}.dcbar{display:inline-block;width:56px;height:4px;border-radius:99px;background:var(--rule);overflow:hidden}.dcbar>i{display:block;height:100%;background:var(--good);border-radius:99px;transition:width .4s}
+.dct.all{color:var(--good)}
+.htodo{margin-top:2px}.htodo b{color:var(--ink);font-weight:650}
+.ddm{align-items:center}.ddm>span{flex:1;min-width:0}.mvb{flex:none;width:30px;height:30px;margin:-4px 2px -4px -6px;border:0;background:none;color:var(--soft);display:grid;place-items:center;padding:0;position:relative}.mvb::after{content:"";position:absolute;inset:-6px}
+.mvb svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.mvb.on{color:var(--good)}.mvb.on svg circle{fill:color-mix(in srgb,var(--good) 18%,transparent)}
+.ddm.isdone>span,.ddm.isdone>b{opacity:.6;text-decoration:line-through;text-decoration-thickness:1px}
+.rmeta .donb{margin-left:auto}
