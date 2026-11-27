@@ -95,7 +95,7 @@ check('long name fits in a row',await ev(()=>{const i=[...document.querySelector
 // Överfört: tick a fixed expense, header counts it, Översikt shows what is left, next month starts unticked
 await ev(()=>{go('b');d_out.open=true});await p.waitForTimeout(250);{const n=await ev(()=>monthData(P.y,P.m).items.filter(r=>!r.skip&&r.a>0).length);
 await p.click('#l_items [data-done] >> nth=0');await p.waitForTimeout(300);
-check('transferred tick counts in the header',await ev(()=>[dc_items.textContent.startsWith('1 av '+n),document.querySelectorAll('#l_items .lnw.isdone').length>=1,document.querySelector('#l_items .donb.on').textContent.startsWith('Överfört ')]),[true,true,true]);
+check('transferred tick counts in the header',await ev(()=>[dc_items.textContent.startsWith('1 av '),document.querySelectorAll('#l_items .lnw.isdone').length>=1,document.querySelector('#l_items .donb.on').textContent.startsWith('Överfört ')]),[true,true,true]);check('header counts every expense row',await ev(()=>dc_items.textContent.includes(' av '+monthData(P.y,P.m).items.filter(r=>!r.skip&&r.a>0).length+' ')),true);
 check('next month starts unticked',await ev(()=>{const d=new Date(P.y,P.m+1,1);return doneSum(monthData(d.getFullYear(),d.getMonth())).d}),0);
 await p.click('#l_items .donb.on >> nth=0');await p.waitForTimeout(300);check('tick can be undone',await ev(()=>dc_items.textContent.startsWith('0 av')),true)}
 // Touch: while typing, a tap elsewhere only closes the keyboard; the next tap acts. Buttons in the same form work at once.
